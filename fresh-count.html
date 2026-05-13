@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>CycleOps — Fresh Count · Plant 1730</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── DESIGN TOKENS ───────────────────────────── */
+    :root {
+      --bg:#F2F5FA; --surface:#FFF; --s2:#F0F3F9; --border:#DDE3EF; --bmid:#C6CEDF;
+      --t1:#0D1526; --t2:#3E4F6A; --t3:#8394AE;
+      --blue:#1D4ED8; --blue-lt:#EFF4FF;
+      --teal:#0D9488; --teal-lt:#F0FDFB;
+      --green:#16A34A; --grn-lt:#F0FDF4; --grn-bd:#BBF7D0;
+      --amber:#D97706; --amb-lt:#FFFBEB; --amb-bd:#FDE68A;
+      --red:#DC2626; --red-lt:#FFF1F0; --red-bd:#FECACA;
+      --purple:#7C3AED; --pur-lt:#F5F3FF;
+      /* Report-specific — matches the reference image exactly */
+      --rep-hdr:#1C3B6E;       /* dark navy header */
+      --rep-row:#EDF3FB;       /* light blue row bg */
+      --rep-row-alt:#F4F8FE;   /* subtle alternate */
+      --rep-val:#1C3B6E;       /* navy for LBS values */
+      --rep-brd:#C8D8EF;       /* row border */
+      --rep-total:#D4E5F8;     /* total row */
+      --sh-sm:0 1px 3px rgba(12,17,29,.06),0 1px 2px rgba(12,17,29,.04);
+      --sh-md:0 4px 12px rgba(12,17,29,.08);
+      --sh-lg:0 16px 40px rgba(12,17,29,.12);
+      --r-sm:6px; --r-md:10px; --r-lg:16px;
+      --font:'DM Sans',sans-serif; --mono:'DM Mono',monospace; --display:'Sora',sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{font-size:16px;-webkit-font-smoothing:antialiased;background:var(--bg)}
+    body{font-family:var(--font);color:var(--t1);min-height:100vh;display:flex;flex-direction:column}
+    input,select,textarea,button{font-family:var(--font)}
+    input,textarea,select{font-size:16px!important}
+    button{cursor:pointer;border:none;background:none}
+    a{color:inherit;text-decoration:none}
+
+    /* ─── TOP BAR ────────────────────────────────── */
+    .topbar{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);box-shadow:var(--sh-sm);height:56px;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .tb-left{display:flex;align-items:center;gap:10px}
+    .btn-back{display:flex;align-items:center;gap:5px;padding:6px 11px;border-radius:var(--r-sm);border:1px solid var(--border);font-size:.82rem;font-weight:500;color:var(--t2);transition:all .13s}
+    .btn-back:hover{background:var(--s2);border-color:var(--bmid)}
+    .btn-back svg{width:13px;height:13px}
+    .tb-divider{width:1px;height:20px;background:var(--border)}
+    .tb-icon{width:32px;height:32px;border-radius:var(--r-sm);background:var(--grn-lt);border:1px solid var(--grn-bd);display:flex;align-items:center;justify-content:center;color:var(--green);font-size:.95rem;flex-shrink:0}
+    .tb-title{font-family:var(--display);font-size:.98rem;font-weight:700;color:var(--t1);letter-spacing:-.01em}
+    .tb-sub{font-size:.74rem;color:var(--t3);margin-top:1px}
+    .tb-right{display:flex;align-items:center;gap:7px}
+    .btn-sm{display:flex;align-items:center;gap:5px;padding:6px 13px;border-radius:var(--r-sm);border:1.5px solid var(--border);font-size:.82rem;font-weight:600;color:var(--t2);background:var(--surface);transition:all .13s;white-space:nowrap}
+    .btn-sm:hover{background:var(--s2);border-color:var(--bmid)}
+    .btn-sm svg{width:13px;height:13px}
+    .btn-sm-green{background:var(--green);color:#fff;border-color:var(--green)}
+    .btn-sm-green:hover{background:#138040}
+    .btn-sm-blue{background:var(--blue);color:#fff;border-color:var(--blue)}
+    .btn-sm-blue:hover{background:#1A44C2}
+    .btn-sm-dark{background:var(--t1);color:#fff;border-color:var(--t1)}
+    .btn-sm-dark:hover{background:#1E2A3A}
+
+    /* ─── LAYOUT ──────────────────────────────────── */
+    .page{flex:1;max-width:1100px;margin:0 auto;width:100%;padding:22px 20px 60px}
+
+    /* ─── SESSION CARD ────────────────────────────── */
+    .session-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--sh-sm);padding:18px 22px;margin-bottom:22px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+    .sc-left{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+    .sc-date{font-family:var(--display);font-size:1.3rem;font-weight:800;color:var(--t1);letter-spacing:-.03em;line-height:1}
+    .sc-sub{font-size:.8rem;color:var(--t3);font-family:var(--mono);margin-top:2px}
+    .mwf-pills{display:flex;gap:5px;margin-left:4px}
+    .mwf-pill{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;border:1.5px solid var(--border);color:var(--t3)}
+    .mwf-pill.today{background:var(--green);border-color:var(--green);color:#fff;box-shadow:0 2px 6px rgba(22,163,74,.3)}
+    .mwf-pill.count-day{background:var(--grn-lt);border-color:var(--grn-bd);color:var(--green)}
+    .mwf-pill.off{background:var(--s2);color:var(--t3)}
+    .count-day-banner{display:flex;align-items:center;gap:7px;padding:6px 12px;border-radius:99px;font-size:.8rem;font-weight:600}
+    .cdb-active{background:var(--grn-lt);color:var(--green);border:1px solid var(--grn-bd)}
+    .cdb-active::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;animation:blink 1.4s ease-in-out infinite}
+    .cdb-off{background:var(--amb-lt);color:var(--amber);border:1px solid var(--amb-bd)}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+    .sc-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .auditor-input{height:36px;padding:0 10px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:.85rem;color:var(--t1);background:var(--surface);outline:none;min-width:160px;width:100%;max-width:220px;transition:border-color .13s,box-shadow .13s}
+    .auditor-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,78,216,.1)}
+    .auditor-input::placeholder{color:var(--t3)}
+    .session-progress{display:flex;align-items:center;gap:8px}
+    .sp-track{width:100px;height:6px;background:var(--border);border-radius:99px;overflow:hidden}
+    .sp-fill{height:100%;background:var(--green);border-radius:99px;transition:width .4s ease}
+    .sp-label{font-size:.78rem;font-weight:600;font-family:var(--mono);color:var(--t2)}
+
+    /* ─── COUNT TABLE (matches reference image) ───── */
+    .table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--sh-sm);overflow:hidden;margin-bottom:24px}
+    .tw-top{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);background:var(--s2);flex-wrap:wrap;gap:10px}
+    .tw-title{font-family:var(--display);font-size:.95rem;font-weight:700;color:var(--t1);letter-spacing:-.01em}
+    .tw-sub{font-size:.76rem;color:var(--t3);margin-top:1px}
+    .tw-actions{display:flex;gap:7px}
+
+    /* The report table itself */
+    .report-tbl-scroll{overflow-x:auto}
+    .report-tbl{width:100%;border-collapse:collapse;min-width:600px}
+
+    /* Header row — dark navy matching image */
+    .report-tbl thead tr{background:var(--rep-hdr)}
+    .report-tbl thead th{padding:13px 16px;text-align:left;font-family:var(--display);font-size:.82rem;font-weight:700;color:#fff;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;border-right:1px solid rgba(255,255,255,.12)}
+    .report-tbl thead th:last-child{border-right:none}
+    .th-item{width:110px}
+    .th-lbs{width:120px;text-align:right}
+    .th-notes{min-width:220px}
+    .th-status{width:40px;text-align:center}
+
+    /* Data rows */
+    .report-tbl tbody tr{border-bottom:1px solid var(--rep-brd);cursor:pointer;transition:background .1s}
+    .report-tbl tbody tr:nth-child(odd){background:var(--rep-row)}
+    .report-tbl tbody tr:nth-child(even){background:var(--rep-row-alt)}
+    .report-tbl tbody tr:hover{background:#DDEAF8}
+    .report-tbl tbody tr.counted{/* counted rows use default color */}
+
+    .td-item{padding:12px 16px;font-family:var(--mono);font-size:.85rem;font-weight:500;color:var(--rep-val);white-space:nowrap}
+    .td-desc{padding:12px 16px;font-size:.9rem;font-weight:700;color:var(--t1);text-transform:uppercase;letter-spacing:.01em}
+    .td-lbs{padding:12px 16px;font-family:var(--mono);font-size:.9rem;font-weight:700;color:var(--rep-val);text-align:right;white-space:nowrap}
+    .td-lbs.zero{color:var(--t3);font-weight:400}
+    .td-lbs.empty{color:var(--t3);font-weight:400;font-style:italic}
+    .td-sap-ref{font-size:.68rem;font-weight:400;color:var(--t3);font-family:var(--mono);margin-top:2px}
+    .td-variance{display:inline-block;font-size:.7rem;font-weight:700;font-family:var(--mono);
+      padding:1px 6px;border-radius:99px;margin-top:3px}
+    .var-over{background:var(--grn-lt);color:var(--green);border:1px solid var(--grn-bd)}
+    .var-under{background:var(--red-lt);color:var(--red);border:1px solid var(--red-bd)}
+    .var-match{background:var(--grn-lt);color:var(--green);border:1px solid var(--grn-bd)}
+    .td-notes{padding:10px 14px;font-size:.78rem;color:var(--t2);line-height:1.4}
+    .td-notes .notes-preview{max-width:280px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--t3)}
+    .td-notes .notes-preview.has-data{color:var(--t2)}
+    .td-action{padding:8px 12px;text-align:center;width:60px}
+    .btn-count{height:28px;padding:0 10px;border-radius:var(--r-sm);font-size:.75rem;font-weight:700;letter-spacing:.02em;display:inline-flex;align-items:center;gap:5px;transition:all .13s;white-space:nowrap}
+    .btn-count-add{background:var(--blue-lt);color:var(--blue);border:1.5px solid #BDD0FB}
+    .btn-count-add:hover{background:var(--blue);color:#fff}
+    .btn-count-edit{background:var(--grn-lt);color:var(--green);border:1.5px solid var(--grn-bd)}
+    .btn-count-edit:hover{background:var(--green);color:#fff}
+
+    /* Status dot */
+    .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;display:inline-block}
+    .sd-empty{background:var(--bmid)}
+    .sd-partial{background:var(--amber)}
+    .sd-done{background:var(--green)}
+    .sd-zero{background:var(--t3)}
+
+    /* Total row */
+    .report-tbl tfoot tr{background:var(--rep-total);border-top:2px solid var(--rep-hdr)}
+    .td-total-label{padding:13px 16px;font-family:var(--display);font-size:.88rem;font-weight:800;color:var(--rep-hdr);text-align:right;text-transform:uppercase;letter-spacing:.04em}
+    .td-total-val{padding:13px 16px;font-family:var(--mono);font-size:.95rem;font-weight:700;color:var(--rep-hdr);text-align:right}
+    .td-total-notes{padding:13px 16px}
+
+    /* ─── HISTORY SESSIONS ────────────────────────── */
+    .hist-wrap{margin-top:4px}
+    .hist-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;cursor:pointer;user-select:none}
+    .hist-title{font-family:var(--display);font-size:.93rem;font-weight:700;color:var(--t1);display:flex;align-items:center;gap:8px}
+    .hist-chev{font-size:.8rem;color:var(--t3);transition:transform .2s}
+    .hist-chev.open{transform:rotate(180deg)}
+    .hist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+    .hist-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;cursor:pointer;transition:all .13s;box-shadow:var(--sh-sm)}
+    .hist-card:hover{border-color:var(--bmid);box-shadow:var(--sh-md);transform:translateY(-1px)}
+    .hc-date{font-family:var(--display);font-size:.92rem;font-weight:700;color:var(--t1);letter-spacing:-.01em}
+    .hc-meta{font-size:.76rem;color:var(--t3);font-family:var(--mono);margin-top:3px}
+    .hc-total{font-family:var(--mono);font-size:1.1rem;font-weight:500;color:var(--rep-val);margin-top:8px}
+    .hc-bar{height:3px;background:var(--border);border-radius:99px;margin-top:8px;overflow:hidden}
+    .hc-fill{height:100%;background:var(--green);border-radius:99px}
+
+    /* ─── ENTRY DRAWER ────────────────────────────── */
+    .drawer-ov{display:none;position:fixed;inset:0;background:rgba(12,17,29,.4);z-index:200;backdrop-filter:blur(2px)}
+    .drawer-ov.open{display:block}
+    .drawer{position:fixed;top:0;right:0;bottom:0;width:520px;background:var(--surface);box-shadow:-8px 0 40px rgba(12,17,29,.14);z-index:201;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
+    .drawer-ov.open .drawer{transform:translateX(0)}
+
+    .drw-hdr{display:flex;align-items:flex-start;justify-content:space-between;padding:18px 22px 14px;border-bottom:1px solid var(--border);flex-shrink:0;gap:10px}
+    .drw-mat{font-family:var(--mono);font-size:.82rem;font-weight:500;color:var(--blue);background:var(--blue-lt);border:1px solid #BDD0FB;border-radius:99px;padding:3px 10px;display:inline-block;margin-bottom:5px}
+    .drw-title{font-family:var(--display);font-size:1.05rem;font-weight:700;color:var(--t1);letter-spacing:-.02em;text-transform:uppercase;line-height:1.2}
+    .drw-close{width:30px;height:30px;border-radius:var(--r-sm);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--t2);transition:all .13s;flex-shrink:0;margin-top:2px}
+    .drw-close:hover{background:var(--s2)}
+    .drw-close svg{width:14px;height:14px}
+
+    .drw-body{flex:1;overflow-y:auto;padding:0}
+
+    /* Summary bar at top of drawer */
+    .drw-summary-bar{background:var(--rep-hdr);padding:14px 22px;display:flex;align-items:center;justify-content:space-between}
+    .dsb-lbl{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.6);font-weight:600;margin-bottom:2px}
+    .dsb-val{font-family:var(--display);font-size:1.8rem;font-weight:800;color:#fff;letter-spacing:-.04em;line-height:1}
+    .dsb-unit{font-size:.85rem;font-weight:400;color:rgba(255,255,255,.65);margin-left:4px}
+    .dsb-delta{font-size:.78rem;font-family:var(--mono);margin-top:3px}
+    .dsb-delta.up{color:#4ADE80} .dsb-delta.dn{color:#F87171} .dsb-delta.eq{color:rgba(255,255,255,.5)}
+    .dsb-finds-count{text-align:right}
+    .dsb-finds-num{font-family:var(--display);font-size:1.5rem;font-weight:800;color:#fff;letter-spacing:-.03em}
+    .dsb-finds-lbl{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.6);font-weight:600;margin-top:2px}
+
+    /* Notes section */
+    .drw-section{padding:16px 22px;border-bottom:1px solid var(--border)}
+    .drw-sec-title{font-size:.78rem;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+    .field-lbl{font-size:.78rem;font-weight:600;color:var(--t2);display:block;margin-bottom:5px}
+    .field-input{width:100%;height:40px;padding:0 11px;border:1.5px solid var(--border);border-radius:var(--r-md);font-size:.88rem;color:var(--t1);background:var(--surface);outline:none;transition:border-color .14s,box-shadow .14s}
+    .field-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,78,216,.1)}
+    .field-input::placeholder{color:var(--t3)}
+    .field-textarea{width:100%;min-height:60px;resize:vertical;padding:9px 11px;border:1.5px solid var(--border);border-radius:var(--r-md);font-size:.86rem;color:var(--t1);background:var(--surface);outline:none;transition:border-color .14s;line-height:1.5}
+    .field-textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,78,216,.1)}
+    .field-textarea::placeholder{color:var(--t3)}
+
+    /* Finds (location/batch/HU entries) */
+    .finds-list{display:flex;flex-direction:column;gap:10px;margin-bottom:10px}
+    .find-card{background:var(--s2);border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;transition:border-color .13s}
+    .find-card:focus-within{border-color:var(--blue)}
+    .find-card-hdr{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--surface);border-bottom:1px solid var(--border)}
+    .find-num{font-family:var(--mono);font-size:.72rem;font-weight:600;color:var(--t3);background:var(--s2);border:1px solid var(--border);border-radius:99px;padding:2px 8px}
+    .find-lbs-badge{font-family:var(--mono);font-size:.84rem;font-weight:700;color:var(--rep-val)}
+    .find-lbs-badge.zero{color:var(--t3);font-weight:400}
+    .btn-rm-find{width:24px;height:24px;border-radius:var(--r-sm);border:1px solid var(--red-bd);background:var(--red-lt);color:var(--red);display:flex;align-items:center;justify-content:center;font-size:.8rem;transition:all .13s;flex-shrink:0}
+    .btn-rm-find:hover{background:var(--red);color:#fff}
+    .find-card-body{padding:10px 12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .find-field{display:flex;flex-direction:column;gap:3px}
+    .ff-lbl{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3)}
+    .ff-input{height:36px;padding:0 9px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:.85rem;color:var(--t1);background:var(--surface);outline:none;transition:border-color .13s;width:100%}
+    .ff-input:focus{border-color:var(--blue);box-shadow:0 0 0 2px rgba(29,78,216,.1)}
+    .ff-input::placeholder{color:var(--t3)}
+    .ff-input-lbs{font-family:var(--mono);font-weight:600;color:var(--rep-val)}
+    .find-field.span2{grid-column:1/-1}
+    .pallet-row{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end}
+    .pallet-calc{font-size:.73rem;color:var(--teal);font-family:var(--mono);padding:5px 0;white-space:nowrap}
+    .btn-add-find{width:100%;height:38px;border:1.5px dashed var(--bmid);border-radius:var(--r-md);font-size:.84rem;font-weight:600;color:var(--t2);background:transparent;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .13s}
+    .btn-add-find:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-lt)}
+    .btn-add-find svg{width:14px;height:14px}
+
+    .drw-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0;background:var(--s2)}
+    .btn-drw{flex:1;height:42px;border-radius:var(--r-md);font-size:.9rem;font-weight:700;transition:all .13s;letter-spacing:-.01em}
+    .btn-drw-save{background:var(--green);color:#fff;border:none}
+    .btn-drw-save:hover{background:#138040}
+    .btn-drw-save:active{transform:scale(.98)}
+    .btn-drw-ghost{background:transparent;border:1.5px solid var(--border);color:var(--t2)}
+    .btn-drw-ghost:hover{background:var(--s2)}
+    .btn-drw-clear{background:var(--red-lt);border:1.5px solid var(--red-bd);color:var(--red);flex:0;padding:0 16px}
+    .btn-drw-clear:hover{background:var(--red);color:#fff}
+
+
+    /* ─── DRAWER MODE BAR ────────────────────── */
+    .drw-mode-bar{display:flex;align-items:center;justify-content:space-between;
+      padding:9px 22px;border-bottom:1px solid var(--border);background:var(--s2);
+      gap:10px;flex-wrap:wrap;flex-shrink:0}
+    .seg-ctrl{display:flex;border:1.5px solid var(--border);border-radius:var(--r-sm);
+      overflow:hidden;background:var(--surface)}
+    .seg-btn{padding:5px 14px;font-size:.78rem;font-weight:700;color:var(--t3);
+      background:transparent;border:none;cursor:pointer;transition:all .12s}
+    .seg-btn.active{background:var(--blue);color:#fff}
+    .drw-verify-pill{font-size:.72rem;font-family:var(--mono);font-weight:600;color:var(--t3);
+      padding:3px 9px;border-radius:99px;background:var(--border)}
+    .drw-verify-pill.all-done{background:var(--grn-lt);color:var(--green);
+      border:1px solid var(--grn-bd)}
+
+    /* ─── SAP VERIFICATION CARDS ─────────────── */
+    .sap-card{background:var(--surface);border:1.5px solid var(--border);
+      border-radius:var(--r-md);overflow:hidden;transition:border-color .15s}
+    .sap-card.st-pending{border-left:4px solid var(--blue)}
+    .sap-card.st-match  {border-left:4px solid var(--green);background:var(--grn-lt)}
+    .sap-card.st-adjust {border-left:4px solid var(--amber)}
+    .sap-card.st-none   {border-left:4px solid var(--border);opacity:.6}
+    .sc-hdr{display:flex;align-items:flex-start;gap:8px;padding:10px 12px 6px}
+    .sc-main{flex:1;min-width:0}
+    .sc-label{font-family:var(--mono);font-size:.82rem;font-weight:700;color:var(--t1)}
+    .sc-sub{font-size:.72rem;color:var(--t3);margin-top:2px}
+    .sc-sap-qty{font-family:var(--mono);font-size:.8rem;font-weight:700;color:var(--rep-val);
+      flex-shrink:0;white-space:nowrap;padding-top:2px}
+    .sc-rm{width:22px;height:22px;border-radius:4px;border:1px solid var(--border);
+      display:flex;align-items:center;justify-content:center;color:var(--t3);cursor:pointer;
+      font-size:.75rem;flex-shrink:0;background:transparent;transition:all .12s}
+    .sc-rm:hover{background:var(--red-lt);color:var(--red);border-color:var(--red-bd)}
+    .sc-controls{display:flex;align-items:center;gap:8px;padding:0 12px 10px}
+    .sc-lbs-wrap{flex:1;min-width:0}
+    .sc-lbs-inp{width:100%;height:46px;padding:0 12px;border:2px solid var(--border);
+      border-radius:var(--r-md);font-size:1.1rem;font-family:var(--mono);font-weight:700;
+      color:var(--t1);background:var(--surface);outline:none;
+      transition:border-color .13s,box-shadow .13s}
+    .sc-lbs-inp:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,78,216,.1)}
+    .sc-lbs-inp.filled{border-color:var(--green)}
+    .sc-lbs-inp.filled:focus{box-shadow:0 0 0 3px rgba(22,163,74,.1)}
+    .sc-uom{font-size:.72rem;font-weight:700;color:var(--t3);flex-shrink:0}
+    .btn-sc-match{height:46px;padding:0 14px;border-radius:var(--r-md);font-size:.82rem;
+      font-weight:700;background:var(--grn-lt);color:var(--green);border:1.5px solid var(--grn-bd);
+      cursor:pointer;white-space:nowrap;transition:all .13s;flex-shrink:0}
+    .btn-sc-match:hover,.btn-sc-match.active{background:var(--green);color:#fff;border-color:var(--green)}
+    .btn-sc-none{height:46px;padding:0 12px;border-radius:var(--r-md);font-size:.82rem;
+      font-weight:700;background:transparent;color:var(--t3);border:1.5px solid var(--border);
+      cursor:pointer;white-space:nowrap;transition:all .13s;flex-shrink:0}
+    .btn-sc-none:hover,.btn-sc-none.active{background:var(--red-lt);color:var(--red);border-color:var(--red-bd)}
+    .sc-status-chip{font-size:.68rem;font-weight:700;border-radius:99px;padding:2px 7px}
+    .scc-match {background:var(--grn-lt);color:var(--green);border:1px solid var(--grn-bd)}
+    .scc-adjust{background:var(--amb-lt);color:var(--amber);border:1px solid var(--amb-bd)}
+    .scc-none  {background:var(--s2);color:var(--t3);border:1px solid var(--border)}
+
+    /* ─── MANUAL UNLISTED CARDS ───────────────── */
+    .manual-card{background:var(--s2);border:1.5px dashed var(--bmid);border-radius:var(--r-md);
+      padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .manual-card-hdr{grid-column:1/-1;display:flex;align-items:center;
+      justify-content:space-between;margin-bottom:2px}
+    .manual-card-lbl{font-size:.72rem;font-weight:700;color:var(--t3);
+      text-transform:uppercase;letter-spacing:.06em}
+    .manual-card .find-field.span2{grid-column:1/-1}
+
+    /* ─── PRINT STYLES ────────────────────────────── */
+    @media print {
+      .topbar,.session-card .sc-right,.tw-actions,.td-action,.hist-wrap,.drawer-ov,
+      .btn-back,.tb-right,.toast-wrap{display:none!important}
+      body{background:#fff}
+      .page{padding:0;max-width:100%}
+      .session-card{border:none;box-shadow:none;padding:4px 0 16px;margin-bottom:16px}
+      .table-wrap{border:none;box-shadow:none;border-radius:0}
+      .tw-top{border-bottom:none;padding:4px 0 12px;background:transparent}
+      .tw-title{font-size:1.1rem}
+      .tw-sub{font-size:.82rem}
+      .report-tbl thead th{padding:11px 14px;font-size:.78rem}
+      .td-desc{font-size:.85rem}
+      .td-item,.td-lbs{font-size:.82rem}
+      .td-notes .notes-preview{max-width:none;white-space:normal;overflow:visible}
+      .report-tbl tbody tr:hover{background:inherit}
+      .print-header{display:block!important}
+    }
+    .print-header{display:none;text-align:center;margin-bottom:20px}
+    .print-header h1{font-size:1.2rem;font-weight:bold;color:#1C3B6E}
+    .print-header p{font-size:.85rem;color:#666;margin-top:4px}
+
+    /* ─── TOAST ───────────────────────────────────── */
+    .toast-wrap{position:fixed;bottom:16px;right:16px;z-index:500;display:flex;flex-direction:column;gap:6px}
+    .toast{background:var(--t1);color:#fff;border-radius:var(--r-md);padding:10px 16px;font-size:.85rem;font-weight:500;box-shadow:var(--sh-lg);display:flex;align-items:center;gap:8px;min-width:220px;animation:tIn .2s ease}
+    @keyframes tIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+    .t-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+    .t-g .t-dot{background:#4ADE80} .t-a .t-dot{background:#FCD34D} .t-r .t-dot{background:#F87171}
+
+    /* ─── RESPONSIVE ──────────────────────────────── */
+    @media(max-width:640px){
+      .drawer{width:100%;top:auto;height:92dvh;border-radius:20px 20px 0 0}
+      .page{padding:14px 12px 40px}
+      .session-card{flex-direction:column;align-items:flex-start;gap:12px}
+      .sc-right{width:100%}
+      .report-tbl thead th{padding:10px 10px;font-size:.74rem}
+      .td-item,.td-desc,.td-lbs,.td-notes,.td-action{padding:10px 10px}
+      .find-card-body{grid-template-columns:1fr}
+      .pallet-row{grid-template-columns:1fr 1fr;gap:6px}
+      .pallet-calc{grid-column:1/-1;padding:0 0 4px}
+      .tb-right .btn-sm-blue,.tb-right .btn-sm-dark{display:none}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════ TOP BAR -->
+<header class="topbar">
+  <div class="tb-left">
+    <a href="index.html" class="btn-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>Hub
+    </a>
+    <div class="tb-divider"></div>
+    <div class="tb-icon">🥬</div>
+    <div>
+      <div class="tb-title">Fresh Materials Count</div>
+      <div class="tb-sub" id="tb-sub">Mon · Wed · Fri Schedule</div>
+    </div>
+  </div>
+  <div class="tb-right">
+    <button class="btn-sm" id="btn-load-sap" title="Pull quantities from the SAP cycle count data">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Load from SAP
+    </button>
+    <button class="btn-sm btn-sm-blue" id="btn-new-session">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      New Session
+    </button>
+    <button class="btn-sm btn-sm-dark" id="btn-print">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Print Report
+    </button>
+    <button class="btn-sm btn-sm-green" id="btn-submit">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Submit Count
+    </button>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- ═══════════ PRINT HEADER (hidden in screen, shows on print) -->
+  <div class="print-header" id="print-header">
+    <h1>PLANT 1730 — FRESH MATERIALS INVENTORY COUNT</h1>
+    <p id="print-meta"></p>
+  </div>
+
+  <!-- ═══════════ SESSION CARD -->
+  <div class="session-card">
+    <div class="sc-left">
+      <div>
+        <div class="sc-date" id="sc-date">—</div>
+        <div class="sc-sub" id="sc-id">Loading…</div>
+      </div>
+      <div class="mwf-pills">
+        <div class="mwf-pill" id="pill-M" title="Monday">M</div>
+        <div class="mwf-pill" id="pill-W" title="Wednesday">W</div>
+        <div class="mwf-pill" id="pill-F" title="Friday">F</div>
+      </div>
+      <div class="count-day-banner" id="count-day-banner">—</div>
+      <div class="session-progress">
+        <div class="sp-track"><div class="sp-fill" id="sp-fill" style="width:0%"></div></div>
+        <span class="sp-label" id="sp-label">0 / 14</span>
+      </div>
+    </div>
+    <div class="sc-right">
+      <input type="text" id="auditor-select" class="auditor-input"
+             placeholder="Your name"
+             autocomplete="name" autocorrect="off" spellcheck="false"
+             maxlength="60" />
+    </div>
+  </div>
+
+  <!-- ═══════════ MAIN REPORT TABLE -->
+  <div class="table-wrap">
+    <div class="tw-top">
+      <div>
+        <div class="tw-title">Fresh Material Quantities</div>
+        <div class="tw-sub">Click any row to enter count details · Ctrl+click to mark as zero</div>
+      </div>
+      <div class="tw-actions">
+        <button class="btn-sm" id="btn-mark-zeros" title="Mark all uncounted items as 0">Mark Remaining as 0</button>
+        <button class="btn-sm" id="btn-export-csv">Export CSV</button>
+      </div>
+    </div>
+
+    <div class="report-tbl-scroll">
+      <table class="report-tbl">
+        <thead>
+          <tr>
+            <th class="th-item">Item</th>
+            <th>Description</th>
+            <th class="th-lbs" style="text-align:right">SAP (LB)</th>
+            <th class="th-lbs" style="text-align:right">Physical (LB)</th>
+            <th class="th-notes">Notes / Finds</th>
+            <th class="th-status">
+              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </th>
+          </tr>
+        </thead>
+        <tbody id="count-tbody">
+          <!-- Rendered by JS -->
+        </tbody>
+        <tfoot>
+          <tr>
+            <td></td>
+            <td class="td-total-label">TOTAL</td>
+            <td class="td-total-val" id="grand-sap-total" style="opacity:.65">—</td>
+            <td class="td-total-val" id="grand-total">—</td>
+            <td class="td-total-notes"></td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════ HISTORY -->
+  <div class="hist-wrap" id="hist-wrap">
+    <div class="hist-hdr" id="hist-hdr-toggle">
+      <div class="hist-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;color:var(--t3)"><circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/></svg>
+        Previous Count Sessions
+        <span style="font-family:var(--mono);font-size:.73rem;color:var(--t3);font-weight:400" id="hist-count-lbl"></span>
+      </div>
+      <span class="hist-chev" id="hist-chev">▼</span>
+    </div>
+    <div id="hist-content" style="display:none">
+      <div class="hist-grid" id="hist-grid"></div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<!-- ═══════════ ENTRY DRAWER -->
+<div class="drawer-ov" id="drawer-ov">
+  <div class="drawer" id="entry-drawer">
+
+    <!-- Drawer header -->
+    <div class="drw-hdr">
+      <div>
+        <span class="drw-mat" id="drw-mat-id">—</span>
+        <div class="drw-title" id="drw-mat-desc">Material</div>
+      </div>
+      <button class="drw-close" id="drw-close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <!-- Live summary bar -->
+    <div class="drw-summary-bar">
+      <div>
+        <div class="dsb-lbl">Physical Total</div>
+        <div class="dsb-val" id="dsb-total">—<span class="dsb-unit">LBS</span></div>
+        <div class="dsb-delta" id="dsb-delta"></div>
+      </div>
+      <div style="text-align:right">
+        <div class="dsb-finds-num" id="dsb-finds-num" style="font-size:1.2rem">—</div>
+        <div class="dsb-finds-lbl" id="dsb-finds-lbl">SAP On-Hand</div>
+      </div>
+    </div>
+
+    <!-- Mode toggle bar: only shown when SAP data exists -->
+    <div class="drw-mode-bar" id="drw-mode-bar" style="display:none">
+      <div style="font-size:.75rem;color:var(--t3)">Count grouped by</div>
+      <div class="seg-ctrl">
+        <button class="seg-btn active" id="seg-batch" onclick="switchSapMode('batch')">By Batch</button>
+        <button class="seg-btn" id="seg-hu" onclick="switchSapMode('hu')">Per HU</button>
+      </div>
+      <div class="drw-verify-pill" id="drw-verify-pill"></div>
+    </div>
+
+    <div class="drw-body" id="drw-body">
+
+      <!-- Main checklist — SAP records + manual adds -->
+      <div class="finds-list" id="finds-list" style="padding:12px 14px;display:flex;flex-direction:column;gap:10px">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Add unlisted find -->
+      <div style="padding:0 14px 4px">
+        <button class="btn-add-find" id="btn-add-find">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add unlisted find
+        </button>
+      </div>
+
+      <!-- Notes (compact) -->
+      <div style="padding:10px 14px 16px">
+        <div style="font-size:.72rem;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px">Notes</div>
+        <textarea class="field-textarea" id="drw-notes" rows="2"
+          placeholder="e.g. found 2 extra bins at receiving, 1 pallet short at FA03"></textarea>
+      </div>
+    </div>
+
+    <div class="drw-footer">
+      <button class="btn-drw btn-drw-clear" id="drw-clear">Clear</button>
+      <button class="btn-drw btn-drw-ghost" id="drw-cancel">Cancel</button>
+      <button class="btn-drw btn-drw-save" id="drw-save">✓ Save Entry</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   FRESH MATERIALS — hardcoded list (counted every M/W/F)
+   STUB: Could be pulled from a config table in Supabase:
+   await supabase.from('fresh_materials_config').select('*')
+══════════════════════════════════════════════════════ */
+const FRESH_MATERIALS = [
+  { id:'3305704', desc:'WHOLE FRESH POBLANO PEPPERS w/STEMS',  hint_lbs_per_pallet: 700  },
+  { id:'3307506', desc:'PEPPER BELL WHOLE GRN FRESH',          hint_lbs_per_pallet: 1500 },
+  { id:'3307509', desc:'PEPPER BELL WHOLE RED',                hint_lbs_per_pallet: 1500 },
+  { id:'3307515', desc:'TOMATILLO FRESH PEELED',               hint_lbs_per_pallet: 1100 },
+  { id:'3307518', desc:'BASIL FRESH',                          hint_lbs_per_pallet: 25   },
+  { id:'3307525', desc:'CILANTRO FRESH WHOLE STALKS',          hint_lbs_per_pallet: 1050 },
+  { id:'3307710', desc:'ONION RED FRESH WHOLE PEELED',         hint_lbs_per_pallet: 2000 },
+  { id:'3308356', desc:'TOMATOES ORGANIC FRESH ROMA WHOLE',    hint_lbs_per_pallet: 2000 },
+  { id:'3309009', desc:'FRESH TOMATO',                         hint_lbs_per_pallet: 2000 },
+  { id:'3309016', desc:'FRESH JALAPENO PEPPER, DESTEMMED',     hint_lbs_per_pallet: 1000 },
+  { id:'3309017', desc:'ANAHEIM, DESTEMMED, 720# AVG. BINS',   hint_lbs_per_pallet: 720  },
+  { id:'3309019', desc:'FRESH ONION, YELLOW WHOLE PEELED',     hint_lbs_per_pallet: 2000 },
+  { id:'3309138', desc:'CHILE HABANERO FRESH DESTEMMED',       hint_lbs_per_pallet: 500  },
+  { id:'3309139', desc:'CHILE GREEN SERRANO FRESH DESTEMMED',  hint_lbs_per_pallet: 700  },
+];
+
+const LS_FRESH  = 'cc_fresh_counts_v1';
+const LS_INV    = 'cc_inventory_v1';
+const readFresh = () => { try{return JSON.parse(localStorage.getItem(LS_FRESH))||[];}catch{return[];} };
+const writeFresh= v  => localStorage.setItem(LS_FRESH, JSON.stringify(v));
+const readInv   = () => { try{return JSON.parse(localStorage.getItem(LS_INV))||[];}catch{return[];} };
+
+/* ══════════════════════════════════════════════════════
+   SESSION FACTORY
+══════════════════════════════════════════════════════ */
+function todayStr() {
+  const d=new Date(); const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), dd=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${dd}`;
+}
+function createSession(dateStr, auditor) {
+  return {
+    id          : `FRESH-${dateStr}`,
+    date        : dateStr,
+    auditor     : auditor||'',
+    status      : 'in_progress',
+    created_at  : new Date().toISOString(),
+    submitted_at: null,
+    items       : FRESH_MATERIALS.map(m => ({
+      material_id : m.id,
+      description : m.desc,
+      total_lbs   : null,   // null = not yet counted
+      sap_ref     : null,   // sum of expected_qty from SAP for this material
+      sap_hu_count: 0,      // how many HUs SAP has for this material
+      notes       : '',
+      finds       : [],
+      counted     : false,
+    })),
+  };
+}
+function createFind() {
+  return {
+    id           : `f${Date.now()}${Math.random().toString(36).slice(2,5)}`,
+    location     : '',
+    batch_number : '',
+    hu_number    : '',
+    pallet_count : '',
+    lbs_per_pallet: '',
+    lbs          : '',
+    notes        : '',
+  };
+}
+
+/* ══════════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════════ */
+let S = {
+  currentSession : null,
+  editingIdx     : null,   // index into session.items
+  drawerFinds    : [],
+  histOpen       : false,
+};
+
+/* ══════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════ */
+(function init() {
+  const today      = todayStr();
+  const all        = readFresh();
+  const existing   = all.find(s => s.date === today);
+  // Read the shared auditor name (same key as scanner.html)
+  const savedName  = (localStorage.getItem('cc_auditor_name') || '').trim();
+
+  S.currentSession = existing || createSession(today, savedName);
+  if (!existing) { all.unshift(S.currentSession); writeFresh(all); }
+
+  // If session has no auditor but we have a saved name, apply it
+  if (!S.currentSession.auditor && savedName) {
+    S.currentSession.auditor = savedName;
+    writeFresh(all);
+  }
+
+  // Pre-fill the auditor input
+  document.getElementById('auditor-select').value = S.currentSession.auditor || '';
+
+  renderSessionHeader();
+  renderTable();
+  renderHistory();
+  document.getElementById('footer-date') && (document.getElementById('footer-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}));
+
+  // MWF indicator
+  const dow = new Date().getDay(); // 0=Sun,1=Mon,3=Wed,5=Fri
+  const isMWF = dow===1||dow===3||dow===5;
+  ['M','W','F'].forEach((d,i) => {
+    const pill = document.getElementById(`pill-${d}`);
+    const pillDow = [1,3,5][i];
+    if (dow === pillDow) { pill.classList.add('today'); }
+    else if ([1,3,5].includes(pillDow)) { pill.classList.add('count-day'); }
+    else { pill.classList.add('off'); }
+  });
+  const banner = document.getElementById('count-day-banner');
+  if (isMWF) { banner.className='count-day-banner cdb-active'; banner.textContent='Count Day'; }
+  else { banner.className='count-day-banner cdb-off'; banner.textContent='Not a Count Day'; }
+})();
+
+/* ══════════════════════════════════════════════════════
+   RENDER SESSION HEADER
+══════════════════════════════════════════════════════ */
+function renderSessionHeader() {
+  const s  = S.currentSession;
+  const dt = new Date(s.date + 'T12:00:00');
+  document.getElementById('sc-date').textContent =
+    dt.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  document.getElementById('sc-id').textContent = s.id +
+    (s.submitted_at ? ' · Submitted' : ' · In Progress');
+  document.getElementById('auditor-select').value = s.auditor || '';
+  const auditorDisplay = s.auditor || 'No name entered';
+  const counted = s.items.filter(i => i.counted).length;
+  const pct     = Math.round((counted / FRESH_MATERIALS.length) * 100);
+  document.getElementById('sp-fill').style.width  = pct + '%';
+  document.getElementById('sp-label').textContent = `${counted} / ${FRESH_MATERIALS.length}`;
+  document.getElementById('tb-sub').textContent =
+    `Mon · Wed · Fri  ·  ${dt.toLocaleDateString('en-US',{month:'short',day:'numeric'})}  ·  ${auditorDisplay}`;
+  document.getElementById('print-meta').textContent =
+    `Date: ${dt.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}  ·  Auditor: ${auditorDisplay}  ·  Session: ${s.id}`;
+}
+
+/* ══════════════════════════════════════════════════════
+   RENDER MAIN TABLE
+══════════════════════════════════════════════════════ */
+function renderTable() {
+  const tbody = document.getElementById('count-tbody');
+  const items = S.currentSession.items;
+  let grandTotal = 0, grandSAP = 0;
+
+  tbody.innerHTML = items.map((item, idx) => {
+    const counted  = item.counted;
+    const lbs      = item.total_lbs;
+    const sapRef   = item.sap_ref;
+    const dotCls   = !counted ? 'sd-empty' : (lbs===0?'sd-zero':'sd-done');
+    const btnCls   = !counted ? 'btn-count-add' : 'btn-count-edit';
+    const btnTxt   = !counted ? '+ Count' : '✎ Edit';
+
+    // Physical LBS cell
+    const lbsTxt  = !counted ? '' : (lbs===0 ? '-' : Number(lbs).toLocaleString());
+    const lbsCls  = !counted ? 'empty' : (lbs===0 ? 'zero' : '');
+
+    // Variance chip (only when both physical and SAP ref are available)
+    let varianceHtml = '';
+    if (counted && lbs !== null && sapRef !== null) {
+      const diff = lbs - sapRef;
+      if (diff === 0) {
+        varianceHtml = `<div class="td-variance var-match">✓ Match</div>`;
+      } else {
+        const cls  = diff > 0 ? 'var-over' : 'var-under';
+        const sign = diff > 0 ? '+' : '';
+        varianceHtml = `<div class="td-variance ${cls}">${sign}${Number(diff).toLocaleString()}</div>`;
+      }
+    }
+
+    // SAP ref cell
+    const sapTxt  = sapRef !== null ? Number(sapRef).toLocaleString() : '—';
+    const sapCls  = sapRef === null ? 'empty' : '';
+
+    if (lbs  && lbs  > 0) grandTotal += lbs;
+    if (sapRef !== null && sapRef > 0) grandSAP   += sapRef;
+
+    const findsSummary = buildFindsSummary(item);
+
+    return `<tr data-idx="${idx}" onclick="openDrawer(${idx})">
+      <td class="td-item"><span class="status-dot ${dotCls}" style="margin-right:7px"></span>${item.material_id}</td>
+      <td class="td-desc">${item.description}</td>
+      <td class="td-lbs ${sapCls}" style="opacity:.7">${sapTxt}</td>
+      <td class="td-lbs ${lbsCls}" style="text-align:right">
+        ${lbsTxt || (counted?'':'—')}
+        ${varianceHtml}
+      </td>
+      <td class="td-notes"><div class="notes-preview ${findsSummary?'has-data':''}">${escHtml(findsSummary || (item.notes ? item.notes : ''))}</div></td>
+      <td class="td-action"><button class="btn-count ${btnCls}" onclick="event.stopPropagation();openDrawer(${idx})">${btnTxt}</button></td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('grand-total').textContent =
+    grandTotal > 0 ? Number(grandTotal).toLocaleString() : '—';
+  document.getElementById('grand-sap-total').textContent =
+    grandSAP > 0 ? Number(grandSAP).toLocaleString() : '—';
+
+  renderSessionHeader();
+}
+
+function buildFindsSummary(item) {
+  if (!item.finds || !item.finds.length) return item.notes || '';
+  const parts = [];
+  const totalFinds = item.finds.length;
+  const locs  = item.finds.filter(f => f.location).map(f => f.location.split('-').pop());
+  const batches = item.finds.filter(f => f.batch_number).length;
+  const hus   = item.finds.filter(f => f.hu_number).length;
+  const pallets = item.finds.reduce((s, f) => s + (parseInt(f.pallet_count)||0), 0);
+  if (pallets > 0) parts.push(`${pallets} pallet${pallets!==1?'s':''}`);
+  if (batches > 0) parts.push(`${batches} batch${batches!==1?'es':''}`);
+  if (hus > 0) parts.push(`${hus} HU${hus!==1?'s':''}`);
+  if (locs.length) parts.push(locs.slice(0,3).join(', '));
+  const base = parts.join(' · ');
+  return item.notes ? (base ? base + ' — ' + item.notes : item.notes) : base;
+}
+
+/* ══════════════════════════════════════════════════════
+   ENTRY DRAWER — SAP-first verification flow
+══════════════════════════════════════════════════════ */
+let S_sapMode = 'batch'; // 'batch' | 'hu'
+
+function openDrawer(idx) {
+  const item    = S.currentSession.items[idx];
+  S.editingIdx  = idx;
+
+  const inv    = readInv();
+  const sapHUs = inv.filter(i => i.material_id === item.material_id);
+  const hasSAP = sapHUs.length > 0;
+
+  // Auto-populate SAP records if the item has never been worked on
+  const isVirgin = !item.finds.length ||
+    (item.finds.length === 1 && !item.finds[0].lbs &&
+     !item.finds[0].batch_number && !item.finds[0].hu_number && !item.finds[0].source);
+
+  if (hasSAP && isVirgin) {
+    S.drawerFinds = buildSapFinds(sapHUs, S_sapMode);
+  } else {
+    S.drawerFinds = JSON.parse(JSON.stringify(
+      item.finds.length ? item.finds : (hasSAP ? buildSapFinds(sapHUs, S_sapMode) : [createFind()])
+    ));
+  }
+
+  document.getElementById('drw-mat-id').textContent   = item.material_id;
+  document.getElementById('drw-mat-desc').textContent = item.description;
+  document.getElementById('drw-notes').value          = item.notes || '';
+
+  const modeBar = document.getElementById('drw-mode-bar');
+  if (modeBar) modeBar.style.display = hasSAP ? 'flex' : 'none';
+
+  renderDrawerFinds();
+  updateDrawerSummary();
+  document.getElementById('drawer-ov').classList.add('open');
+
+  setTimeout(() => {
+    const first = document.querySelector('.sc-lbs-inp');
+    if (first) first.focus();
+  }, 320);
+}
+
+function closeDrawer() {
+  document.getElementById('drawer-ov').classList.remove('open');
+  S.editingIdx  = null;
+  S.drawerFinds = [];
+}
+
+function switchSapMode(mode) {
+  if (mode === S_sapMode) return;
+  const hasData = S.drawerFinds.some(f => f.lbs !== '' && f.lbs !== null && f.lbs !== undefined);
+  if (hasData && !confirm('Switch grouping? SAP records will reload and any unsaved changes will be lost.')) return;
+  S_sapMode = mode;
+  document.getElementById('seg-batch').classList.toggle('active', mode === 'batch');
+  document.getElementById('seg-hu').classList.toggle('active', mode === 'hu');
+  const inv    = readInv();
+  const item   = S.currentSession.items[S.editingIdx];
+  const sapHUs = inv.filter(i => i.material_id === item.material_id);
+  const manual = S.drawerFinds.filter(f => f.source === 'manual');
+  S.drawerFinds = [...buildSapFinds(sapHUs, mode), ...manual];
+  renderDrawerFinds();
+  updateDrawerSummary();
+}
+
+/* ── Build SAP find objects ──────────────────────────── */
+function buildSapFinds(hus, mode) {
+  if (mode === 'batch') {
+    const batches = {};
+    hus.forEach(i => {
+      const b = i.batch_number || '';
+      if (!batches[b]) batches[b] = { qty: 0, hus: [], uom: i.uom || 'LB' };
+      batches[b].qty += parseFloat(i.expected_qty) || 0;
+      batches[b].hus.push(i);
+    });
+    return Object.entries(batches).map(([batchNum, data]) => {
+      const locs = [...new Set(data.hus.map(h => {
+        const bin = h.expected_bin || ''; const d = bin.indexOf('-');
+        return d >= 0 ? bin.slice(d + 1) : bin;
+      }))].filter(Boolean);
+      return { ...createFind(), source:'sap_batch', batch_number:batchNum,
+        location:locs.join(', '), sap_qty:data.qty, uom:data.uom,
+        hu_count:data.hus.length, lbs:'' };
+    });
+  } else {
+    return hus.map(i => {
+      const bin = i.expected_bin || ''; const d = bin.indexOf('-');
+      return { ...createFind(), source:'sap_hu', hu_number:i.hu_number,
+        batch_number:i.batch_number||'',
+        location:d>=0?bin.slice(d+1):bin,
+        sap_qty:parseFloat(i.expected_qty)||0, uom:i.uom||'LB', lbs:'' };
+    });
+  }
+}
+
+/* ── Render all cards ────────────────────────────────── */
+function renderDrawerFinds() {
+  const list = document.getElementById('finds-list');
+  if (!S.drawerFinds.length) { list.innerHTML = ''; return; }
+  list.innerHTML = S.drawerFinds.map(f =>
+    (f.source === 'sap_batch' || f.source === 'sap_hu')
+      ? renderSapCard(f) : renderManualCard(f)
+  ).join('');
+  updateVerifyPill();
+}
+
+function renderSapCard(f) {
+  const lbsNum  = (f.lbs !== '' && f.lbs !== null && f.lbs !== undefined) ? parseFloat(f.lbs) : null;
+  const hasVal  = lbsNum !== null && !isNaN(lbsNum);
+  const isMatch = hasVal && f.sap_qty != null && Math.abs(lbsNum - f.sap_qty) < 0.5;
+  const isNone  = hasVal && lbsNum === 0;
+  const isAdj   = hasVal && !isMatch && !isNone;
+  const stCls   = isMatch?'st-match':isNone?'st-none':isAdj?'st-adjust':'st-pending';
+
+  let chip = '';
+  if (isMatch) chip = '<span class="sc-status-chip scc-match">✓ Match</span>';
+  else if (isNone) chip = '<span class="sc-status-chip scc-none">Not found</span>';
+  else if (isAdj) {
+    const diff = lbsNum - f.sap_qty;
+    chip = `<span class="sc-status-chip scc-adjust">${diff>0?'+':''}${Number(diff).toLocaleString()}</span>`;
+  }
+
+  const label = f.source === 'sap_batch'
+    ? (f.batch_number ? `Batch ${f.batch_number}` : '(No batch)') + (f.hu_count > 1 ? ` · ${f.hu_count} HUs` : '')
+    : `HU ${f.hu_number}`;
+
+  const subParts = [];
+  if (f.source === 'sap_hu' && f.batch_number) subParts.push(`Batch ${f.batch_number}`);
+  if (f.location) subParts.push(`📍 ${f.location}`);
+
+  const sapTxt = f.sap_qty != null ? `${Number(f.sap_qty).toLocaleString()} ${f.uom||'LB'}` : '';
+
+  return `<div class="sap-card ${stCls}" data-find-id="${f.id}">
+    <div class="sc-hdr">
+      <div class="sc-main">
+        <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+          <span class="sc-label">${escHtml(label)}</span>${chip}
+        </div>
+        ${subParts.length ? `<div class="sc-sub">${escHtml(subParts.join('  '))}</div>` : ''}
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:6px;margin-left:8px">
+        <span class="sc-sap-qty">${escHtml(sapTxt)}</span>
+        <button class="sc-rm" onclick="removeFind('${f.id}')" title="Remove">✕</button>
+      </div>
+    </div>
+    <div class="sc-controls">
+      <div class="sc-lbs-wrap">
+        <input type="number" class="sc-lbs-inp${hasVal?' filled':''}"
+          value="${hasVal ? f.lbs : ''}"
+          placeholder="${f.sap_qty != null ? Number(f.sap_qty).toLocaleString() : 'LBS'}"
+          oninput="sapCardInput('${f.id}',this.value)"
+          inputmode="decimal" min="0" step="0.1"/>
+      </div>
+      <span class="sc-uom">${escHtml(f.uom||'LB')}</span>
+      <button class="btn-sc-match${isMatch?' active':''}" onclick="matchSapQty('${f.id}')">✓ Match</button>
+      <button class="btn-sc-none${isNone?' active':''}"  onclick="markNotFound('${f.id}')">None</button>
+    </div>
+  </div>`;
+}
+
+function renderManualCard(f) {
+  const calcLbs = f.pallet_count && f.lbs_per_pallet
+    ? `= ${(parseInt(f.pallet_count)*parseFloat(f.lbs_per_pallet)).toLocaleString()} LBS` : '';
+  const hint = (S.editingIdx !== null && FRESH_MATERIALS[S.editingIdx])
+    ? `~${FRESH_MATERIALS[S.editingIdx].hint_lbs_per_pallet}#/plt` : 'avg LBS';
+  return `<div class="manual-card" data-find-id="${f.id}">
+    <div class="manual-card-hdr">
+      <span class="manual-card-lbl">Unlisted find</span>
+      <button class="sc-rm" onclick="removeFind('${f.id}')">✕</button>
+    </div>
+    <div class="find-field">
+      <div class="ff-lbl">📍 Location</div>
+      <input type="text" class="ff-input" value="${escAttr(f.location)}"
+        placeholder="e.g. FA01A, PREPROOM"
+        onchange="updateFind('${f.id}','location',this.value)" autocapitalize="characters"/>
+    </div>
+    <div class="find-field">
+      <div class="ff-lbl">🏷 Batch</div>
+      <input type="text" class="ff-input" value="${escAttr(f.batch_number)}"
+        placeholder="e.g. 0000052512"
+        onchange="updateFind('${f.id}','batch_number',this.value)" autocapitalize="characters"/>
+    </div>
+    <div class="find-field">
+      <div class="ff-lbl">📦 HU (optional)</div>
+      <input type="text" class="ff-input" value="${escAttr(f.hu_number)}"
+        placeholder="e.g. 800081139"
+        onchange="updateFind('${f.id}','hu_number',this.value)" autocapitalize="characters"/>
+    </div>
+    <div class="find-field">
+      <div class="ff-lbl">⚖ LBS</div>
+      <input type="number" class="ff-input ff-input-lbs" value="${f.lbs}"
+        placeholder="Physical LBS"
+        oninput="updateFind('${f.id}','lbs',this.value)" min="0" step="0.1"/>
+    </div>
+    <div class="find-field span2">
+      <div class="ff-lbl" style="margin-bottom:3px">🔢 Pallets × LBS/plt</div>
+      <div class="pallet-row">
+        <div class="find-field"><div class="ff-lbl">Pallets</div>
+          <input type="number" class="ff-input" value="${f.pallet_count}"
+            placeholder="#" min="0" oninput="updateFind('${f.id}','pallet_count',this.value);calcPallets('${f.id}')"/></div>
+        <div class="find-field"><div class="ff-lbl">LBS/plt</div>
+          <input type="number" class="ff-input" value="${f.lbs_per_pallet}"
+            placeholder="${hint}"
+            oninput="updateFind('${f.id}','lbs_per_pallet',this.value);calcPallets('${f.id}')"/></div>
+        <div class="pallet-calc" id="calc-${f.id}">${calcLbs}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function getHint(idx) {
+  const mat = FRESH_MATERIALS[idx]; return mat ? `~${mat.hint_lbs_per_pallet}#/plt` : 'avg LBS';
+}
+
+/* ── SAP card interactions ───────────────────────────── */
+function sapCardInput(fid, val) {
+  updateFind(fid, 'lbs', val);
+  const f = S.drawerFinds.find(f => f.id === fid); if (!f) return;
+  const card = document.querySelector(`[data-find-id="${fid}"]`);
+  if (!card) return;
+  const lbsNum = parseFloat(val); const hasVal = val !== '' && !isNaN(lbsNum);
+  const inp = card.querySelector('.sc-lbs-inp');
+  if (inp) inp.classList.toggle('filled', hasVal);
+  const isMatch = hasVal && f.sap_qty != null && Math.abs(lbsNum - f.sap_qty) < 0.5;
+  const isNone  = hasVal && lbsNum === 0;
+  const isAdj   = hasVal && !isMatch && !isNone;
+  card.className = 'sap-card ' + (isMatch?'st-match':isNone?'st-none':isAdj?'st-adjust':'st-pending');
+  // Update chip inline to avoid full re-render
+  const chipEl = card.querySelector('.sc-status-chip');
+  let chipHtml = '';
+  if (isMatch) chipHtml = '<span class="sc-status-chip scc-match">✓ Match</span>';
+  else if (isNone) chipHtml = '<span class="sc-status-chip scc-none">Not found</span>';
+  else if (isAdj) { const diff=lbsNum-f.sap_qty; chipHtml=`<span class="sc-status-chip scc-adjust">${diff>0?'+':''}${Number(diff).toLocaleString()}</span>`; }
+  if (chipEl) chipEl.outerHTML = chipHtml;
+  else if (chipHtml) { const lbl=card.querySelector('.sc-label'); if(lbl) lbl.insertAdjacentHTML('afterend',chipHtml); }
+  updateDrawerSummary();
+  updateVerifyPill();
+}
+
+function matchSapQty(fid) {
+  const f = S.drawerFinds.find(f => f.id === fid); if (!f || f.sap_qty == null) return;
+  f.lbs = f.sap_qty;
+  const card = document.querySelector(`[data-find-id="${fid}"]`);
+  if (card) card.outerHTML = renderSapCard(f);
+  updateDrawerSummary(); updateVerifyPill();
+}
+
+function markNotFound(fid) {
+  const f = S.drawerFinds.find(f => f.id === fid); if (!f) return;
+  f.lbs = (f.lbs === 0 || f.lbs === '0') ? '' : 0;
+  const card = document.querySelector(`[data-find-id="${fid}"]`);
+  if (card) card.outerHTML = renderSapCard(f);
+  updateDrawerSummary(); updateVerifyPill();
+}
+
+function updateVerifyPill() {
+  const pill = document.getElementById('drw-verify-pill'); if (!pill) return;
+  const sap = S.drawerFinds.filter(f => f.source==='sap_batch'||f.source==='sap_hu');
+  const done = sap.filter(f => f.lbs!==''&&f.lbs!==null&&f.lbs!==undefined).length;
+  if (!sap.length) { pill.textContent=''; return; }
+  pill.textContent = `${done} / ${sap.length} verified`;
+  pill.className   = 'drw-verify-pill' + (done===sap.length?' all-done':'');
+}
+function removeFind(fid) {
+  S.drawerFinds = S.drawerFinds.filter(f => f.id !== fid);
+  if (!S.drawerFinds.length) S.drawerFinds.push(createFind());
+  renderDrawerFinds();
+  updateDrawerSummary();
+}
+
+function updateFind(fid, key, val) {
+  const f = S.drawerFinds.find(f => f.id === fid); if (!f) return;
+  f[key] = val;
+  // Update the LBS badge in the card header without full re-render
+  const card = document.querySelector(`[data-find-id="${fid}"]`);
+  if (card) {
+    const badge = card.querySelector('.find-lbs-badge');
+    if (badge) {
+      const lbs = key === 'lbs' ? val : f.lbs;
+      const display = lbs ? Number(lbs).toLocaleString() + ' LBS' : '';
+      badge.textContent = display || 'No LBS entered';
+      badge.className = `find-lbs-badge${display?'':' zero'}`;
+    }
+  }
+  updateDrawerSummary();
+}
+
+function calcPallets(fid) {
+  const f = S.drawerFinds.find(f => f.id === fid); if (!f) return;
+  const p = parseInt(f.pallet_count), w = parseFloat(f.lbs_per_pallet);
+  const el = document.getElementById(`calc-${fid}`); if (!el) return;
+  if (p > 0 && w > 0) {
+    const calc = p * w;
+    el.textContent = `= ${calc.toLocaleString()} LBS`;
+    // Auto-fill LBS field if it's empty
+    if (!f.lbs) {
+      f.lbs = calc;
+      const lbsInput = document.querySelector(`[data-find-id="${fid}"] .ff-input-lbs`);
+      if (lbsInput) lbsInput.value = calc;
+      updateFind(fid, 'lbs', calc);
+    }
+  } else { el.textContent = ''; }
+}
+
+/* ── Summary bar ────────────────────────────────────── */
+function updateDrawerSummary() {
+  const total = S.drawerFinds.reduce((s, f) => s + (parseFloat(f.lbs)||0), 0);
+  const count = S.drawerFinds.filter(f => parseFloat(f.lbs) > 0).length;
+  const item  = S.editingIdx !== null ? S.currentSession.items[S.editingIdx] : null;
+  const sapRef= item?.sap_ref ?? null;
+
+  const totalEl = document.getElementById('dsb-total');
+  const countEl = document.getElementById('dsb-finds-num');
+  const deltaEl = document.getElementById('dsb-delta');
+
+  if (total > 0) {
+    totalEl.innerHTML = `${total.toLocaleString()}<span class="dsb-unit">LBS</span>`;
+
+    // Show variance vs SAP reference (takes priority over last-session comparison)
+    if (sapRef !== null) {
+      const diff = total - sapRef;
+      const sign = diff > 0 ? '+' : '';
+      const cls  = diff > 0 ? 'up' : diff < 0 ? 'dn' : 'eq';
+      deltaEl.className   = `dsb-delta ${cls}`;
+      deltaEl.textContent = diff !== 0
+        ? `${sign}${diff.toLocaleString()} vs SAP (${sapRef.toLocaleString()} on-hand)`
+        : `Matches SAP on-hand (${sapRef.toLocaleString()})`;
+    } else {
+      // Fall back to last-session comparison if no SAP ref loaded
+      const prev = getPreviousSessionItem(S.editingIdx);
+      if (prev !== null) {
+        const diff = total - prev;
+        const sign = diff > 0 ? '+' : '';
+        const cls  = diff > 0 ? 'up' : diff < 0 ? 'dn' : 'eq';
+        deltaEl.className   = `dsb-delta ${cls}`;
+        deltaEl.textContent = diff !== 0
+          ? `${sign}${diff.toLocaleString()} vs last count (${prev.toLocaleString()})`
+          : `Same as last count`;
+      } else { deltaEl.textContent = ''; }
+    }
+  } else {
+    totalEl.innerHTML = `—<span class="dsb-unit">LBS</span>`;
+    if (sapRef !== null) {
+      deltaEl.className   = 'dsb-delta eq';
+      deltaEl.textContent = `SAP on-hand: ${sapRef.toLocaleString()} LBS across ${item?.sap_hu_count||0} HUs`;
+    } else { deltaEl.textContent = ''; }
+  }
+  countEl.textContent = count;
+}
+
+function getPreviousSessionItem(idx) {
+  const all  = readFresh();
+  const curr = S.currentSession.date;
+  const prev = all.filter(s => s.date < curr && s.status === 'submitted')
+                  .sort((a,b) => b.date.localeCompare(a.date))[0];
+  if (!prev || !prev.items) return null;
+  const item = prev.items[idx];
+  return (item && item.total_lbs != null) ? item.total_lbs : null;
+}
+
+/* ── Save / Cancel / Clear ──────────────────────────── */
+document.getElementById('btn-add-find').addEventListener('click', () => {
+  S.drawerFinds.push({ ...createFind(), source: 'manual' });
+  renderDrawerFinds();
+  updateDrawerSummary();
+  document.getElementById('drw-body').scrollTop = 9999;
+});
+
+document.getElementById('drw-save').addEventListener('click', () => {
+  if (S.editingIdx === null) return;
+
+  const finds    = S.drawerFinds.filter(f => parseFloat(f.lbs) > 0);
+  const notes    = document.getElementById('drw-notes').value.trim();
+  const total    = finds.reduce((s, f) => s + (parseFloat(f.lbs)||0), 0);
+
+  // If no finds entered but notes say something, still save with 0
+  const item       = S.currentSession.items[S.editingIdx];
+  item.finds       = S.drawerFinds; // keep all, including empty ones
+  item.notes       = notes;
+  item.total_lbs   = total > 0 ? total : (finds.length === 0 && notes ? 0 : total);
+  item.counted     = true;
+
+  saveCurrentSession();
+  renderTable();
+  closeDrawer();
+  toast(`${item.description.split(' ').slice(0,3).join(' ')} — ${total > 0 ? total.toLocaleString() + ' LBS' : 'Zero'} saved`, 'g');
+});
+
+document.getElementById('drw-cancel').addEventListener('click', closeDrawer);
+document.getElementById('drw-close').addEventListener('click', closeDrawer);
+document.getElementById('drawer-ov').addEventListener('click', e => {
+  if (e.target === document.getElementById('drawer-ov')) closeDrawer();
+});
+
+document.getElementById('drw-clear').addEventListener('click', () => {
+  if (!confirm('Clear this entry? All finds and notes will be removed.')) return;
+  const item     = S.currentSession.items[S.editingIdx];
+  item.finds     = []; item.notes = ''; item.total_lbs = null; item.counted = false;
+  saveCurrentSession();
+  renderTable();
+  closeDrawer();
+  toast('Entry cleared.', 'a');
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('drawer-ov').classList.contains('open')) closeDrawer();
+});
+
+/* ══════════════════════════════════════════════════════
+   AUDITOR SELECT
+══════════════════════════════════════════════════════ */
+document.getElementById('auditor-select').addEventListener('input', e => {
+  S.currentSession.auditor = e.target.value.trim();
+  if (S.currentSession.auditor) localStorage.setItem('cc_auditor_name', S.currentSession.auditor);
+  saveCurrentSession();
+  renderSessionHeader();
+});
+
+/* ══════════════════════════════════════════════════════
+   LOAD FROM SAP
+══════════════════════════════════════════════════════ */
+document.getElementById('btn-load-sap').addEventListener('click', () => {
+  const inv = readInv();
+  if (!inv.length) { toast('No SAP data loaded. Upload physical_stock.xlsx first.', 'a'); return; }
+
+  // ── What "Load from SAP" does ──────────────────────────────────────────
+  // It reads expected_qty (the SAP on-hand balance) for every HU of each
+  // fresh material and stores the total as sap_ref — a reference baseline
+  // the auditor can compare against their physical count.
+  //
+  // It does NOT mark items as "counted".  The auditor still walks the
+  // warehouse and enters what they physically find.  The variance column
+  // then shows (physical - SAP reference).
+  //
+  // Filter: use expected_qty from ALL inventory rows for this material,
+  // regardless of whether they've been audited (actual_qty may be null).
+  // ──────────────────────────────────────────────────────────────────────
+  let refLoaded = 0;
+  S.currentSession.items.forEach(item => {
+    const matches = inv.filter(i => i.material_id === item.material_id);
+    if (!matches.length) return;
+
+    // Sum expected_qty across all HUs of this material
+    const sapTotal  = matches.reduce((s, i) => s + (parseFloat(i.expected_qty) || 0), 0);
+    item.sap_ref      = sapTotal;
+    item.sap_hu_count = matches.length;
+
+    // Pre-fill finds from SAP so the auditor has a head start on locations/HUs.
+    // Only pre-fill if the auditor hasn't entered anything yet.
+    if (!item.counted && !item.finds.length) {
+      item.finds = matches
+        .filter(i => i.expected_qty > 0)
+        .map(i => ({
+          id           : `f-sap-${i.hu_number}`,
+          location     : i.expected_bin || '',
+          batch_number : i.batch_number || '',
+          hu_number    : i.hu_number,
+          pallet_count : '',
+          lbs_per_pallet: '',
+          lbs          : '',          // intentionally blank — auditor must verify
+          notes        : 'SAP record — verify physically',
+        }));
+    }
+    refLoaded++;
+  });
+
+  if (refLoaded === 0) {
+    toast('No matching materials found in the SAP export.', 'a');
+    return;
+  }
+  saveCurrentSession();
+  renderTable();
+  toast(`SAP reference loaded for ${refLoaded} material${refLoaded!==1?'s':''}. Enter physical counts to see variance.`, 'g');
+});
+
+/* ══════════════════════════════════════════════════════
+   MARK REMAINING AS ZERO
+══════════════════════════════════════════════════════ */
+document.getElementById('btn-mark-zeros').addEventListener('click', () => {
+  const uncounted = S.currentSession.items.filter(i => !i.counted);
+  if (!uncounted.length) { toast('All items already counted.', 'a'); return; }
+  if (!confirm(`Mark ${uncounted.length} uncounted item${uncounted.length!==1?'s':''} as zero?`)) return;
+  uncounted.forEach(i => { i.total_lbs = 0; i.counted = true; });
+  saveCurrentSession(); renderTable();
+  toast(`${uncounted.length} items marked as zero.`, 'a');
+});
+
+/* ══════════════════════════════════════════════════════
+   SUBMIT SESSION
+══════════════════════════════════════════════════════ */
+document.getElementById('btn-submit').addEventListener('click', () => {
+  const uncounted = S.currentSession.items.filter(i => !i.counted).length;
+  const msg = uncounted > 0
+    ? `${uncounted} item${uncounted!==1?'s':''} still uncounted. Submit anyway?`
+    : 'Submit this count session?';
+  if (!confirm(msg)) return;
+  // STUB: await supabase.from('fresh_count_sessions').insert({...S.currentSession})
+  S.currentSession.status       = 'submitted';
+  S.currentSession.submitted_at = new Date().toISOString();
+  saveCurrentSession();
+  renderSessionHeader();
+  renderHistory();
+  toast('Fresh count submitted ✓', 'g');
+});
+
+/* ══════════════════════════════════════════════════════
+   NEW SESSION
+══════════════════════════════════════════════════════ */
+document.getElementById('btn-new-session').addEventListener('click', () => {
+  if (S.currentSession.status === 'in_progress') {
+    if (!confirm('Start a new session? The current in-progress session will be saved.')) return;
+    saveCurrentSession();
+  }
+  const today    = todayStr();
+  const all      = readFresh();
+  const auditor  = document.getElementById('auditor-select').value;
+  // Make new session for today (append timestamp if one already exists for today)
+  const dateKey  = S.currentSession.date === today ? today : today;
+  const newSess  = createSession(dateKey, auditor);
+  newSess.id     = `FRESH-${today}-${Date.now().toString().slice(-4)}`;
+  all.unshift(newSess); writeFresh(all);
+  S.currentSession = newSess;
+  renderSessionHeader(); renderTable(); renderHistory();
+  toast('New fresh count session started.', 'g');
+});
+
+/* ══════════════════════════════════════════════════════
+   PRINT
+══════════════════════════════════════════════════════ */
+document.getElementById('btn-print').addEventListener('click', () => {
+  document.getElementById('print-meta').textContent =
+    `Date: ${document.getElementById('sc-date').textContent}  ·  Auditor: ${S.currentSession.auditor}  ·  Session: ${S.currentSession.id}`;
+  window.print();
+});
+
+/* ══════════════════════════════════════════════════════
+   EXPORT CSV
+══════════════════════════════════════════════════════ */
+document.getElementById('btn-export-csv').addEventListener('click', () => {
+  const s    = S.currentSession;
+  const rows = [
+    ['Session ID','Date','Auditor','Material ID','Description','Total LBS',
+     'Pallet Count','Batch Numbers','HU Numbers','Locations','Notes'],
+    ...s.items.map(item => {
+      const pallets  = item.finds.reduce((x, f) => x + (parseInt(f.pallet_count)||0), 0);
+      const batches  = item.finds.filter(f=>f.batch_number).map(f=>f.batch_number).join('; ');
+      const hus      = item.finds.filter(f=>f.hu_number).map(f=>f.hu_number).join('; ');
+      const locs     = item.finds.filter(f=>f.location).map(f=>f.location).join('; ');
+      return [s.id, s.date, s.auditor, item.material_id,
+        `"${item.description}"`,
+        item.total_lbs != null ? item.total_lbs : '',
+        pallets||'', `"${batches}"`, `"${hus}"`, `"${locs}"`, `"${item.notes||''}"`].join(',');
+    })
+  ];
+  const csv  = rows.join('\n');
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = `fresh_count_${s.date}.csv`; a.click(); URL.revokeObjectURL(a.href);
+  toast('CSV exported.','g');
+});
+
+/* ══════════════════════════════════════════════════════
+   HISTORY
+══════════════════════════════════════════════════════ */
+function renderHistory() {
+  const all  = readFresh();
+  const past = all.filter(s => s.id !== S.currentSession.id && s.date <= todayStr())
+                  .sort((a,b) => b.date.localeCompare(a.date));
+  const hc   = document.getElementById('hist-count-lbl');
+  hc.textContent = `(${past.length})`;
+  const grid = document.getElementById('hist-grid');
+  if (!past.length) { grid.innerHTML = '<div style="color:var(--t3);font-size:.84rem;">No previous sessions yet.</div>'; return; }
+  grid.innerHTML = past.slice(0,9).map(s => {
+    const counted  = s.items.filter(i=>i.counted).length;
+    const totalLbs = s.items.reduce((x,i)=>x+(i.total_lbs||0),0);
+    const pct      = Math.round((counted/FRESH_MATERIALS.length)*100);
+    const dt       = new Date(s.date+'T12:00:00');
+    return `<div class="hist-card" onclick="loadSession('${s.id}')">
+      <div class="hc-date">${dt.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}</div>
+      <div class="hc-meta">${s.auditor} · ${s.status==='submitted'?'Submitted':'In Progress'} · ${counted}/${FRESH_MATERIALS.length} items</div>
+      <div class="hc-total">${totalLbs>0?totalLbs.toLocaleString()+' LBS total':'No quantities entered'}</div>
+      <div class="hc-bar"><div class="hc-fill" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
+}
+
+function loadSession(sessionId) {
+  const all  = readFresh();
+  const sess = all.find(s => s.id === sessionId);
+  if (!sess) return;
+  if (sess.status === 'in_progress' && S.currentSession.status === 'in_progress') {
+    if (!confirm('Switch to this session? Current in-progress session will be saved.')) return;
+    saveCurrentSession();
+  }
+  S.currentSession = sess;
+  renderSessionHeader(); renderTable();
+  document.getElementById('auditor-select').value = sess.auditor || '';
+  toast(`Loaded session ${sess.id}`, 'g');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.getElementById('hist-hdr-toggle').addEventListener('click', () => {
+  S.histOpen = !S.histOpen;
+  document.getElementById('hist-content').style.display = S.histOpen ? 'block' : 'none';
+  document.getElementById('hist-chev').classList.toggle('open', S.histOpen);
+});
+
+/* ══════════════════════════════════════════════════════
+   PERSISTENCE
+   STUB: Replace saveCurrentSession() with Supabase upsert:
+   await supabase.from('fresh_count_sessions').upsert(S.currentSession)
+══════════════════════════════════════════════════════ */
+function saveCurrentSession() {
+  const all = readFresh();
+  const idx = all.findIndex(s => s.id === S.currentSession.id);
+  if (idx >= 0) all[idx] = S.currentSession; else all.unshift(S.currentSession);
+  writeFresh(all);
+}
+
+// Auto-save every 30s
+setInterval(() => { if (S.currentSession) saveCurrentSession(); }, 30000);
+
+/* ══════════════════════════════════════════════════════
+   UTILITIES
+══════════════════════════════════════════════════════ */
+function toast(msg, t='g') {
+  const w=document.getElementById('toast-wrap'), el=document.createElement('div');
+  el.className=`toast t-${t}`; el.innerHTML=`<div class="t-dot"></div><span>${msg}</span>`;
+  w.appendChild(el); setTimeout(()=>el.remove(),3200);
+}
+function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escAttr(s){ return String(s||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-wiring.js"></script>
+</body>
+</html>

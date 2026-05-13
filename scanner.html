@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Floor Audit — Plant 1730</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f8f9fc;--sf:#ffffff;--sf2:#f1f3f8;--sf3:#e8eaf0;
+  --bd:#e2e5ed;--tx:#0f172a;--t2:#475569;--t3:#94a3b8;
+  --acc:#1d4ed8;--acc-dim:#eff6ff;
+  --grn:#059669;--grn-bg:#f0fdf4;--grn-bd:#bbf7d0;
+  --red:#dc2626;--red-bg:#fff5f5;--red-bd:#fecaca;
+  --amb:#d97706;--amb-bg:#fffbeb;--amb-bd:#fde68a;
+  --cyn:#0891b2;--cyn-bg:#ecfeff;
+  --pur:#7c3aed;--pur-bg:#f5f3ff;
+  --r:14px;--r-sm:10px;--safe-b:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{height:100dvh}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);height:100dvh;overflow:hidden}
+button{font-family:inherit;border:none;cursor:pointer;-webkit-appearance:none;background:none}
+button:active{transform:scale(.96)}
+input,select,textarea{font-family:inherit;background:none;border:none;outline:none;color:var(--tx)}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* screens */
+.screen{display:none;flex-direction:column;height:100dvh;overflow:hidden}
+.screen.active{display:flex;animation:si .16s ease}
+@keyframes si{from{opacity:0}to{opacity:1}}
+
+/* toast */
+.toast{position:fixed;top:14px;left:50%;transform:translateX(-50%);
+  padding:9px 18px;border-radius:12px;font-size:12px;font-weight:700;
+  z-index:999;pointer-events:none;opacity:0;transition:opacity .25s;white-space:nowrap}
+.toast.show{opacity:1}
+.toast.green{background:var(--grn-bg);color:var(--grn);border:1px solid var(--grn-bd)}
+.toast.red  {background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}
+.toast.blue {background:var(--acc-dim);color:var(--acc);border:1px solid rgba(91,154,255,.25)}
+.toast.amber{background:var(--amb-bg);color:var(--amb);border:1px solid var(--amb-bd)}
+
+/* header */
+.hdr{display:flex;justify-content:space-between;align-items:center;
+  padding:11px 14px;background:var(--sf);border-bottom:1px solid var(--bd);flex-shrink:0;gap:8px}
+.hdr h1{font-size:15px;font-weight:800}
+.hdr-sub{font-size:10px;color:var(--t2);font-weight:600;margin-top:1px}
+.hdr-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.hdr-btn{background:var(--sf2);color:var(--t2);padding:7px 11px;border-radius:var(--r-sm);
+  font-size:10px;font-weight:700;white-space:nowrap;transition:all .13s;text-decoration:none;display:inline-flex;align-items:center}
+.hdr-btn:hover{background:var(--acc-dim);color:var(--acc)}
+
+/* ── SETUP ── */
+.setup-scroll{flex:1;overflow-y:auto;padding:14px 14px 110px;-webkit-overflow-scrolling:touch}
+.setup-scroll::-webkit-scrollbar{display:none}
+.stat-row{display:flex;gap:8px;margin-bottom:18px}
+.stat-box{flex:1;background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:12px 8px;text-align:center}
+.stat-val{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--acc)}
+.stat-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--t3);margin-top:3px}
+.sec-title{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);margin:18px 0 10px}
+.search-row{display:flex;gap:7px;margin-bottom:4px}
+.search-inp{flex:1;padding:11px 13px;border-radius:12px;background:var(--sf);border:1px solid var(--bd);
+  color:var(--acc);font-family:'JetBrains Mono',monospace;font-weight:700;font-size:14px;transition:border-color .13s}
+.search-inp:focus{border-color:var(--acc)}
+.search-btn{background:var(--acc);color:#fff;padding:0 16px;border-radius:12px;font-size:12px;font-weight:800}
+
+/* aisle grid */
+.aisle-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.grid-hdr,.grid-section-header{grid-column:1/-1;font-size:8px;font-weight:800;text-transform:uppercase;
+  letter-spacing:2px;color:var(--t3);padding:4px 2px 0;margin-top:6px;
+  border-top:1px solid var(--bd);display:flex;align-items:center;gap:8px}
+.grid-hdr:first-child,.grid-section-header:first-child{margin-top:0;border-top:none}
+.sh-line{flex:1;height:1px;background:var(--bd)}
+.aisle-btn{background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);
+  padding:0;text-align:center;position:relative;overflow:hidden;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:72px;transition:all .13s}
+.aisle-btn:hover{border-color:var(--acc);background:var(--acc-dim)}
+.aisle-btn:active{transform:scale(.93)}
+.aisle-btn.done   {border-color:var(--grn-bd);background:var(--grn-bg)}
+.aisle-btn.in-prog{border-color:var(--amb-bd);background:var(--amb-bg)}
+.aisle-btn.freezer{border-color:rgba(34,211,238,.2)}
+.aisle-btn.freezer:hover{border-color:var(--cyn);background:var(--cyn-bg)}
+.aisle-btn.freezer.done{border-color:rgba(34,211,238,.4);background:var(--cyn-bg)}
+.aisle-btn.freezer.in-prog{border-color:rgba(34,211,238,.3);background:rgba(34,211,238,.06)}
+.aisle-btn.other{border-color:rgba(167,139,250,.2)}
+.aisle-btn.other:hover{border-color:var(--pur);background:var(--pur-bg)}
+.a-letter{font-size:20px;font-weight:900;line-height:1}
+.a-count{font-size:8px;font-weight:700;color:var(--t3);margin-top:3px}
+.aisle-prog{position:absolute;bottom:0;left:0;height:3px;background:var(--acc);transition:width .4s}
+.aisle-btn.done   .aisle-prog{background:var(--grn)}
+.aisle-btn.in-prog .aisle-prog{background:var(--amb)}
+.setup-nav{position:fixed;bottom:0;left:0;right:0;display:flex;gap:6px;
+  padding:10px 14px calc(var(--safe-b) + 10px);
+  background:rgba(248,249,252,.97);backdrop-filter:blur(20px);border-top:1px solid var(--bd)}
+.nav-tab{flex:1;padding:13px 0;border-radius:12px;font-size:11px;font-weight:800;text-transform:uppercase;
+  background:var(--sf2);color:var(--t2);border:1.5px solid var(--bd);text-align:center;
+  text-decoration:none;display:flex;align-items:center;justify-content:center;transition:all .13s}
+.nav-tab.active,.nav-tab:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
+
+/* ── COUNTING ── */
+.phase-bar{display:flex;gap:2px;padding:10px 14px 0;background:var(--sf)}
+.phase-step{flex:1;height:4px;border-radius:2px;background:var(--sf3);transition:background .25s}
+.phase-step.active{background:var(--acc)}
+.phase-step.done  {background:var(--grn)}
+.phase-lbls{display:flex;justify-content:space-between;padding:4px 14px 10px;
+  font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;
+  color:var(--t3);background:var(--sf);border-bottom:1px solid var(--bd)}
+.phase-lbls span.active{color:var(--acc)}
+.phase-lbls span.done  {color:var(--grn)}
+.bin-nav{display:flex;gap:6px;padding:11px 14px;background:var(--sf);
+  border-bottom:1px solid var(--bd);flex-shrink:0;align-items:center}
+.nav-btn{width:48px;height:48px;border-radius:12px;background:var(--sf2);color:var(--t3);
+  font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:all .13s}
+.nav-btn:hover{background:var(--acc-dim);color:var(--acc)}
+.bin-inp{flex:1;padding:12px;background:var(--sf2);border:2px solid var(--bd);border-radius:12px;
+  font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;color:var(--acc);
+  text-transform:uppercase;text-align:center;transition:border-color .13s}
+.bin-inp:focus{border-color:var(--acc)}
+.bin-strip{display:flex;gap:3px;padding:8px 14px;overflow-x:auto;
+  background:var(--sf);scrollbar-width:none;flex-shrink:0;border-bottom:1px solid var(--bd)}
+.bin-strip::-webkit-scrollbar{display:none}
+.strip-dot{min-width:26px;height:26px;border-radius:7px;display:flex;align-items:center;
+  justify-content:center;font-size:8px;font-weight:800;background:var(--sf2);color:var(--t3);
+  flex-shrink:0;cursor:pointer;transition:all .13s}
+.strip-dot:hover{background:var(--acc-dim);color:var(--acc)}
+.strip-dot.cur {min-width:38px;font-size:10px;background:var(--acc);color:#fff;cursor:default}
+.strip-dot.done{background:var(--grn-bg);color:var(--grn);border:1px solid var(--grn-bd)}
+
+/* bin notes */
+.bnc-wrap{background:var(--sf);border-bottom:1px solid var(--bd);flex-shrink:0}
+.bnc-toggle{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;cursor:pointer}
+.bnc-left{display:flex;align-items:center;gap:7px;font-size:10px;font-weight:700;color:var(--t3)}
+.bnc-inds{display:flex;gap:4px}
+.bnc-ind{font-size:8px;font-weight:700;padding:2px 7px;border-radius:99px}
+.bnc-ind-note{background:var(--acc-dim);color:var(--acc);border:1px solid rgba(91,154,255,.3)}
+.bnc-ind-photo{background:var(--grn-bg);color:var(--grn);border:1px solid var(--grn-bd)}
+.bnc-chev{font-size:.7rem;color:var(--t3);transition:transform .2s}
+.bnc-chev.open{transform:rotate(180deg)}
+.bnc-body{display:none;padding:10px 14px 12px;border-top:1px solid var(--bd)}
+.bnc-body.open{display:block}
+.bnc-ta{width:100%;min-height:60px;resize:none;padding:9px 11px;border:1.5px solid var(--bd);
+  border-radius:var(--r-sm);font-size:.85rem;color:var(--tx);background:var(--sf2);
+  transition:border-color .13s;line-height:1.5}
+.bnc-ta:focus{border-color:var(--acc)}
+.bnc-ta::placeholder{color:var(--t3)}
+.bnc-photo-row{display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap}
+.btn-bnc-photo{height:34px;padding:0 12px;border-radius:var(--r-sm);font-size:.78rem;font-weight:700;
+  background:var(--sf3);color:var(--t2);border:1px solid var(--bd);display:flex;align-items:center;gap:5px}
+.btn-bnc-photo:hover{border-color:var(--acc);color:var(--acc)}
+.bnc-photo-prev{width:64px;height:64px;border-radius:var(--r-sm);object-fit:cover;
+  border:1.5px solid var(--bd);cursor:pointer;display:none}
+.btn-bnc-rm{display:none;height:34px;padding:0 10px;border-radius:var(--r-sm);font-size:.74rem;
+  font-weight:700;background:var(--red-bg);color:var(--red);border:1px solid var(--red-bd)}
+
+/* hu list */
+.hu-list{flex:1;overflow-y:auto;padding:12px 14px 200px;-webkit-overflow-scrolling:touch}
+.hu-list::-webkit-scrollbar{display:none}
+.hu-card{background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);
+  padding:14px;margin-bottom:8px;transition:border-color .18s,background .18s;animation:ci .16s ease both}
+.hu-card.confirmed{border-color:var(--grn-bd);background:var(--grn-bg)}
+.hu-card.missing  {border-color:var(--red-bd);opacity:.72;background:var(--red-bg)}
+.hu-card.adjusted {border-color:var(--amb-bd);background:var(--amb-bg)}
+.hu-card.extra    {border-color:rgba(34,211,238,.25);background:var(--cyn-bg)}
+@keyframes ci{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.hu-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px;flex-wrap:wrap}
+.hu-id{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;
+  color:var(--acc);background:var(--acc-dim);padding:3px 9px;border-radius:6px;flex-shrink:0}
+.hu-badges{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.hu-badge{font-size:8px;font-weight:800;text-transform:uppercase;padding:3px 8px;border-radius:5px;letter-spacing:.5px;white-space:nowrap}
+.hb-ok  {background:var(--grn-bg);color:var(--grn)}
+.hb-miss{background:var(--red-bg);color:var(--red)}
+.hb-adj {background:var(--amb-bg);color:var(--amb)}
+.hb-ext {background:var(--cyn-bg);color:var(--cyn)}
+.hb-st  {background:var(--pur-bg);color:var(--pur)}
+.hu-desc{font-size:14px;font-weight:800;color:var(--tx);margin-bottom:8px;line-height:1.3;letter-spacing:-.01em}
+.hu-meta{display:flex;gap:14px;margin-bottom:8px;flex-wrap:wrap}
+.m-item{display:flex;flex-direction:column}
+.m-lbl{font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t3)}
+.m-val{font-size:12px;font-weight:700;margin-top:2px}
+/* sled */
+.sled-row{display:inline-flex;align-items:center;gap:8px;padding:5px 11px;border-radius:20px;background:var(--sf2);margin-bottom:10px}
+.sled-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t3)}
+.sled-val{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700}
+.sled-val.expired {color:var(--red)} .sled-val.expiring{color:var(--amb)} .sled-val.valid{color:var(--grn)}
+.sled-badge{font-size:8px;font-weight:800;text-transform:uppercase;padding:2px 8px;border-radius:10px}
+.sled-badge.expired {background:var(--red-bg);color:var(--red)}
+.sled-badge.expiring{background:var(--amb-bg);color:var(--amb)}
+.sled-badge.valid   {background:var(--grn-bg);color:var(--grn)}
+/* qty row */
+.qty-row{display:flex;align-items:center;gap:6px;background:var(--sf2);border-radius:12px;padding:6px;margin-bottom:8px}
+.qty-btn{width:60px;height:60px;border-radius:12px;background:var(--sf3);font-size:26px;font-weight:900;
+  color:var(--t3);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .13s}
+.qty-btn.plus:hover {background:var(--acc-dim);color:var(--acc)}
+.qty-btn.minus:hover{background:var(--red-bg);color:var(--red)}
+.qty-input{flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:36px;
+  font-weight:700;color:var(--acc);min-width:0;-moz-appearance:textfield}
+.qty-input::-webkit-outer-spin-button,.qty-input::-webkit-inner-spin-button{-webkit-appearance:none}
+.qty-input::placeholder{color:var(--sf3)}
+.sap-hint{text-align:center;font-size:9px;font-weight:700;color:var(--t3);margin-bottom:8px}
+/* actions */
+.hu-actions{display:flex;gap:6px}
+.act-btn{flex:1;padding:15px 0;border-radius:12px;font-size:12px;font-weight:800;text-transform:uppercase;
+  min-height:52px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;transition:filter .13s}
+.act-btn:hover{filter:brightness(1.1)}
+.act-confirm{background:var(--grn);color:#fff}
+.act-miss{background:var(--sf3);color:var(--red);border:1.5px solid var(--red-bd) !important}
+.act-miss.active{background:var(--red);color:#fff;border-color:transparent !important}
+/* resolved */
+.resolved-row{display:flex;justify-content:space-between;align-items:center;
+  padding:10px 13px;background:var(--sf2);border-radius:var(--r-sm);margin-bottom:6px}
+.res-lbl{font-size:9px;font-weight:700;text-transform:uppercase;color:var(--t3)}
+.res-val{font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700}
+.res-val.match  {color:var(--grn)} .res-val.mismatch{color:var(--amb)}
+.undo-btn{width:100%;padding:7px;color:var(--t3);font-size:9px;font-weight:700;background:none;cursor:pointer}
+.undo-btn:hover{color:var(--amb)}
+.card-actions{display:flex;gap:6px;margin-top:8px}
+.note-btn{flex:1;padding:9px 11px;background:var(--sf2);border:1px solid var(--bd);
+  border-radius:var(--r-sm);font-size:10px;font-weight:700;color:var(--t3);text-align:left;cursor:pointer;transition:all .13s}
+.note-btn:hover{background:var(--acc-dim);border-color:var(--acc);color:var(--acc)}
+.note-btn.has{background:var(--amb-bg);border-color:var(--amb-bd);color:var(--amb)}
+.move-btn{padding:9px 13px;background:var(--pur-bg);border:1px solid rgba(167,139,250,.3);
+  border-radius:var(--r-sm);font-size:10px;font-weight:700;color:var(--pur);cursor:pointer;transition:filter .13s}
+.move-btn:hover{filter:brightness(1.2)}
+.empty-bin{text-align:center;padding:44px 20px;color:var(--t3)}
+.empty-bin .icon{font-size:36px;margin-bottom:10px;display:block;opacity:.5}
+.counted-banner{display:flex;align-items:center;gap:10px;padding:10px 13px;border-radius:var(--r);
+  margin-bottom:8px;background:var(--grn-bg);border:1px solid var(--grn-bd);animation:ci .16s ease}
+.counted-banner strong{font-size:11px;color:var(--grn);font-weight:800}
+.extra-form{background:var(--sf);border:1.5px dashed var(--bd);border-radius:var(--r);
+  padding:14px;margin-bottom:8px;animation:ci .16s ease}
+.extra-form h3{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--cyn);margin-bottom:10px}
+.field{width:100%;padding:12px 13px;background:var(--sf2);border:1.5px solid var(--bd);
+  border-radius:12px;font-size:14px;font-weight:600;color:var(--tx);margin-bottom:6px;transition:border-color .13s}
+.field:focus{border-color:var(--acc)}
+.field::placeholder{color:var(--t3)}
+.field-row{display:flex;gap:6px}
+
+/* bottom bar */
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;
+  padding:10px 14px calc(var(--safe-b) + 10px);
+  background:rgba(248,249,252,.97);backdrop-filter:blur(20px);border-top:1px solid var(--bd);z-index:50}
+.bottom-row{display:flex;gap:6px;margin-bottom:7px}
+.btn-sec{flex:1;padding:13px 0;border-radius:12px;font-size:11px;font-weight:800;text-transform:uppercase;
+  background:var(--sf2);color:var(--t2);border:1.5px solid var(--bd);text-align:center;min-height:46px;
+  cursor:pointer;transition:all .13s}
+.btn-sec:hover{background:var(--acc-dim);border-color:var(--acc);color:var(--acc)}
+.btn-pri{width:100%;padding:16px 0;border-radius:var(--r);font-size:14px;font-weight:800;text-transform:uppercase;
+  background:var(--grn);color:#fff;min-height:56px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;border:none;transition:filter .13s}
+.btn-pri:hover{filter:brightness(1.1)}
+.btn-pri.disabled{background:var(--sf3);color:var(--t3);pointer-events:none}
+
+/* move modal */
+.modal-ov{position:fixed;inset:0;background:rgba(15,23,42,.45);backdrop-filter:blur(4px);
+  z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-ov.open{display:flex}
+.move-box{background:var(--sf);width:100%;max-width:380px;padding:20px;
+  border-radius:var(--r);border:1px solid var(--pur);animation:ci .2s ease}
+.move-box h3{color:var(--pur);font-size:15px;font-weight:800;margin-bottom:14px}
+.modal-info{margin:8px 0 14px;font-size:11px;color:var(--t2);background:var(--sf2);padding:8px;border-radius:8px}
+.modal-row{display:flex;gap:8px}
+.modal-actions{display:flex;gap:8px;margin-top:18px}
+
+/* name modal */
+.nm-ov{display:none;position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:300;
+  align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+.nm-ov.open{display:flex}
+.nm-sheet{background:var(--sf);width:100%;max-width:500px;border-radius:20px 20px 0 0;
+  padding:20px 20px calc(20px + var(--safe-b));border-top:2px solid var(--acc)}
+.nm-handle{width:36px;height:4px;border-radius:99px;background:var(--sf3);margin:0 auto 16px}
+.nm-title{font-size:1.1rem;font-weight:800;color:var(--tx);margin-bottom:4px;letter-spacing:-.02em}
+.nm-sub{font-size:.82rem;color:var(--t2);margin-bottom:18px;line-height:1.5}
+.nm-input{width:100%;height:52px;padding:0 16px;border:2px solid var(--bd);border-radius:12px;
+  font-size:1rem;font-weight:700;color:var(--tx);background:var(--sf2);transition:border-color .14s}
+.nm-input:focus{border-color:var(--acc)}
+.nm-input::placeholder{color:var(--t3);font-weight:400}
+.nm-btn{width:100%;height:52px;background:var(--acc);color:#fff;border-radius:12px;
+  font-size:1rem;font-weight:800;margin-top:11px;display:flex;align-items:center;justify-content:center}
+.nm-btn:active{transform:scale(.98)}
+.nm-btn:disabled{opacity:.35;pointer-events:none}
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast"><span id="toast-txt"></span></div>
+
+<!-- NAME MODAL -->
+<div class="nm-ov" id="nm-ov">
+  <div class="nm-sheet">
+    <div class="nm-handle"></div>
+    <div class="nm-title">Who's counting?</div>
+    <div class="nm-sub">Your name attaches to every scan. Saved on this device — enter it once.</div>
+    <input type="text" id="nm-input" class="nm-input" placeholder="Enter your full name"
+           autocomplete="name" autocorrect="off" spellcheck="false" maxlength="60"/>
+    <button class="nm-btn" id="nm-btn" disabled>Start Auditing →</button>
+  </div>
+</div>
+
+<!-- MOVE MODAL -->
+<div class="modal-ov" id="modal-move">
+  <div class="move-box">
+    <h3>🔄 Move Item</h3>
+    <label class="m-lbl" style="display:block;margin-bottom:5px">HU Number</label>
+    <input type="text" id="qm-hu" class="field mono" readonly>
+    <div class="modal-info" id="qm-info"></div>
+    <div class="modal-row">
+      <div style="flex:2">
+        <label class="m-lbl" style="display:block;margin-bottom:5px">Found In Bin</label>
+        <input type="text" id="qm-bin" class="field mono" placeholder="e.g. WA12A" style="text-transform:uppercase">
+      </div>
+      <div style="flex:1">
+        <label class="m-lbl" style="display:block;margin-bottom:5px">Actual Qty</label>
+        <input type="number" inputmode="numeric" id="qm-qty" class="field mono" placeholder="Qty">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-sec" onclick="document.getElementById('modal-move').classList.remove('open')" style="flex:1">Cancel</button>
+      <button class="act-btn act-confirm" onclick="submitMove()" style="flex:2">Log Movement</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ SCREEN 1: SETUP ═══════════ -->
+<div id="screen-setup" class="screen active">
+  <div class="hdr">
+    <div>
+      <h1>Floor Audit</h1>
+      <div class="hdr-sub" id="stat-progress">Plant 1730</div>
+    </div>
+    <div class="hdr-right">
+      <button class="hdr-btn" onclick="openNameModal(true)">
+        👤 <span id="name-display">Set Name</span>
+      </button>
+      <a class="hdr-btn" href="index.html">← Hub</a>
+    </div>
+  </div>
+
+  <div class="setup-scroll">
+    <div class="stat-row">
+      <div class="stat-box"><div class="stat-val" id="stat-loaded">—</div><div class="stat-lbl">SAP Items</div></div>
+      <div class="stat-box"><div class="stat-val" id="stat-bins">—</div><div class="stat-lbl">SAP Bins</div></div>
+      <div class="stat-box"><div class="stat-val" id="stat-done">0</div><div class="stat-lbl">Done Today</div></div>
+    </div>
+    <div class="sec-title">Count by Product</div>
+    <div class="search-row">
+      <input type="text" id="product-search" class="search-inp mono" placeholder="Material #…"
+             autocorrect="off" autocapitalize="characters"/>
+      <button class="search-btn" onclick="searchProduct()">Go</button>
+    </div>
+    <div class="sec-title">Select Area</div>
+    <div class="aisle-grid" id="aisle-grid">
+      <div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--t3)">
+        <div style="font-size:32px;margin-bottom:10px">📤</div>
+        <div style="font-weight:700;margin-bottom:4px">No SAP data loaded</div>
+        <div style="font-size:11px">Upload physical_stock.xlsx from the Monitor page</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="setup-nav">
+    <span class="nav-tab active">Count</span>
+    <a class="nav-tab" href="index.html">Hub</a>
+  </div>
+</div>
+
+<!-- ═══════════ SCREEN 2: COUNTING ═══════════ -->
+<div id="screen-counting" class="screen">
+  <div class="hdr">
+    <button class="hdr-btn" onclick="backToSetup()">← Back</button>
+    <div style="flex:1;text-align:center">
+      <h1 id="count-title">—</h1>
+      <div class="hdr-sub" id="count-sub"></div>
+    </div>
+    <div style="width:60px"></div>
+  </div>
+
+  <div class="phase-bar">
+    <div class="phase-step" id="ph1"></div>
+    <div class="phase-step" id="ph2"></div>
+    <div class="phase-step" id="ph3"></div>
+  </div>
+  <div class="phase-lbls">
+    <span id="phl1">Check HUs</span>
+    <span id="phl2">Extras</span>
+    <span id="phl3">Finalize</span>
+  </div>
+
+  <div class="bin-nav">
+    <button class="nav-btn" onclick="stepBin(-1)">◀</button>
+    <input type="text" class="bin-inp" id="bin-inp"
+           placeholder="SCAN BIN…" autocorrect="off" autocapitalize="characters"/>
+    <button class="nav-btn" onclick="stepBin(1)">▶</button>
+  </div>
+
+  <div class="bin-strip" id="bin-strip"></div>
+
+  <div class="bnc-wrap">
+    <div class="bnc-toggle" id="bnc-toggle">
+      <div class="bnc-left">
+        📝 Bin Notes &amp; Photo
+        <div class="bnc-inds" id="bnc-inds"></div>
+      </div>
+      <span class="bnc-chev" id="bnc-chev">▼</span>
+    </div>
+    <div class="bnc-body" id="bnc-body">
+      <textarea class="bnc-ta" id="bnc-notes" rows="2"
+        placeholder="e.g. wrap damaged, product on floor, label missing…"
+        oninput="saveBinNotes()"></textarea>
+      <div class="bnc-photo-row">
+        <input type="file" id="bnc-photo-inp" accept="image/*" capture="environment" style="display:none"/>
+        <button class="btn-bnc-photo" id="btn-bnc-photo">📷 Bin Photo</button>
+        <img id="bnc-photo-prev" class="bnc-photo-prev" alt="bin photo"/>
+        <button class="btn-bnc-rm" id="btn-bnc-rm">Remove</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="hu-list" id="hu-list"></div>
+
+  <div class="bottom-bar">
+    <div class="bottom-row">
+      <button class="btn-sec" onclick="toggleExtra()">＋ Found Extra</button>
+      <button class="btn-sec" id="btn-confirm-all" onclick="confirmAll()">✓ All</button>
+    </div>
+    <button class="btn-pri" id="btn-finalize" onclick="finalizeBin()">Finalize &amp; Next →</button>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ══════════════════════════════════════════════
+   BIN MAP  (complete plant)
+══════════════════════════════════════════════ */
+const ALL_BINS = {
+  FA:["FA01A","FA01B","FA02A","FA02B","FA03A","FA03B","FA04A","FA04B","FA05A","FA05B","FA06A","FA06B","FA07A","FA07B","FA08A","FA08B"],
+  FB:["FB01A","FB01B","FB02A","FB02B","FB03A","FB03B","FB04A","FB04B","FB05A","FB05B","FB06A","FB06B","FB07A","FB07B","FB08A","FB08B"],
+  FC:["FC01A","FC01B","FC02A","FC02B","FC03A","FC03B","FC04A","FC04B","FC05A","FC05B","FC06A","FC06B","FC07A","FC07B","FC08A","FC08B"],
+  FD:["FD01A","FD01B","FD02A","FD02B","FD03A","FD03B","FD04A","FD04B","FD05A","FD05B","FD06A","FD06B","FD07A","FD07B","FD08A","FD08B","FD09A","FD09B","FD10A","FD10B"],
+  FZ:["FZ100"],
+  WA:["WA01A","WA01B","WA02A","WA02B","WA03A","WA03B","WA04A","WA04B","WA05A","WA05B","WA06A","WA06B","WA07A","WA07B","WA08A","WA08B","WA09A","WA09B","WA100","WA10A","WA10B","WA11A","WA11B","WA12A","WA12B","WA13A","WA13B","WA14A","WA14B","WA15A","WA15B","WA16A","WA16B","WA17A","WA17B","WA18A","WA18B","WA19A","WA20A","WA20B","WA21A","WA21B","WA22B","WA22C","WA23B","WA24B","WA25B","WA26A","WA26B","WA26C","WA27A","WA27B","WA28A","WA28B","WA28C","WA29A","WA29B","WA29C","WA30A","WA30B","WA30C","WA31A","WA31B","WA31C","WA32A","WA32B","WA32C","WA33A","WA33B","WA33C","WA34A","WA34B","WA34C","WA35A","WA35B","WA35C","WA36A","WA36B","WA36C"],
+  WB:["WB00A","WB00B","WB00C","WB01A","WB01B","WB01C","WB02A","WB02B","WB02C","WB03A","WB03B","WB03C","WB04A","WB04B","WB04C","WB05A","WB05B","WB05C","WB06A","WB06B","WB06C","WB07A","WB07B","WB07C","WB08A","WB08B","WB08C","WB09A","WB09B","WB09C","WB100","WB10A","WB10B","WB10C","WB11A","WB11B","WB11C","WB12A","WB12B","WB12C","WB13A","WB13B","WB13C","WB14A","WB14B","WB14C","WB15A","WB15B","WB15C","WB16A","WB16B","WB16C","WB17A","WB17B","WB17C","WB18A","WB18B","WB18C","WB19A","WB19B","WB20A","WB20B","WB21A","WB21B","WB21C","WB22A","WB22B","WB22C","WB23B","WB24B","WB25B","WB26A","WB26B","WB26C","WB27A","WB27B","WB27C","WB28A","WB28B","WB28C","WB29A","WB29B","WB29C","WB30A","WB30B","WB30C","WB31A","WB31B","WB31C","WB32A","WB32B","WB32C","WB33A","WB33B","WB33C","WB34A","WB34B","WB34C","WB35A","WB35B","WB35C","WB36A","WB36B","WB36C","WB37A","WB37B","WB37C","WB38A","WB38B","WB38C"],
+  WC:["WC00A","WC00B","WC00C","WC01A","WC01B","WC01C","WC02A","WC02B","WC02C","WC03A","WC03B","WC03C","WC04A","WC04B","WC04C","WC05A","WC05B","WC05C","WC06A","WC06B","WC06C","WC07A","WC07B","WC07C","WC08A","WC08B","WC08C","WC09A","WC09B","WC09C","WC100","WC10A","WC10B","WC10C","WC11A","WC11B","WC11C","WC12A","WC12B","WC12C","WC13A","WC13B","WC13C","WC14A","WC14B","WC14C","WC15A","WC15B","WC15C","WC16A","WC16B","WC16C","WC17A","WC17B","WC17C","WC18A","WC18B","WC18C","WC19A","WC19B","WC19C","WC20A","WC20B","WC20C","WC21A","WC21B","WC21C","WC22A","WC22B","WC22C","WC23B","WC24B","WC25B","WC26A","WC26B","WC26C","WC27A","WC27B","WC27C","WC28A","WC28B","WC28C","WC29A","WC29B","WC29C","WC30A","WC30B","WC30C","WC31A","WC31B","WC31C","WC32A","WC32B","WC32C","WC33A","WC33B","WC33C","WC34A","WC34B","WC34C","WC35A","WC35B","WC35C","WC36A","WC36B","WC36C","WC37A","WC37B","WC37C","WC38A","WC38B","WC38C"],
+  WD:["WD00A","WD00B","WD00C","WD01A","WD01B","WD01C","WD02A","WD02B","WD02C","WD03A","WD03B","WD03C","WD04A","WD04B","WD04C","WD05A","WD05B","WD05C","WD06A","WD06B","WD06C","WD07A","WD07B","WD07C","WD08A","WD08B","WD08C","WD09A","WD09B","WD09C","WD100","WD10A","WD10B","WD10C","WD11A","WD11B","WD11C","WD12A","WD12B","WD12C","WD13A","WD13B","WD13C","WD14A","WD14B","WD14C","WD15A","WD15B","WD15C","WD16A","WD16B","WD16C","WD17A","WD17B","WD17C","WD18A","WD18B","WD18C","WD19A","WD19B","WD19C","WD20A","WD20B","WD20C","WD21A","WD21B","WD21C","WD22A","WD22B","WD22C","WD23B","WD24B","WD25B","WD26A","WD26B","WD26C","WD27A","WD27B","WD27C","WD28A","WD28B","WD28C","WD29A","WD29B","WD29C","WD30A","WD30B","WD30C","WD31A","WD31B","WD31C","WD32A","WD32B","WD32C","WD33A","WD33B","WD33C","WD34A","WD34B","WD34C","WD35A","WD35B","WD35C","WD36A","WD36B","WD36C","WD37A","WD37B","WD37C","WD38A","WD38B","WD38C"],
+  WE:["WE00A","WE00B","WE00C","WE01A","WE01B","WE01C","WE02A","WE02B","WE02C","WE03A","WE03B","WE03C","WE04A","WE04B","WE04C","WE05A","WE05B","WE05C","WE06A","WE06B","WE06C","WE07A","WE07B","WE07C","WE08A","WE08B","WE08C","WE09A","WE09B","WE09C","WE100","WE10A","WE10B","WE10C","WE11A","WE11B","WE11C","WE12A","WE12B","WE12C","WE13A","WE13B","WE13C","WE14A","WE14B","WE14C","WE15A","WE15B","WE15C","WE16A","WE16B","WE16C","WE17A","WE17B","WE17C","WE18A","WE18B","WE18C","WE19A","WE19B","WE19C","WE20A","WE20B","WE20C","WE21A","WE21B","WE21C","WE22A","WE22B","WE22C","WE23B","WE24B","WE25B","WE26A","WE26B","WE26C","WE27A","WE27B","WE27C","WE28A","WE28B","WE28C","WE29A","WE29B","WE29C","WE30A","WE30B","WE30C","WE31A","WE31B","WE31C","WE32A","WE32B","WE32C","WE33A","WE33B","WE33C","WE34A","WE34B","WE34C","WE35A","WE35B","WE35C","WE36A","WE36B","WE36C","WE37A","WE37B","WE37C","WE38A","WE38B","WE38C"],
+  WF:["WF00A","WF00B","WF00C","WF01A","WF01B","WF01C","WF02A","WF02B","WF02C","WF03A","WF03B","WF03C","WF04A","WF04B","WF04C","WF05A","WF05B","WF05C","WF06A","WF06B","WF06C","WF07A","WF07B","WF07C","WF08A","WF08B","WF08C","WF09A","WF09B","WF09C","WF100","WF10A","WF10B","WF10C","WF11A","WF11B","WF11C","WF12A","WF12B","WF12C","WF13A","WF13B","WF13C","WF14A","WF14B","WF14C","WF15A","WF15B","WF15C","WF16A","WF16B","WF16C","WF17A","WF17B","WF17C","WF18A","WF18B","WF18C","WF19A","WF19B","WF20A","WF20B","WF21A","WF21B","WF21C","WF22A","WF22B","WF22C","WF23B","WF24B","WF25B","WF26A","WF26B","WF27A","WF27B","WF28A","WF28B","WF28C","WF29A","WF29B","WF29C","WF30A","WF30B","WF30C","WF31A","WF31B","WF31C","WF32A","WF32B","WF32C","WF33A","WF33B","WF33C","WF34A","WF34B","WF34C","WF35A","WF35B","WF35C","WF36A","WF36B","WF36C","WF37A","WF37B","WF37C","WF38A","WF38B","WF38C"],
+  WG:["WG00A","WG00B","WG00C","WG01A","WG01B","WG01C","WG02A","WG02B","WG02C","WG03A","WG03B","WG03C","WG04A","WG04B","WG04C","WG05A","WG05B","WG05C","WG06A","WG06B","WG06C","WG07A","WG07B","WG07C","WG08A","WG08B","WG08C","WG09A","WG09B","WG09C","WG100","WG10A","WG10B","WG10C","WG11A","WG11B","WG11C","WG12A","WG12B","WG12C","WG13A","WG13B","WG13C","WG14A","WG14B","WG14C","WG15A","WG15B","WG15C","WG16A","WG16B","WG16C","WG17A","WG17B","WG18A","WG18B","WG19A","WG19B","WG20A","WG20B","WG21A","WG21B","WG22A","WG22B","WG23B","WG24B","WG25B","WG26A","WG26B","WG27A","WG27B","WG28A","WG28B","WG28C","WG29A","WG29B","WG29C","WG30A","WG30B","WG30C","WG31A","WG31B","WG31C","WG32A","WG32B","WG32C","WG33A","WG33B","WG33C","WG34A","WG34B","WG34C","WG35A","WG35B","WG35C","WG36A","WG36B","WG36C","WG37A","WG37B","WG37C","WG38A","WG38B","WG38C"],
+  WH:["WH01A","WH01B","WH01C","WH02A","WH02B","WH02C","WH03A","WH03B","WH03C","WH04A","WH04B","WH04C","WH05A","WH05B","WH05C","WH06A","WH06B","WH06C","WH07A","WH07B","WH07C","WH08A","WH08B","WH08C","WH09A","WH09B","WH09C","WH100","WH10A","WH10B","WH10C","WH11A","WH11B","WH11C","WH12A","WH12B","WH12C","WH13A","WH13B","WH13C","WH14A","WH14B","WH14C","WH15A","WH15B","WH15C","WH16A","WH16B","WH16C","WH17A","WH17B","WH17C","WH18A","WH18B","WH18C","WH19A","WH19B","WH20A","WH20B","WH21A","WH21B","WH22A","WH22B","WH23B","WH24B","WH25B","WH26A","WH26B","WH26C","WH27A","WH27B","WH27C","WH28A","WH28B","WH28C","WH29A","WH29B","WH29C","WH30A","WH30B","WH30C","WH31A","WH31B","WH31C","WH32A","WH32B","WH32C","WH33A","WH33B","WH33C","WH34A","WH34B","WH34C","WH35A","WH35B","WH35C","WH36A","WH36B","WH36C","WH37A","WH37B","WH37C","WH38A","WH38B","WH38C"],
+  WJ:["WJ01A","WJ01B","WJ01C","WJ02A","WJ02B","WJ02C","WJ03A","WJ03B","WJ03C","WJ04A","WJ04B","WJ04C","WJ05A","WJ05B","WJ05C","WJ06A","WJ06B","WJ06C","WJ07A","WJ07B","WJ07C","WJ08A","WJ08B","WJ08C","WJ09A","WJ09B","WJ09C","WJ100","WJ10A","WJ10B","WJ10C","WJ11A","WJ11B","WJ11C","WJ12A","WJ12B","WJ12C","WJ13A","WJ13B","WJ13C","WJ14A","WJ14B","WJ14C","WJ15A","WJ15B","WJ15C","WJ16A","WJ16B","WJ16C","WJ17A","WJ17B","WJ17C","WJ18A","WJ18B","WJ18C","WJ19A","WJ19B","WJ19C","WJ20A","WJ20B","WJ20C","WJ21A","WJ21B","WJ22A","WJ22B","WJ26A","WJ26B","WJ26C","WJ27A","WJ27B","WJ27C","WJ28A","WJ28B","WJ28C","WJ29A","WJ29B","WJ29C","WJ30A","WJ30B","WJ30C","WJ31A","WJ31B","WJ31C","WJ32A","WJ32B","WJ32C","WJ33A","WJ33B","WJ33C","WJ34A","WJ34B","WJ34C","WJ35A","WJ35B","WJ35C","WJ36A","WJ36B","WJ36C","WJ37A","WJ37B","WJ37C","WJ38A","WJ38B","WJ38C"],
+  WK:["WK00A","WK00B","WK00C","WK01A","WK01B","WK01C","WK02A","WK02B","WK02C","WK03A","WK03B","WK03C","WK04A","WK04B","WK04C","WK05A","WK05B","WK05C","WK06A","WK06B","WK06C","WK07A","WK07B","WK07C","WK08A","WK08B","WK08C","WK09A","WK09B","WK09C","WK100","WK10A","WK10B","WK10C","WK11A","WK11B","WK11C","WK12A","WK12B","WK12C","WK13A","WK13B","WK13C","WK14A","WK14B","WK14C","WK15A","WK15B","WK15C","WK16A","WK16B","WK16C","WK17A","WK17B","WK17C","WK18A","WK18B","WK18C","WK19A","WK19B","WK19C","WK20A","WK20B","WK20C","WK21A","WK21B","WK21C","WK22A","WK22B","WK22C","WK23A","WK23B","WK23C","WK24A","WK24B","WK24C","WK25A","WK25B","WK25C","WK26A","WK26B","WK26C","WK27A","WK27B","WK27C","WK28A","WK28B","WK28C","WK29A","WK29B","WK29C","WK30A","WK30B","WK30C","WK31A","WK31B","WK31C","WK32A","WK32B","WK32C","WK33A","WK33B","WK33C","WK34A","WK34B","WK34C"],
+  WL:["WL00A","WL00B","WL00C","WL01A","WL01B","WL01C","WL02A","WL02B","WL02C","WL03A","WL03B","WL03C","WL04A","WL04B","WL04C","WL05A","WL05B","WL05C","WL06A","WL06B","WL06C","WL07A","WL07B","WL07C","WL08A","WL08B","WL08C","WL09A","WL09B","WL09C","WL100","WL10A","WL10B","WL10C","WL11A","WL11B","WL11C","WL12A","WL12B","WL12C","WL13A","WL13B","WL13C","WL14A","WL14B","WL14C","WL15A","WL15B","WL15C","WL16A","WL16B","WL16C","WL17A","WL17B","WL17C","WL18A","WL18B","WL18C","WL19A","WL19B","WL19C","WL20A","WL20B","WL20C","WL21A","WL21B","WL21C","WL22A","WL22B","WL22C","WL23A","WL23B","WL23C","WL24A","WL24B","WL24C","WL25A","WL25B","WL25C","WL26A","WL26B","WL26C","WL27A","WL27B","WL27C","WL28A","WL28B","WL28C","WL29A","WL29B","WL29C","WL30A","WL30B","WL30C","WL31A","WL31B","WL31C","WL32A","WL32B","WL32C","WL33A","WL33B","WL33C","WL34A","WL34B","WL34C"],
+  WM:["WM01A","WM01B","WM01C","WM02A","WM02B","WM02C","WM03A","WM03B","WM03C","WM04A","WM04B","WM04C","WM05A","WM05B","WM05C","WM06A","WM06B","WM06C","WM07A","WM07B","WM07C","WM08A","WM08B","WM08C","WM09A","WM09B","WM09C","WM100","WM10A","WM10B","WM10C","WM11A","WM11B","WM11C","WM12A","WM12B","WM12C","WM13A","WM13B","WM13C","WM14A","WM14B","WM14C","WM15A","WM15B","WM15C","WM16A","WM16B","WM16C","WM17A","WM17B","WM17C","WM18A","WM18B","WM18C","WM19A","WM19B","WM19C","WM20A","WM20B","WM20C","WM21A","WM21B","WM21C","WM22A","WM22B","WM22C","WM23A","WM23B","WM23C","WM24A","WM24B","WM24C","WM25A","WM25B","WM25C","WM26A","WM26B","WM26C","WM27A","WM27B","WM27C","WM28A","WM28B","WM28C","WM29A","WM29B","WM29C","WM30A","WM30B","WM30C","WM31A","WM31B","WM31C","WM32A","WM32B","WM32C","WM33A","WM33B","WM33C","WM34B","WM34C","WM35B","WM35C"],
+  WN:["WN01A","WN01B","WN01C","WN02A","WN02B","WN02C","WN03A","WN03B","WN03C","WN04A","WN04B","WN04C","WN05A","WN05B","WN05C","WN06A","WN06B","WN06C","WN07A","WN07B","WN07C","WN08A","WN08B","WN08C","WN09A","WN09B","WN09C","WN100","WN10A","WN10B","WN10C","WN11A","WN11B","WN11C","WN12A","WN12B","WN12C","WN13A","WN13B","WN13C","WN14A","WN14B","WN14C","WN15A","WN15B","WN15C","WN16A","WN16B","WN16C","WN17A","WN17B","WN17C","WN18A","WN18B","WN18C","WN19A","WN19B","WN19C","WN20A","WN20B","WN20C","WN21A","WN21B","WN21C","WN22A","WN22B","WN22C","WN23A","WN23B","WN23C","WN24A","WN24B","WN24C","WN25A","WN25B","WN25C","WN26A","WN26B","WN26C","WN27A","WN27B","WN27C","WN28A","WN28B","WN28C"],
+  WP:["WP01A","WP01B","WP01C","WP02A","WP02B","WP02C","WP03A","WP03B","WP03C","WP04A","WP04B","WP04C","WP05A","WP05B","WP05C","WP06A","WP06B","WP06C","WP07A","WP07B","WP07C","WP08A","WP08B","WP08C","WP09A","WP09B","WP09C","WP100","WP10A","WP10B","WP10C","WP11A","WP11B","WP11C","WP12A","WP12B","WP12C","WP13A","WP13B","WP13C","WP14A","WP14B","WP14C","WP15A","WP15B","WP15C","WP16A","WP16B","WP16C","WP17A","WP17B","WP17C","WP18A","WP18B","WP18C","WP19A","WP19B","WP19C","WP20A","WP20B","WP20C","WP21A","WP21B","WP21C","WP22A","WP22B","WP22C","WP23A","WP23B","WP23C","WP24A","WP24B","WP24C","WP25A","WP25B","WP25C","WP26A","WP26B","WP26C","WP27A","WP27B","WP27C","WP28A","WP28B","WP28C","WP29A","WP29B","WP29C","WP30A","WP30B","WP30C"],
+  'LABEL ROOM':["LR01A","LR01B","LR01C","LR02A","LR02B","LR02C","LR03A","LR03B","LR03C","LR04A","LR04B","LR04C","LR05A","LR05B","LR05C","LR06A","LR06B","LR06C","LR07A","LR07B","LR07C","LR08A","LR08B","LR08C","LR09A","LR09B","LR09C","LR10A","LR10B","LR10C","LR11A","LR11B","LR11C","LR12A","LR12B","LR12C","LR13A","LR13B","LR13C","LR14A","LR14B","LR14C","LR15A","LR15B","LR15C","LR16A","LR16B","LR16C","LR17A","LR17B","LR17C","LR18A","LR18B","LR18C","LR19A","LR19B","LR19C","LR20A","LR20B","LR20C","LR21A","LR21B","LR21C","LR22A","LR22B","LR22C","LR23A","LR23B","LR23C","LR24A","LR24B","LR24C","LR25A","LR25B","LR25C","LR26A","LR26B","LR26C"],
+  PRODUCTION:["MIXAREA1_HU","MIXAREA1_HU_FIX","MIXAREA2_HU","MIXAREA2_HU_FIX","PACKRM1_HU","PACKRM1_NHU","PACKRM2_HU","PACKRM2_NHU","SPICE-BLND-FLOOR","SPICERM_HU"],
+  RECEIVING:["RECV-HOLD","RECV01","RECV02","RECV03","RECV04","RECV05"],
+  STAGING:["B101","B102","B103","B104","B105","B106","B107","B108","B109","B110","B111","B112","B113","B114","STG-INSIDE-01","STG-INSIDE-02","STG03","STG04","STG05","STG06","STG07","STG08","STG09","STG10","STG11","STG12","STG13","STG14","STG_RTN"],
+};
+
+const BIN_SECTIONS = {
+  warehouse: ['WA','WB','WC','WD','WE','WF','WG','WH','WJ','WK','WL','WM','WN','WP'],
+  freezer:   ['FA','FB','FC','FD','FZ'],
+  other:     ['LABEL ROOM','PRODUCTION','RECEIVING','STAGING'],
+};
+
+/* maps aisle key → SAP storage type for building compound bin keys */
+const AISLE_TO_ST = {
+  FA:'FZ01',FB:'FZ01',FC:'FZ01',FD:'FZ01',FZ:'FZ02',
+  WA:'RAW2',WB:'RAW2',WC:'RAW2',
+  WD:'FG01',WE:'FG01',WG:'FG01',WH:'FG01',
+  WJ:'FG01',WK:'FG01',WL:'FG01',WM:'FG01',WP:'FG01',
+  WF:'KITS', WN:'FG02',
+  'LABEL ROOM':'LBRM', PRODUCTION:'PSH1', RECEIVING:'RAW1', STAGING:'Y930',
+};
+
+/* ══════════════════════════════════════════════
+   STORAGE HELPERS
+══════════════════════════════════════════════ */
+const LS_INV  = 'cc_inventory_v1';
+const LS_SES  = 'cc_session_active_v1';
+const LS_NAME = 'cc_auditor_name';
+const LS_DONE = 'cc_done_bins';
+
+const readInv  = () => { try{return JSON.parse(localStorage.getItem(LS_INV))||[];}catch{return[];} };
+const writeInv = v  => { try{localStorage.setItem(LS_INV,JSON.stringify(v));}catch{} };
+const readSes  = () => { try{return JSON.parse(localStorage.getItem(LS_SES));}catch{return null;} };
+const writeSes = v  => { try{localStorage.setItem(LS_SES,JSON.stringify(v));}catch{} };
+const getName  = () => (localStorage.getItem(LS_NAME)||'').trim();
+const setName  = n  => localStorage.setItem(LS_NAME, n.trim());
+
+/* ══════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════ */
+const ST = {
+  aisle      : null,    // zone key ('FA', 'WA', etc.)
+  aisleBins  : [],      // short bin names from ALL_BINS
+  binIdx     : 0,
+  currentBin : '',      // compound key e.g. 'FZ01-FA01A'
+  binShort   : '',      // plain bin e.g. 'FA01A'
+  items      : [],      // working items for current bin
+  done       : new Set(),  // compound keys finalized this session
+  phase      : 1,
+  showExtra  : false,
+  binNotes   : {},      // { compoundKey: { notes, photo } }
+  moveIdx    : -1,
+  session    : null,
+  targetMat  : null,   // filter by material when using product search
+};
+
+/* ══════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════ */
+(function init(){
+  // Restore today's completed bins
+  try {
+    const d = JSON.parse(localStorage.getItem(LS_DONE)||'{}');
+    if (d.date === new Date().toDateString() && Array.isArray(d.bins))
+      d.bins.forEach(b => ST.done.add(b));
+  } catch {}
+
+  ST.session = readSes();
+  if (!ST.session) {
+    ST.session = {
+      id:`SES-1730-${Date.now()}`, user:getName()||'Auditor', plant:'1730',
+      started_at:new Date().toISOString(), status:'active',
+      bins_visited:[], hu_scanned:[], bin_notes:{},
+    };
+    writeSes(ST.session);
+  }
+
+  const name = getName();
+  document.getElementById('name-display').textContent = name || 'Set Name';
+  if (!name) openNameModal(false);
+
+  document.getElementById('bin-inp').addEventListener('keydown', e => {
+    if (e.key === 'Enter') jumpToBin(e.target.value.trim().toUpperCase());
+  });
+  document.getElementById('product-search').addEventListener('keydown', e => {
+    if (e.key === 'Enter') searchProduct();
+  });
+
+  buildGrid();
+  updateStats();
+  window.addEventListener('storage', e => {
+    if (e.key === LS_INV) { buildGrid(); updateStats(); }
+  });
+})();
+
+/* ══════════════════════════════════════════════
+   NAME MODAL
+══════════════════════════════════════════════ */
+function openNameModal(dismissable=true) {
+  const ov=document.getElementById('nm-ov');
+  document.getElementById('nm-input').value=getName();
+  document.getElementById('nm-btn').disabled=!getName();
+  ov.classList.add('open');
+  setTimeout(()=>document.getElementById('nm-input').focus(),120);
+  ov.onclick=e=>{if(dismissable&&e.target===ov)ov.classList.remove('open');};
+}
+document.getElementById('nm-input').addEventListener('input',function(){
+  document.getElementById('nm-btn').disabled=!this.value.trim();
+});
+document.getElementById('nm-input').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&e.target.value.trim())document.getElementById('nm-btn').click();
+});
+document.getElementById('nm-btn').addEventListener('click',()=>{
+  const n=document.getElementById('nm-input').value.trim();if(!n)return;
+  setName(n);ST.session.user=n;writeSes(ST.session);
+  document.getElementById('name-display').textContent=n;
+  document.getElementById('nm-ov').classList.remove('open');
+  toast('Signed in as '+n,'green');
+});
+
+/* ══════════════════════════════════════════════
+   SETUP STATS & GRID
+══════════════════════════════════════════════ */
+function updateStats() {
+  const inv = readInv();
+  const binSet = new Set(inv.map(i=>i.expected_bin).filter(Boolean));
+  document.getElementById('stat-loaded').textContent = inv.length.toLocaleString();
+  document.getElementById('stat-bins').textContent   = binSet.size.toLocaleString();
+  document.getElementById('stat-done').textContent   = ST.done.size;
+  const total = Object.values(ALL_BINS).flat().length;
+  document.getElementById('stat-progress').textContent =
+    `${ST.done.size} / ${total} bins counted today`;
+}
+
+function buildGrid() {
+  const grid = document.getElementById('aisle-grid');
+  const inv  = readInv();
+  if (!inv.length) {
+    grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:28px;color:var(--t3)">
+      <div style="font-size:32px;margin-bottom:10px">📤</div>
+      <div style="font-weight:700;margin-bottom:4px">No SAP data loaded</div>
+      <div style="font-size:11px">Upload physical_stock.xlsx from the Monitor page</div>
+    </div>`;
+    return;
+  }
+  const invBins = new Set(inv.map(i=>i.expected_bin).filter(Boolean));
+
+  // Plain-name set: the bin portion after the first dash (e.g. 'FA01A' from 'FZ01-FA01A').
+  // This lets tile counts work even when AISLE_TO_ST doesn't match the actual
+  // storage-type codes in the SAP export.
+  const plainBins = new Set(inv.map(i=>{
+    const b=i.expected_bin; if(!b)return null;
+    const d=b.indexOf('-'); return d>=0?b.slice(d+1):b;
+  }).filter(Boolean));
+
+  function zoneStats(zk) {
+    const st   = AISLE_TO_ST[zk]||'';
+    const bins = ALL_BINS[zk]||[];
+    const sap  = bins.filter(b=>invBins.has(st?`${st}-${b}`:b)||plainBins.has(b));
+    const done = bins.filter(b=>ST.done.has(st?`${st}-${b}`:b)||ST.done.has(b)).length;
+    return { total:bins.length, sap:sap.length, done };
+  }
+
+  const SECS=[
+    {key:'warehouse',label:'🏭 Warehouse Floor', cls:''},
+    {key:'freezer',  label:'❄ Freezer',          cls:'freezer'},
+    {key:'other',    label:'📦 Other Areas',      cls:'other'},
+  ];
+
+  let html='';
+  SECS.forEach(({key,label,cls})=>{
+    const zones=BIN_SECTIONS[key]||[];
+    if(!zones.length)return;
+    html+=`<div class="grid-hdr"><span>${label}</span><span class="sh-line"></span></div>`;
+    zones.forEach(zk=>{
+      const {total,sap,done}=zoneStats(zk);
+      const pct    = sap>0?Math.round(done/sap*100):0;
+      const allDone= sap>0&&done>=sap;
+      const inProg = done>0&&!allDone;
+      const sCls   = allDone?'done':inProg?'in-prog':'';
+      const isAlpha= /^[WF][A-Z]$/.test(zk);
+      const LABELS = {'LABEL ROOM':'Label\nRoom',PRODUCTION:'Prod.',RECEIVING:'Recv.',STAGING:'Staging'};
+      const lbl    = isAlpha?zk[1]:(LABELS[zk]||zk);
+      const sub    = sap>0?`${done}/${sap}`:(`${total} bins`);
+      html+=`<button class="aisle-btn ${cls} ${sCls}" onclick="selectZone('${zk}')">
+        <span class="a-letter" style="${!isAlpha?'font-size:11px;font-weight:800;line-height:1.2;padding:0 3px':''}">${escHtml(lbl)}</span>
+        <span class="a-count">${sub}</span>
+        <div class="aisle-prog" style="width:${pct}%"></div>
+      </button>`;
+    });
+  });
+  grid.innerHTML=html;
+}
+
+/* ══════════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════════ */
+function selectZone(zk) {
+  ST.targetMat=null; ST.aisle=zk;
+  ST.aisleBins=ALL_BINS[zk]||[];
+  ST.binIdx=0;
+  if(!ST.aisleBins.length){toast('No bins for '+zk,'amber');return;}
+  openBinShort(ST.aisleBins[0]);
+}
+
+function searchProduct() {
+  const mat=document.getElementById('product-search').value.trim().toUpperCase();
+  if(!mat)return;
+  const inv=readInv();
+  const compounds=[...new Set(inv.filter(i=>i.material_id===mat).map(i=>i.expected_bin))].sort();
+  if(!compounds.length){toast(`Material ${mat} not in SAP data`,'amber');return;}
+  ST.targetMat=mat; ST.aisle=null;
+  ST.aisleBins=compounds;  // compound keys when in product mode
+  ST.binIdx=0;
+  openBinCompound(compounds[0]);
+}
+
+function stepBin(dir) {
+  const n=ST.binIdx+dir;
+  if(n<0||n>=ST.aisleBins.length)return;
+  ST.binIdx=n;
+  if(ST.targetMat) openBinCompound(ST.aisleBins[n]);
+  else             openBinShort(ST.aisleBins[n]);
+}
+
+/* Navigate by short name (e.g. 'FA01A') within current aisle */
+function openBinShort(short) {
+  const st=AISLE_TO_ST[ST.aisle]||'';
+  const key=st?`${st}-${short}`:short;
+  _openBin(key, short);
+}
+
+/* Navigate by compound key (e.g. 'FZ01-FA01A') — used by product search */
+function openBinCompound(key) {
+  const parts=key.split('-'); const short=parts.slice(1).join('-')||key;
+  _openBin(key, short);
+}
+
+/* Type a bin in the nav input */
+function jumpToBin(raw) {
+  if(!raw)return;
+  // If already compound, use directly; otherwise build from aisle
+  if(raw.includes('-')){openBinCompound(raw);return;}
+  if(ST.aisle){openBinShort(raw);}else{openBinCompound(raw);}
+}
+
+function _openBin(key, short) {
+  const inv=readInv();
+  // Primary: exact compound key (e.g. 'FZ01-FA01A').
+  // Fallback: plain bin name after first dash — handles AISLE_TO_ST mismatches.
+  let ex=inv.filter(i=>{
+    if(i.expected_bin===key) return true;
+    const d=(i.expected_bin||'').indexOf('-');
+    const plain=d>=0?i.expected_bin.slice(d+1):i.expected_bin;
+    return plain===short;
+  });
+  if(ST.targetMat) ex=ex.filter(i=>i.material_id===ST.targetMat);
+
+  if(!ST.targetMat){
+    const idx=ST.aisleBins.indexOf(short);
+    if(idx>=0)ST.binIdx=idx;
+  }
+  ST.currentBin=key; ST.binShort=short;
+  ST.items=ex.map(i=>({
+    hu:i.hu_number, mid:i.material_id, desc:i.description||'',
+    batch:i.batch_number||'', sapBin:i.expected_bin,
+    sapQty:i.expected_qty||0, unit:i.uom||'LB',
+    sled:i.sled||'', st:i.stock_type||'',
+    scannedQty:0, status:'pending', isExtra:false, note:'',
+  }));
+  ST.phase=1; ST.showExtra=false;
+
+  if(ST.session&&!ST.session.bins_visited.includes(key)){
+    ST.session.bins_visited.push(key); writeSes(ST.session);
+  }
+
+  switchScreen('counting');
+  document.getElementById('count-title').textContent=short;
+  document.getElementById('count-sub').textContent =
+    ST.aisle?(ST.aisle):(ST.targetMat?`Material ${ST.targetMat}`:'');
+  document.getElementById('bin-inp').value=short;
+  renderPhase(); renderStrip(); loadBinNotes(key);
+  renderList(); updateFinalizeBtn();
+}
+
+function backToSetup() {
+  ST.targetMat=null;
+  document.getElementById('product-search').value='';
+  switchScreen('setup'); buildGrid(); updateStats();
+}
+
+/* ══════════════════════════════════════════════
+   PHASE BAR
+══════════════════════════════════════════════ */
+function renderPhase() {
+  ['ph1','ph2','ph3'].forEach((id,i)=>{
+    document.getElementById(id).className='phase-step'+
+      (ST.phase===i+1?' active':ST.phase>i+1?' done':'');
+  });
+  ['phl1','phl2','phl3'].forEach((id,i)=>{
+    document.getElementById(id).className=
+      ST.phase===i+1?'active':ST.phase>i+1?'done':'';
+  });
+}
+
+/* ══════════════════════════════════════════════
+   BIN STRIP
+══════════════════════════════════════════════ */
+function renderStrip() {
+  const strip=document.getElementById('bin-strip');
+  strip.innerHTML='';
+  if(ST.targetMat){return;}  // hide strip in product-search mode
+  const seen={};
+  ST.aisleBins.forEach(b=>{
+    const num=b.length>=4?b.substring(2,4):b;
+    if(seen[num])return; seen[num]=true;
+    const st=AISLE_TO_ST[ST.aisle]||'';
+    const inRow=ST.aisleBins.filter(x=>x.substring(2,4)===num);
+    const isCur=ST.binShort.substring(2,4)===num;
+    const isDone=inRow.some(x=>ST.done.has(st?`${st}-${x}`:x));
+    const dot=document.createElement('button');
+    dot.className=`strip-dot${isCur?' cur':isDone&&!isCur?' done':''}`;
+    dot.textContent=isCur?num:isDone?'✓':num;
+    dot.title=inRow.join(', ');
+    if(!isCur) dot.onclick=()=>openBinShort(inRow[0]);
+    strip.appendChild(dot);
+  });
+  setTimeout(()=>{
+    const c=strip.querySelector('.cur');
+    if(c)c.scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});
+  },50);
+}
+
+/* ══════════════════════════════════════════════
+   BIN NOTES
+══════════════════════════════════════════════ */
+document.getElementById('bnc-toggle').addEventListener('click',()=>{
+  const b=document.getElementById('bnc-body');
+  const c=document.getElementById('bnc-chev');
+  const open=b.classList.toggle('open');
+  c.classList.toggle('open',open);
+  if(open)document.getElementById('bnc-notes').focus();
+});
+document.getElementById('btn-bnc-photo').addEventListener('click',()=>
+  document.getElementById('bnc-photo-inp').click()
+);
+document.getElementById('bnc-photo-inp').addEventListener('change',async function(){
+  const file=this.files[0];if(!file)return;
+  const uri=await compressPhoto(file);
+  (ST.binNotes[ST.currentBin]=ST.binNotes[ST.currentBin]||{}).photo=uri;
+  document.getElementById('bnc-photo-prev').src=uri;
+  document.getElementById('bnc-photo-prev').style.display='block';
+  document.getElementById('btn-bnc-rm').style.display='inline-flex';
+  _saveBNC(); updateBncInds(); this.value=''; toast('Bin photo saved','green');
+});
+document.getElementById('btn-bnc-rm').addEventListener('click',()=>{
+  if(ST.binNotes[ST.currentBin])ST.binNotes[ST.currentBin].photo=null;
+  document.getElementById('bnc-photo-prev').style.display='none';
+  document.getElementById('btn-bnc-rm').style.display='none';
+  _saveBNC(); updateBncInds();
+});
+function loadBinNotes(key){
+  const d=ST.binNotes[key]||{};
+  document.getElementById('bnc-notes').value=d.notes||'';
+  const prev=document.getElementById('bnc-photo-prev');
+  const rm=document.getElementById('btn-bnc-rm');
+  if(d.photo){prev.src=d.photo;prev.style.display='block';rm.style.display='inline-flex';}
+  else{prev.style.display='none';rm.style.display='none';}
+  document.getElementById('bnc-body').classList.remove('open');
+  document.getElementById('bnc-chev').classList.remove('open');
+  updateBncInds();
+}
+function saveBinNotes(){
+  if(!ST.currentBin)return;
+  (ST.binNotes[ST.currentBin]=ST.binNotes[ST.currentBin]||{}).notes=
+    document.getElementById('bnc-notes').value;
+  _saveBNC(); updateBncInds();
+}
+function _saveBNC(){
+  if(ST.session){ST.session.bin_notes=ST.binNotes;writeSes(ST.session);}
+}
+function updateBncInds(){
+  const d=ST.binNotes[ST.currentBin]||{};
+  document.getElementById('bnc-inds').innerHTML=
+    (d.notes?`<span class="bnc-ind bnc-ind-note">Note</span>`:'') +
+    (d.photo ?`<span class="bnc-ind bnc-ind-photo">📷</span>`:'');
+}
+
+/* ══════════════════════════════════════════════
+   HU LIST
+══════════════════════════════════════════════ */
+function renderList(){
+  const list=document.getElementById('hu-list');
+  const parts=[];
+  if(ST.done.has(ST.currentBin)){
+    parts.push(`<div class="counted-banner"><span>✅</span>
+      <div><strong>Already Counted Today</strong><br>
+      <small style="font-size:9px;color:var(--t2)">Counting again will update results</small></div>
+    </div>`);
+  }
+  const main=ST.items.filter(i=>!i.isExtra);
+  if(!main.length&&!ST.showExtra){
+    parts.push(`<div class="empty-bin"><span class="icon">📭</span>
+      <p style="font-weight:700">SAP shows this bin as empty</p>
+      <p style="color:var(--cyn);font-weight:700;font-size:11px;margin-top:6px">
+        Tap "+ Found Extra" if you find anything</p></div>`);
+  }
+  main.forEach((item,_)=>parts.push(renderCard(item,ST.items.indexOf(item))));
+  const extra=ST.items.filter(i=>i.isExtra);
+  if(extra.length){
+    parts.push(`<div class="sec-title" style="color:var(--cyn);margin-top:12px">🔍 Extra Items Found</div>`);
+    extra.forEach(item=>parts.push(renderCard(item,ST.items.indexOf(item))));
+  }
+  if(ST.showExtra){
+    parts.push(`<div class="extra-form"><h3>🔍 Found Extra Item</h3>
+      <input type="text" class="field mono" id="extra-hu"
+             placeholder="HU number (or 0 if no label)" oninput="extraLookup()">
+      <div id="extra-autofill"></div>
+      <div class="field-row">
+        <input type="text"   class="field" id="extra-mat" placeholder="Material #" style="flex:1;text-transform:uppercase">
+        <input type="number" class="field mono" id="extra-qty" placeholder="Qty" style="width:80px;text-align:center">
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn-sec" onclick="toggleExtra()" style="flex:1">Cancel</button>
+        <button class="act-btn act-confirm" onclick="addExtra()" style="flex:2">Add Item</button>
+      </div>
+    </div>`);
+  }
+  list.innerHTML=parts.join('');
+  updateFinalizeBtn();
+}
+
+function renderCard(item,idx){
+  const isOk  =item.status==='confirmed';
+  const isMiss=item.status==='missing';
+  const isAdj =item.status==='adjusted';
+  const isPend=item.status==='pending';
+  const cardCls=isMiss?'missing':isOk?'confirmed':isAdj?'adjusted':item.isExtra?'extra':'';
+  const badge=isOk  ?`<span class="hu-badge hb-ok">✓ Confirmed</span>`
+             :isMiss?`<span class="hu-badge hb-miss">✗ Missing</span>`
+             :isAdj ?`<span class="hu-badge hb-adj">± Adjusted</span>`
+             :item.isExtra?`<span class="hu-badge hb-ext">+ Extra</span>`:'';
+  const stBadge=item.st&&item.st!=='F2'?`<span class="hu-badge hb-st">${escHtml(item.st)}</span>`:'';
+  const ss=item.sled?sledStatus(item.sled):'unknown';
+  const sledHTML=item.sled&&ss!=='unknown'?`
+    <div class="sled-row">
+      <span class="sled-lbl">Best-By</span>
+      <span class="sled-val ${ss}">${formatSLED(item.sled)}</span>
+      <span class="sled-badge ${ss}">${ss==='expired'?'⚠ EXPIRED':ss==='expiring'?'⚡ EXPIRING':'✓ VALID'}</span>
+    </div>`:'';
+  let body;
+  if(isPend||isAdj){
+    body=`<div class="qty-row">
+      <button class="qty-btn minus" data-a="dec" data-i="${idx}">−</button>
+      <input class="qty-input" type="number" inputmode="numeric" data-i="${idx}"
+             value="${item.scannedQty||''}" placeholder="${item.sapQty}" onfocus="this.select()">
+      <button class="qty-btn plus"  data-a="inc" data-i="${idx}">+</button>
+    </div>
+    <div class="sap-hint">SAP expects <strong>${item.sapQty} ${item.unit}</strong></div>
+    <div class="hu-actions">
+      <button class="act-btn act-confirm" data-a="confirm" data-i="${idx}">Confirm ${item.sapQty}</button>
+      <button class="act-btn act-miss${isMiss?' active':''}" data-a="miss" data-i="${idx}">Missing</button>
+    </div>`;
+  } else {
+    const match=item.scannedQty===item.sapQty;
+    body=`<div class="resolved-row">
+      <span class="res-lbl">Count</span>
+      <span class="res-val ${match?'match':'mismatch'}">${item.scannedQty}</span>
+    </div>
+    <button class="undo-btn" data-a="reset" data-i="${idx}">↺ Undo</button>`;
+  }
+  return `<div class="hu-card ${cardCls}" data-ci="${idx}">
+    <div class="hu-top">
+      <span class="hu-id mono">HU ${escHtml(item.hu||'—')}</span>
+      <div class="hu-badges">${badge}${stBadge}</div>
+    </div>
+    <div class="hu-desc">${escHtml(item.desc||item.mid||'—')}</div>
+    <div class="hu-meta">
+      <div class="m-item"><span class="m-lbl">Material</span>
+        <span class="m-val mono" style="font-size:11px">${escHtml(item.mid||'—')}</span></div>
+      <div class="m-item"><span class="m-lbl">SAP Qty</span>
+        <span class="m-val mono">${item.sapQty} ${item.unit}</span></div>
+      ${item.batch?`<div class="m-item"><span class="m-lbl">Batch</span>
+        <span class="m-val mono" style="font-size:11px">${escHtml(item.batch)}</span></div>`:''}
+    </div>
+    ${sledHTML}
+    ${body}
+    <div class="card-actions">
+      <button class="note-btn${item.note?' has':''}" data-a="note" data-i="${idx}">
+        📝 ${item.note?escHtml(item.note.substring(0,30))+(item.note.length>30?'…':''):'Add Note'}
+      </button>
+      <button class="move-btn" data-a="move" data-i="${idx}">🔄 Move</button>
+    </div>
+  </div>`;
+}
+
+/* event delegation */
+document.getElementById('hu-list').addEventListener('click',e=>{
+  const btn=e.target.closest('[data-a]');if(!btn)return;
+  const idx=parseInt(btn.dataset.i,10);
+  switch(btn.dataset.a){
+    case 'confirm':confirmItem(idx);break;
+    case 'miss':   missItem(idx);  break;
+    case 'inc':    adjQty(idx,1);  break;
+    case 'dec':    adjQty(idx,-1); break;
+    case 'reset':  resetItem(idx); break;
+    case 'note':   addNote(idx);   break;
+    case 'move':   openMove(idx);  break;
+  }
+});
+document.getElementById('hu-list').addEventListener('input',e=>{
+  if(!e.target.classList.contains('qty-input'))return;
+  const idx=parseInt(e.target.dataset.i,10);
+  const item=ST.items[idx];if(!item)return;
+  item.scannedQty=parseFloat(e.target.value)||0;
+  if(item.scannedQty>0)item.status=item.scannedQty===item.sapQty?'confirmed':'adjusted';
+  updateFinalizeBtn();
+});
+document.getElementById('hu-list').addEventListener('change',e=>{
+  if(!e.target.classList.contains('qty-input'))return;
+  patchCard(parseInt(e.target.dataset.i,10));
+});
+
+/* item actions */
+function confirmItem(idx){
+  const item=ST.items[idx];if(!item)return;
+  if(!item.scannedQty)item.scannedQty=item.sapQty;
+  item.status=item.scannedQty===item.sapQty?'confirmed':'adjusted';
+  checkPhase(); patchCard(idx);
+}
+function missItem(idx){
+  const item=ST.items[idx];if(!item)return;
+  item.status=item.status==='missing'?'pending':'missing';
+  item.scannedQty=0; checkPhase(); patchCard(idx);
+}
+function adjQty(idx,delta){
+  const item=ST.items[idx];if(!item)return;
+  item.scannedQty=Math.max(0,(item.scannedQty||0)+delta);
+  item.status='adjusted'; patchCard(idx);
+}
+function resetItem(idx){
+  const item=ST.items[idx];if(!item)return;
+  item.status='pending';item.scannedQty=0;
+  ST.phase=1;renderPhase();patchCard(idx);
+}
+function confirmAll(){
+  ST.items.filter(i=>!i.isExtra&&i.status==='pending').forEach(item=>{
+    item.scannedQty=item.sapQty;item.status='confirmed';
+  });
+  checkPhase();renderList();
+}
+function addNote(idx){
+  const note=prompt('Note:',ST.items[idx].note||'');
+  if(note!==null){ST.items[idx].note=note.trim();patchCard(idx);}
+}
+function checkPhase(){
+  if(ST.items.filter(i=>!i.isExtra).every(i=>i.status!=='pending')&&ST.phase===1){
+    ST.phase=2;renderPhase();
+  }
+}
+function patchCard(idx){
+  const old=document.querySelector(`#hu-list [data-ci="${idx}"]`);
+  if(!old){renderList();return;}
+  const t=document.createElement('template');
+  t.innerHTML=renderCard(ST.items[idx],idx).trim();
+  old.replaceWith(t.content.firstElementChild);
+  updateFinalizeBtn();
+}
+
+/* extras */
+function toggleExtra(){ST.showExtra=!ST.showExtra;renderList();}
+function extraLookup(){
+  const hu=document.getElementById('extra-hu').value.trim();
+  if(hu.length<4)return;
+  const m=readInv().find(i=>i.hu_number===hu);
+  if(m){
+    document.getElementById('extra-mat').value=m.material_id;
+    document.getElementById('extra-autofill').innerHTML=
+      `<span style="font-size:9px;font-weight:700;color:var(--grn);background:var(--grn-bg);
+        padding:3px 8px;border-radius:6px;display:inline-block;margin-bottom:6px">
+        ✓ Auto-filled: ${escHtml(m.description||'')}</span>`;
+  }
+}
+function addExtra(){
+  const hu=document.getElementById('extra-hu').value.trim()||'EXTRA';
+  const mat=document.getElementById('extra-mat').value.trim().toUpperCase();
+  const qty=parseFloat(document.getElementById('extra-qty').value)||0;
+  if(!mat||!qty){toast('Enter material # and qty','amber');return;}
+  const m=readInv().find(i=>i.hu_number===hu);
+  ST.items.push({
+    hu, mid:mat, desc:m?m.description:'Found (Extra)',
+    batch:m?m.batch_number||'':'', sapBin:m?m.expected_bin:null,
+    sapQty:m?m.expected_qty:0, unit:m?m.uom||'LB':'LB',
+    sled:'', st:'', scannedQty:qty, status:'confirmed', isExtra:true, note:'',
+  });
+  ST.showExtra=false; renderList(); toast('Extra item added','blue');
+}
+
+/* move modal */
+function openMove(idx){
+  ST.moveIdx=idx;
+  const item=ST.items[idx];
+  document.getElementById('qm-hu').value=item.hu;
+  document.getElementById('qm-qty').value=item.scannedQty||item.sapQty||0;
+  document.getElementById('qm-bin').value='';
+  document.getElementById('qm-info').innerHTML=
+    `<strong style="color:var(--acc)">Moving from ${ST.binShort}</strong><br>
+     ${escHtml(item.desc)} · SAP: ${item.sapQty} ${item.unit}`;
+  document.getElementById('modal-move').classList.add('open');
+}
+function submitMove(){
+  const hu=document.getElementById('qm-hu').value.trim();
+  const bin=document.getElementById('qm-bin').value.trim().toUpperCase();
+  const qty=parseFloat(document.getElementById('qm-qty').value);
+  if(!hu||!bin||isNaN(qty)){toast('Fill all fields','amber');return;}
+  const item=ST.items[ST.moveIdx];
+  item.status='missing';item.scannedQty=0;item.note=`Moved to ${bin}`;
+  patchCard(ST.moveIdx);
+  // Update inventory record
+  const inv=readInv(); const ii=inv.findIndex(i=>i.hu_number===hu);
+  if(ii>=0){
+    inv[ii].status='moved';inv[ii].actual_bin=bin;inv[ii].actual_qty=qty;
+    inv[ii].auditor_notes=`Moved from ${ST.binShort}`;
+    inv[ii].audited_by=getName()||'Auditor';inv[ii].audited_at=new Date().toISOString();
+    writeInv(inv);
+  }
+  document.getElementById('modal-move').classList.remove('open');
+  checkPhase(); toast('Movement logged','green');
+}
+
+/* ══════════════════════════════════════════════
+   FINALIZE
+══════════════════════════════════════════════ */
+function updateFinalizeBtn(){
+  const p=ST.items.filter(i=>i.status==='pending').length;
+  const btn=document.getElementById('btn-finalize');
+  const cab=document.getElementById('btn-confirm-all');
+  btn.className='btn-pri'+(p>0?' disabled':'');
+  btn.textContent=p>0?`${p} item${p>1?'s':''} unchecked`
+    :ST.items.length===0?'✓ Confirm Empty →':'Finalize & Next →';
+  if(cab)cab.style.display=ST.items.filter(i=>!i.isExtra&&i.status==='pending').length<=1?'none':'';
+}
+
+function finalizeBin(){
+  if(ST.items.some(i=>i.status==='pending'))return;
+  const inv=readInv();
+  const user=getName()||'Auditor';
+  const now=new Date().toISOString();
+  ST.items.forEach(item=>{
+    if(item.isExtra){
+      inv.push({
+        hu_number:item.hu||`EXTRA-${Date.now()}`,material_id:item.mid,
+        description:item.desc,batch_number:item.batch,
+        expected_bin:item.sapBin||null,actual_bin:ST.currentBin,
+        expected_qty:item.sapQty,actual_qty:item.scannedQty,
+        qty_variance:item.scannedQty,uom:item.unit,
+        status:'found_unlisted',auditor_notes:item.note||'',
+        audited_by:user,audited_at:now,session_id:ST.session?.id||null,
+      });
+    } else {
+      const ii=inv.findIndex(i=>i.hu_number===item.hu);
+      if(ii>=0){
+        const s=item.status==='missing'?'missing'
+               :item.scannedQty!==item.sapQty?'qty_adjustment':'verified';
+        Object.assign(inv[ii],{
+          status:s,actual_bin:ST.currentBin,actual_qty:item.scannedQty,
+          qty_variance:item.scannedQty-item.sapQty,
+          auditor_notes:item.note||'',audited_by:user,
+          audited_at:now,session_id:ST.session?.id||null,
+        });
+      }
+    }
+  });
+  writeInv(inv);
+  ST.done.add(ST.currentBin);
+  try{localStorage.setItem(LS_DONE,JSON.stringify({date:new Date().toDateString(),bins:[...ST.done]}));}catch{}
+  toast(`${ST.binShort} finalized ✓`,'green');
+  const next=ST.binIdx+1;
+  if(next<ST.aisleBins.length){
+    ST.binIdx=next;
+    if(ST.targetMat)openBinCompound(ST.aisleBins[next]);
+    else            openBinShort(ST.aisleBins[next]);
+  } else {
+    backToSetup();
+    toast(`${ST.aisle||'Count'} complete 🎉`,'green');
+  }
+}
+
+/* ══════════════════════════════════════════════
+   SLED HELPERS
+══════════════════════════════════════════════ */
+function parseSLED(raw){
+  if(!raw)return null;
+  const s=String(raw).trim();
+  if(!s||s==='null'||s==='undefined')return null;
+  const d=new Date(s);if(!isNaN(d))return d;
+  const us=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if(us)return new Date(`${us[3]}-${us[1].padStart(2,'0')}-${us[2].padStart(2,'0')}`);
+  const eu=s.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+  if(eu)return new Date(`${eu[3]}-${eu[2]}-${eu[1]}`);
+  return null;
+}
+function sledStatus(raw){
+  const d=parseSLED(raw);if(!d)return 'unknown';
+  const now=new Date();now.setHours(0,0,0,0);
+  const thr=new Date(now);thr.setDate(thr.getDate()+90);
+  return d<now?'expired':d<=thr?'expiring':'valid';
+}
+function formatSLED(raw){
+  const d=parseSLED(raw);if(!d)return raw||'—';
+  return `${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}/${d.getFullYear()}`;
+}
+
+/* photo compress */
+function compressPhoto(file,maxW=900,q=0.68){
+  return new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onerror=()=>rej(new Error('Read failed'));
+    r.onload=e=>{
+      const img=new Image();
+      img.onerror=()=>rej(new Error('Load failed'));
+      img.onload=()=>{
+        const sc=Math.min(1,maxW/img.width);
+        const cv=document.createElement('canvas');
+        cv.width=Math.round(img.width*sc);cv.height=Math.round(img.height*sc);
+        cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+        res(cv.toDataURL('image/jpeg',q));
+      };
+      img.src=e.target.result;
+    };
+    r.readAsDataURL(file);
+  });
+}
+
+/* utils */
+function switchScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+}
+let _tt;
+function toast(msg,type='blue'){
+  const el=document.getElementById('toast');
+  el.className=`toast ${type}`;
+  document.getElementById('toast-txt').textContent=msg;
+  el.classList.add('show');clearTimeout(_tt);
+  _tt=setTimeout(()=>el.classList.remove('show'),2800);
+}
+function escHtml(s){const d=document.createElement('div');d.textContent=String(s||'');return d.innerHTML;}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-wiring.js"></script>
+</body>
+</html>

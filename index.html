@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cycle Count Hub — Plant 1730</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── TOKENS ─────────────────────────────────────────────── */
+    :root {
+      --bg:          #F4F6FA;
+      --surface:     #FFFFFF;
+      --surface-alt: #F0F2F7;
+      --border:      #E1E5EE;
+      --border-mid:  #C9CEDB;
+
+      --text-1:      #0C111D;
+      --text-2:      #4A5368;
+      --text-3:      #8C94A8;
+
+      --blue:        #1D4ED8;
+      --blue-light:  #EFF4FF;
+      --blue-hover:  #1A44C2;
+
+      --teal:        #0D9488;
+      --teal-light:  #F0FDFB;
+      --teal-hover:  #0B8276;
+
+      --green:       #16A34A;
+      --green-light: #F0FDF4;
+
+      --amber:       #D97706;
+      --amber-light: #FFFBEB;
+
+      --red:         #DC2626;
+      --red-light:   #FFF1F0;
+
+      --shadow-sm:   0 1px 3px rgba(12,17,29,.06), 0 1px 2px rgba(12,17,29,.04);
+      --shadow-md:   0 4px 12px rgba(12,17,29,.08), 0 2px 4px rgba(12,17,29,.04);
+      --shadow-lg:   0 12px 32px rgba(12,17,29,.10), 0 4px 8px rgba(12,17,29,.05);
+
+      --radius-sm:   6px;
+      --radius-md:   12px;
+      --radius-lg:   20px;
+
+      --font-sans:   'DM Sans', sans-serif;
+      --font-mono:   'DM Mono', monospace;
+      --font-display:'Sora', sans-serif;
+
+      --transition:  all .18s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ─── RESET ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg);
+      color: var(--text-1);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    a { color: inherit; text-decoration: none; }
+    button { font-family: var(--font-sans); cursor: pointer; border: none; }
+
+    /* ─── LAYOUT ─────────────────────────────────────────────── */
+    .page-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 0 24px;
+    }
+
+    /* ─── TOP BAR ────────────────────────────────────────────── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-mark {
+      width: 36px; height: 36px;
+      background: var(--blue);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .brand-mark svg { width: 20px; height: 20px; }
+    .brand-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text-1);
+      letter-spacing: -.01em;
+    }
+    .brand-sub {
+      font-size: .72rem;
+      color: var(--text-3);
+      font-weight: 500;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+    }
+    .topbar-meta {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .topbar-clock {
+      font-family: var(--font-mono);
+      font-size: .85rem;
+      color: var(--text-2);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 6px 12px;
+    }
+    .topbar-user {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: .88rem;
+      color: var(--text-2);
+      font-weight: 500;
+    }
+    .avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--teal) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .72rem; font-weight: 700; color: #fff;
+      font-family: var(--font-display);
+    }
+
+    /* ─── HERO ───────────────────────────────────────────────── */
+    .hero {
+      padding: 52px 0 40px;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: .78rem;
+      color: var(--blue);
+      background: var(--blue-light);
+      border: 1px solid #BFCEF9;
+      border-radius: 99px;
+      padding: 5px 14px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--blue);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .5; transform: scale(.8); }
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: var(--text-1);
+      letter-spacing: -.03em;
+      line-height: 1.12;
+      margin-bottom: 14px;
+    }
+    .hero-title span { color: var(--blue); }
+    .hero-desc {
+      font-size: 1.05rem;
+      color: var(--text-2);
+      font-weight: 400;
+      max-width: 480px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ─── STATUS STRIP ───────────────────────────────────────── */
+    .status-strip {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin: 24px 0 48px;
+      flex-wrap: wrap;
+    }
+    .status-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 16px;
+      font-size: .84rem;
+      color: var(--text-2);
+      font-weight: 500;
+      box-shadow: var(--shadow-sm);
+    }
+    .status-chip .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-green { background: var(--green); }
+    .dot-amber { background: var(--amber); }
+    .dot-blue  { background: var(--blue); }
+    .chip-val {
+      font-family: var(--font-mono);
+      font-weight: 500;
+      color: var(--text-1);
+    }
+
+    /* ─── PORTAL CARDS ───────────────────────────────────────── */
+    .portal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      max-width: 780px;
+      margin: 0 auto 64px;
+      width: 100%;
+    }
+    .portal-card {
+      position: relative;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      box-shadow: var(--shadow-md);
+      cursor: pointer;
+      transition: var(--transition);
+      overflow: hidden;
+      text-decoration: none;
+    }
+    .portal-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity .2s ease;
+    }
+    .portal-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--border-mid);
+    }
+
+    /* Blue card */
+    .portal-card.blue .card-icon-wrap {
+      background: var(--blue-light);
+      border-color: #BFCEF9;
+      color: var(--blue);
+    }
+    .portal-card.blue:hover { border-color: #93ABEF; }
+    .portal-card.blue .card-action {
+      color: var(--blue);
+      background: var(--blue-light);
+      border-color: #BFCEF9;
+    }
+    .portal-card.blue:hover .card-action {
+      background: var(--blue);
+      color: #fff;
+      border-color: var(--blue);
+    }
+
+    /* Teal card */
+    .portal-card.teal .card-icon-wrap {
+      background: var(--teal-light);
+      border-color: #A2DED9;
+      color: var(--teal);
+    }
+    .portal-card.teal:hover { border-color: #7DCEC9; }
+    .portal-card.teal .card-action {
+      color: var(--teal);
+      background: var(--teal-light);
+      border-color: #A2DED9;
+    }
+    .portal-card.teal:hover .card-action {
+      background: var(--teal);
+      color: #fff;
+      border-color: var(--teal);
+    }
+
+    .card-icon-wrap {
+      width: 54px; height: 54px;
+      border-radius: var(--radius-md);
+      border: 1.5px solid;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 24px;
+      transition: var(--transition);
+    }
+    .card-icon-wrap svg { width: 26px; height: 26px; }
+    .card-label {
+      font-family: var(--font-mono);
+      font-size: .73rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-1);
+      letter-spacing: -.02em;
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+    .card-desc {
+      font-size: .9rem;
+      color: var(--text-2);
+      line-height: 1.6;
+      margin-bottom: 32px;
+      flex: 1;
+    }
+    .card-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid;
+      font-size: .88rem;
+      font-weight: 600;
+      font-family: var(--font-sans);
+      transition: var(--transition);
+      letter-spacing: -.01em;
+    }
+    .card-action svg { width: 15px; height: 15px; transition: transform .18s ease; }
+    .portal-card:hover .card-action svg { transform: translateX(3px); }
+    .card-corner-art {
+      position: absolute;
+      right: -20px;
+      top: -20px;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      opacity: .04;
+    }
+    .portal-card.blue .card-corner-art { background: var(--blue); }
+    .portal-card.teal .card-corner-art { background: var(--teal); }
+
+    /* ─── QUICK STATS ROW ────────────────────────────────────── */
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      max-width: 780px;
+      margin: -16px auto 48px;
+      width: 100%;
+    }
+    .qs-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .qs-label {
+      font-size: .74rem;
+      color: var(--text-3);
+      font-weight: 500;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+      margin-bottom: 6px;
+    }
+    .qs-value {
+      font-family: var(--font-display);
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--text-1);
+      letter-spacing: -.02em;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .qs-change {
+      font-size: .78rem;
+      font-weight: 500;
+    }
+    .change-up { color: var(--green); }
+    .change-dn { color: var(--red); }
+    .change-ne { color: var(--text-3); }
+
+    /* ─── FOOTER ─────────────────────────────────────────────── */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 18px 24px;
+      text-align: center;
+      font-size: .8rem;
+      color: var(--text-3);
+      font-family: var(--font-mono);
+    }
+
+    /* ─── FADE-IN ANIMATION ──────────────────────────────────── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeUp .45s cubic-bezier(.4,0,.2,1) forwards;
+    }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .delay-1 { animation-delay: .08s; }
+    .delay-2 { animation-delay: .16s; }
+    .delay-3 { animation-delay: .24s; }
+    .delay-4 { animation-delay: .32s; }
+    .delay-5 { animation-delay: .40s; }
+    .delay-6 { animation-delay: .48s; }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────── */
+    @media (max-width: 640px) {
+      .hero-title { font-size: 2rem; }
+      .portal-grid { grid-template-columns: 1fr; }
+      .quick-stats { grid-template-columns: repeat(2, 1fr); }
+      .topbar-meta { display: none; }
+    }
+
+    /* ─── NAME GATE ─────────────────────────────────────────── */
+    .gate-overlay {
+      position: fixed; inset: 0; z-index: 1000;
+      background: var(--bg);
+      display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+      transition: opacity .3s ease, visibility .3s ease;
+    }
+    .gate-overlay.hidden {
+      opacity: 0; visibility: hidden; pointer-events: none;
+    }
+    .gate-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      padding: 48px 44px 40px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      animation: gate-in .4s cubic-bezier(.4,0,.2,1);
+    }
+    @keyframes gate-in {
+      from { opacity: 0; transform: translateY(20px) scale(.97); }
+      to   { opacity: 1; transform: none; }
+    }
+    .gate-brand {
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px; margin-bottom: 28px;
+    }
+    .gate-mark {
+      width: 42px; height: 42px;
+      background: var(--blue);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .gate-mark svg { width: 22px; height: 22px; }
+    .gate-brand-text { text-align: left; }
+    .gate-brand-name {
+      font-family: var(--font-display); font-weight: 700;
+      font-size: 1.05rem; color: var(--text-1); letter-spacing: -.01em;
+    }
+    .gate-brand-sub {
+      font-family: var(--font-mono); font-size: .68rem;
+      color: var(--text-3); text-transform: uppercase; letter-spacing: .05em;
+    }
+    .gate-divider {
+      width: 40px; height: 3px;
+      background: var(--blue); border-radius: 99px;
+      margin: 0 auto 24px;
+    }
+    .gate-title {
+      font-family: var(--font-display); font-size: 1.35rem;
+      font-weight: 800; color: var(--text-1); letter-spacing: -.02em;
+      margin-bottom: 10px;
+    }
+    .gate-desc {
+      font-size: .88rem; color: var(--text-2); line-height: 1.6;
+      margin-bottom: 28px;
+    }
+    .gate-input-wrap { position: relative; margin-bottom: 14px; text-align: left; }
+    .gate-input-label {
+      display: block; font-size: .75rem; font-weight: 700;
+      color: var(--text-2); text-transform: uppercase;
+      letter-spacing: .05em; margin-bottom: 6px;
+    }
+    .gate-input {
+      width: 100%; height: 48px;
+      padding: 0 16px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans); font-size: 1rem;
+      font-weight: 500; color: var(--text-1);
+      background: var(--surface); outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .gate-input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(29,78,216,.12);
+    }
+    .gate-input.error { border-color: var(--red); }
+    .gate-error {
+      font-size: .78rem; color: var(--red);
+      margin-top: 5px; display: none;
+    }
+    .gate-error.visible { display: block; }
+    .gate-btn {
+      width: 100%; height: 48px;
+      background: var(--blue); color: #fff;
+      border: none; border-radius: var(--radius-md);
+      font-family: var(--font-display); font-size: .95rem;
+      font-weight: 700; letter-spacing: -.01em;
+      cursor: pointer; transition: var(--transition);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .gate-btn:hover  { background: var(--blue-hover); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+    .gate-btn:active { transform: none; }
+    .gate-btn svg { width: 16px; height: 16px; }
+    .gate-footer-note {
+      margin-top: 20px; font-size: .75rem; color: var(--text-3);
+      font-family: var(--font-mono);
+    }
+
+
+    /* ─── GATE ROLE SELECT ───────────────────────────────── */
+    .gate-roles {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 10px; margin-bottom: 22px;
+    }
+    .role-opt {
+      position: relative; cursor: pointer;
+    }
+    .role-opt input[type="radio"] {
+      position: absolute; opacity: 0; width: 0; height: 0;
+    }
+    .role-card {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 8px; padding: 16px 12px;
+      border: 2px solid var(--border); border-radius: var(--radius-md);
+      background: var(--surface); transition: all .15s; text-align: center;
+      cursor: pointer;
+    }
+    .role-opt input:checked + .role-card {
+      border-color: var(--blue);
+      background: var(--blue-light);
+      box-shadow: 0 0 0 3px rgba(29,78,216,.1);
+    }
+    .role-card:hover { border-color: var(--border-mid); background: var(--surface-alt); }
+    .role-opt input:checked + .role-card:hover { background: var(--blue-light); }
+    .role-icon {
+      width: 36px; height: 36px; border-radius: var(--radius-sm);
+      background: var(--surface-alt); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      transition: all .15s;
+    }
+    .role-opt input:checked + .role-card .role-icon {
+      background: var(--blue); border-color: var(--blue);
+    }
+    .role-opt input:checked + .role-card .role-icon svg { stroke: #fff; }
+    .role-icon svg { width: 16px; height: 16px; stroke: var(--text-2); }
+    .role-label {
+      font-size: .8rem; font-weight: 700; color: var(--text-1);
+      line-height: 1.3;
+    }
+    .role-hint {
+      font-size: .71rem; color: var(--text-3); line-height: 1.4;
+    }
+
+    /* ─── TOPBAR USER CHIP (clickable to change name) ─────── */
+    .topbar-user {
+      cursor: pointer;
+      padding: 5px 8px; border-radius: var(--radius-sm);
+      transition: background .15s;
+    }
+    .topbar-user:hover { background: var(--surface-alt); }
+    .topbar-user:hover::after {
+      content: ' · change';
+      font-size: .72rem; color: var(--text-3);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════ TOP BAR -->
+  <div class="page-wrapper">
+    <header class="topbar fade-up">
+      <div class="topbar-brand">
+        <div class="brand-mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z"/>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-name">CycleOps</div>
+          <div class="brand-sub">Plant 1730 · Buena Park</div>
+        </div>
+      </div>
+      <div class="topbar-meta">
+        <div class="topbar-clock" id="js-clock">--:-- --</div>
+        <div class="topbar-user">
+          <div class="avatar" id="js-avatar">AL</div>
+          <span id="js-username">A. Lopez</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ═══════════════════════════════ HERO -->
+    <main>
+      <div class="hero">
+        <div class="hero-eyebrow fade-up delay-1">Inventory Control System</div>
+        <h1 class="hero-title fade-up delay-2">Audit with<br /><span>precision.</span> Act fast.</h1>
+        <p class="hero-desc fade-up delay-3">Live cycle count management for Plant 1730. Execute floor audits, track discrepancies, and push reconciliations to SAP — all from one hub.</p>
+      </div>
+
+      <!-- STATUS STRIP -->
+      <div class="status-strip fade-up delay-3">
+        <div class="status-chip">
+          <div class="dot dot-green"></div>
+          <span>Supabase</span>
+          <span class="chip-val" id="js-db-status">Connected</span>
+        </div>
+        <div class="status-chip">
+          <div class="dot dot-amber"></div>
+          <span>SAP</span>
+          <span class="chip-val" id="js-sap-status">2 Pending</span>
+        </div>
+        <div class="status-chip">
+          <div class="dot dot-blue"></div>
+          <span>Active Sessions</span>
+          <span class="chip-val" id="js-active-sessions">1</span>
+        </div>
+        <div class="status-chip">
+          <span>Last Sync</span>
+          <span class="chip-val" id="js-last-sync">12 min ago</span>
+        </div>
+      </div>
+
+      <!-- PORTAL CARDS -->
+      <div class="portal-grid fade-up delay-4">
+
+        <a href="scanner.html" class="portal-card blue" id="portal-scanner">
+          <div class="card-corner-art"></div>
+          <div class="card-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+              <path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+              <line x1="7" y1="12" x2="17" y2="12"/><line x1="12" y1="7" x2="12" y2="17"/>
+            </svg>
+          </div>
+          <div class="card-label">Floor Operations</div>
+          <div class="card-title">Start Cycle Count</div>
+          <div class="card-desc">Open the floor audit tool. Scan bin locations, log quantity discrepancies, flag label reprints, and build a submittable adjustment batch.</div>
+          <div class="card-action">
+            Begin Audit
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+
+        <a href="monitor.html" class="portal-card teal" id="portal-monitor">
+          <div class="card-corner-art"></div>
+          <div class="card-icon-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+              <path d="M7 8l3 4 2-2 3 4"/>
+            </svg>
+          </div>
+          <div class="card-label">Management View</div>
+          <div class="card-title">Metrics &amp; History</div>
+          <div class="card-desc">Review KPIs, audit history, accuracy trends, and pending SAP reconciliation queue. Drill into any session for line-item detail.</div>
+          <div class="card-action">
+            Open Dashboard
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+
+        <a href="fresh-count.html" class="portal-card" style="background:linear-gradient(135deg,#064E3B 0%,#065F46 100%);border-color:#065F46" id="portal-fresh">
+          <div class="card-corner-art" style="border-color:rgba(255,255,255,.08)"></div>
+          <div class="card-icon-wrap" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a10 10 0 0 1 10 10"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10"/>
+              <path d="M9 12c0-1.66 1.34-3 3-3s3 1.34 3 3-1.34 3-3 3-3-1.34-3-3z"/>
+              <path d="M3 9h1M3 15h1M20 9h1M20 15h1M9 3v1M15 3v1M9 20v1M15 20v1"/>
+            </svg>
+          </div>
+          <div class="card-label" style="color:rgba(255,255,255,.65)">Mon · Wed · Fri</div>
+          <div class="card-title" style="color:#fff">Fresh Materials Count</div>
+          <div class="card-desc" style="color:rgba(255,255,255,.7)">Count scattered fresh produce by location, pallet group, or batch number. 14 materials tracked per shift — prints a clean summary report.</div>
+          <div class="card-action" style="color:#fff;border-top-color:rgba(255,255,255,.15)">
+            Open Fresh Count
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+
+        <a href="requests.html" class="portal-card" style="background:linear-gradient(135deg,#1E3A5F 0%,#1C4A6E 100%);border-color:#1C4A6E" id="portal-requests">
+          <div class="card-corner-art" style="border-color:rgba(255,255,255,.08)"></div>
+          <div class="card-icon-wrap" style="background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2);color:#fff">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+              <rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/>
+            </svg>
+          </div>
+          <div class="card-label" style="color:rgba(255,255,255,.65)">Ad-Hoc Counts</div>
+          <div class="card-title" style="color:#fff">Ad-Hoc Count Reports</div>
+          <div class="card-desc" style="color:rgba(255,255,255,.7)">View all manager-requested cycle counts with auditor findings, photo evidence, and quantity variances ready for SAP action.</div>
+          <div class="card-action" style="color:#fff;border-top-color:rgba(255,255,255,.15)">
+            View Reports
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+
+      </div>
+
+      <!-- QUICK STATS -->
+      <div class="quick-stats fade-up delay-5">
+        <div class="qs-card">
+          <div class="qs-label">Accuracy MTD</div>
+          <div class="qs-value" id="js-qs-accuracy">98.4%</div>
+          <div class="qs-change change-up">↑ 0.6% vs last period</div>
+        </div>
+        <div class="qs-card">
+          <div class="qs-label">Bins Today</div>
+          <div class="qs-value" id="js-qs-bins">47</div>
+          <div class="qs-change change-up">↑ 12 from yesterday</div>
+        </div>
+        <div class="qs-card">
+          <div class="qs-label">Discrepancies</div>
+          <div class="qs-value" id="js-qs-disc">6</div>
+          <div class="qs-change change-dn">↑ 2 open</div>
+        </div>
+        <div class="qs-card">
+          <div class="qs-label">SAP Queue</div>
+          <div class="qs-value" id="js-qs-sap">2</div>
+          <div class="qs-change change-ne">— no change</div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+
+  <!-- ═══════════════════════════════ NAME GATE -->
+  <div class="gate-overlay" id="js-gate">
+    <div class="gate-card">
+      <div class="gate-brand">
+        <div class="gate-mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </div>
+        <div class="gate-brand-text">
+          <div class="gate-brand-name">CycleOps</div>
+          <div class="gate-brand-sub">Plant 1730 · Novus Foods</div>
+        </div>
+      </div>
+
+      <div class="gate-divider"></div>
+
+      <div class="gate-title">Welcome to CycleOps</div>
+      <p class="gate-desc">
+        Enter your name so your activity is tracked on all
+        audit sessions, count records, and requests.
+      </p>
+
+      <div class="gate-input-wrap">
+        <label class="gate-input-label" for="js-gate-input">Your Name</label>
+        <input
+          class="gate-input"
+          id="js-gate-input"
+          type="text"
+          placeholder="e.g. J. Doe"
+          maxlength="60"
+          autocomplete="name"
+          autocapitalize="words"
+          spellcheck="false"
+        />
+        <div class="gate-error" id="js-gate-error">Please enter your name to continue.</div>
+      </div>
+
+      <div class="gate-roles">
+        <label class="role-opt">
+          <input type="radio" name="gate-role" value="auditor" id="role-auditor" checked />
+          <div class="role-card">
+            <div class="role-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 7V5a2 2 0 0 1 2-2h2"/>
+                <path d="M17 3h2a2 2 0 0 1 2 2v2"/>
+                <path d="M21 17v2a2 2 0 0 1-2 2h-2"/>
+                <path d="M7 21H5a2 2 0 0 1-2-2v-2"/>
+                <line x1="7" y1="12" x2="17" y2="12"/>
+                <line x1="12" y1="7" x2="12" y2="17"/>
+              </svg>
+            </div>
+            <span class="role-label">Auditor</span>
+            <span class="role-hint">Going to the floor to count</span>
+          </div>
+        </label>
+        <label class="role-opt">
+          <input type="radio" name="gate-role" value="requester" id="role-requester" />
+          <div class="role-card">
+            <div class="role-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+                <rect x="9" y="3" width="6" height="4" rx="1"/>
+                <path d="M9 12h6M9 16h4"/>
+              </svg>
+            </div>
+            <span class="role-label">Requesting</span>
+            <span class="role-hint">Need to submit a count request</span>
+          </div>
+        </label>
+      </div>
+
+      <button class="gate-btn" id="js-gate-btn">
+        Enter Hub
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+             stroke-linecap="round" stroke-linejoin="round" id="js-gate-btn-arrow">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </button>
+
+      <div class="gate-footer-note">
+        Inventory Control System · v1.0
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ FOOTER -->
+  <footer class="footer">
+    CycleOps · Plant 1730 · <span id="js-footer-date"></span> · Powered by Supabase
+  </footer>
+
+  <script>
+    const LS_NAME = 'cc_auditor_name';
+
+    /* ─── Helpers ──────────────────────────────────────────── */
+    function getInitials(name) {
+      return name.trim().split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    }
+
+    function applyName(name) {
+      document.getElementById('js-avatar').textContent   = getInitials(name);
+      document.getElementById('js-username').textContent = name;
+    }
+
+    /* ─── Clock ────────────────────────────────────────────── */
+    function updateClock() {
+      const now = new Date();
+      const h   = now.getHours();
+      const m   = String(now.getMinutes()).padStart(2, '0');
+      const ampm= h >= 12 ? 'PM' : 'AM';
+      document.getElementById('js-clock').textContent = `${(h%12)||12}:${m} ${ampm}`;
+      document.getElementById('js-footer-date').textContent =
+        now.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric', year:'numeric' });
+    }
+    updateClock();
+    setInterval(updateClock, 30000);
+
+    /* ─── Live stats from localStorage ────────────────────── */
+    function refreshStats() {
+      try {
+        const inv  = JSON.parse(localStorage.getItem('cc_inventory_v1') || '[]');
+        const reqs = JSON.parse(localStorage.getItem('cc_adhoc_requests_v1') || '[]');
+        const done = JSON.parse(localStorage.getItem('cc_done_bins') || 'null');
+
+        if (inv.length) {
+          const pct = Math.round(inv.filter(i => i.status !== 'pending_count').length / inv.length * 1000) / 10;
+          document.getElementById('js-qs-accuracy').textContent = pct + '%';
+          document.getElementById('js-sap-status').textContent = inv.filter(i => i.status === 'qty_adjustment' || i.status === 'missing').length + ' pending';
+        }
+        const pending = reqs.filter(r => r.status === 'pending' || r.status === 'in_progress').length;
+        document.getElementById('js-qs-disc').textContent = pending;
+        document.getElementById('js-qs-sap').textContent  = reqs.filter(r => r.status === 'pending').length;
+
+        const today = new Date().toISOString().slice(0,10);
+        if (done && done.date === today) {
+          document.getElementById('js-qs-bins').textContent = done.bins?.length || 0;
+        }
+      } catch(e) { /* ignore */ }
+    }
+    refreshStats();
+
+    /* ─── Gate logic ───────────────────────────────────────── */
+    const gate    = document.getElementById('js-gate');
+    const gateInp = document.getElementById('js-gate-input');
+    const gateBtn = document.getElementById('js-gate-btn');
+    const gateErr = document.getElementById('js-gate-error');
+
+    function getSelectedRole() {
+      return document.querySelector('input[name="gate-role"]:checked')?.value || 'auditor';
+    }
+
+    // Update button label when role changes
+    document.querySelectorAll('input[name="gate-role"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        const isReq = getSelectedRole() === 'requester';
+        gateBtn.childNodes[0].textContent = isReq ? 'Go to My Requests ' : 'Enter Hub ';
+      });
+    });
+
+    function openGate(prefill) {
+      if (prefill) gateInp.value = prefill;
+      gate.classList.remove('hidden');
+      setTimeout(() => { gateInp.focus(); gateInp.select(); }, 50);
+    }
+
+    function commitName() {
+      const name = gateInp.value.trim();
+      if (!name) {
+        gateInp.classList.add('error');
+        gateErr.classList.add('visible');
+        gateInp.focus();
+        return;
+      }
+      const role = getSelectedRole();
+      localStorage.setItem(LS_NAME, name);
+      localStorage.setItem('cc_user_role', role);
+      applyName(name);
+      gate.classList.add('hidden');
+
+      if (role === 'requester') {
+        window.location.href = 'requests.html';
+      }
+    }
+
+    // Check on load
+    const saved = localStorage.getItem(LS_NAME);
+    if (saved && saved.trim()) {
+      applyName(saved.trim());
+      // Restore role radio
+      const savedRole = localStorage.getItem('cc_user_role') || 'auditor';
+      const savedRadio = document.getElementById(`role-${savedRole}`);
+      if (savedRadio) savedRadio.checked = true;
+      gate.classList.add('hidden');
+    } else {
+      openGate();
+    }
+
+    // Button + Enter key
+    gateBtn.addEventListener('click', commitName);
+    gateInp.addEventListener('keydown', e => {
+      if (e.key === 'Enter') commitName();
+      gateInp.classList.remove('error');
+      gateErr.classList.remove('visible');
+    });
+
+    // Click topbar user chip → reopen gate to change name/role
+    document.querySelector('.topbar-user').addEventListener('click', () => {
+      const savedRole = localStorage.getItem('cc_user_role') || 'auditor';
+      const r = document.getElementById(`role-${savedRole}`);
+      if (r) r.checked = true;
+      openGate(localStorage.getItem(LS_NAME) || '');
+    });
+
+    // Status chips (static fallbacks)
+    document.getElementById('js-db-status').textContent      = 'localStorage';
+    document.getElementById('js-active-sessions').textContent = '—';
+    document.getElementById('js-last-sync').textContent      = 'Local only';
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="supabase-wiring.js"></script>
+</body>
+</html>

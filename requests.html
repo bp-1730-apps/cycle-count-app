@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CycleOps — Ad-Hoc Count Reports · Plant 1730</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── TOKENS ──────────────────────────────────────────── */
+    :root {
+      --bg:#F4F6FA; --surface:#FFF; --s2:#F0F2F7; --border:#E1E5EE; --bmid:#C9CEDB;
+      --t1:#0C111D; --t2:#4A5368; --t3:#8C94A8;
+      --blue:#1D4ED8; --blue-lt:#EFF4FF;
+      --teal:#0D9488; --teal-lt:#F0FDFB; --teal-bd:#A2DED9;
+      --green:#16A34A; --grn-lt:#F0FDF4; --grn-bd:#BBF7D0;
+      --amber:#D97706; --amb-lt:#FFFBEB; --amb-bd:#FDE68A;
+      --red:#DC2626; --red-lt:#FFF1F0; --red-bd:#FECACA;
+      --purple:#7C3AED; --pur-lt:#F5F3FF; --pur-bd:#DDD6FE;
+      --sh-sm:0 1px 3px rgba(12,17,29,.06),0 1px 2px rgba(12,17,29,.04);
+      --sh-md:0 4px 12px rgba(12,17,29,.08),0 2px 4px rgba(12,17,29,.04);
+      --sh-lg:0 16px 40px rgba(12,17,29,.12),0 4px 10px rgba(12,17,29,.06);
+      --r-sm:6px; --r-md:10px; --r-lg:16px; --r-xl:20px;
+      --font:'DM Sans',sans-serif; --mono:'DM Mono',monospace; --display:'Sora',sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{font-size:16px;-webkit-font-smoothing:antialiased}
+    body{font-family:var(--font);background:var(--bg);color:var(--t1);min-height:100vh;display:flex;flex-direction:column}
+    a{color:inherit;text-decoration:none} button{font-family:var(--font);cursor:pointer;border:none}
+    input,select{font-family:var(--font)}
+
+    /* ─── TOP BAR ────────────────────────────────────────── */
+    .topbar{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);box-shadow:var(--sh-sm);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .tb-left{display:flex;align-items:center;gap:12px}
+    .btn-back{display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;font-size:.83rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all .15s}
+    .btn-back:hover{background:var(--s2);border-color:var(--bmid)}
+    .btn-back svg{width:14px;height:14px}
+    .tb-divider{width:1px;height:20px;background:var(--border)}
+    .tb-icon{width:34px;height:34px;border-radius:var(--r-sm);background:var(--teal-lt);border:1px solid var(--teal-bd);display:flex;align-items:center;justify-content:center;color:var(--teal)}
+    .tb-icon svg{width:16px;height:16px}
+    .tb-title{font-family:var(--display);font-size:1rem;font-weight:700;color:var(--t1);letter-spacing:-.01em}
+    .tb-sub{font-size:.76rem;color:var(--t3)}
+    .tb-right{display:flex;align-items:center;gap:8px}
+    .btn-sm{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r-sm);border:1.5px solid var(--border);background:var(--surface);font-size:.83rem;font-weight:600;color:var(--t2);transition:all .15s}
+    .btn-sm:hover{background:var(--s2);border-color:var(--bmid)}
+    .btn-sm svg{width:13px;height:13px}
+    .btn-sm-teal{background:var(--teal);color:#fff;border-color:var(--teal)}
+    .btn-sm-teal:hover{background:#0B8276}
+    .btn-sm-dark{background:var(--t1);color:#fff;border-color:var(--t1)}
+    .btn-sm-dark:hover{background:#1E2A3A}
+
+    /* ─── LAYOUT ─────────────────────────────────────────── */
+    .page{flex:1;max-width:1200px;margin:0 auto;width:100%;padding:24px 24px 60px}
+
+    /* ─── PAGE HERO ──────────────────────────────────────── */
+    .page-hero{margin-bottom:28px}
+    .hero-eyebrow{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:.74rem;font-weight:500;color:var(--teal);background:var(--teal-lt);border:1px solid var(--teal-bd);border-radius:99px;padding:4px 12px;letter-spacing:.05em;text-transform:uppercase;margin-bottom:12px}
+    .hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--teal);animation:pulse 2s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+    .hero-title{font-family:var(--display);font-size:1.9rem;font-weight:800;color:var(--t1);letter-spacing:-.03em;line-height:1.15;margin-bottom:8px}
+    .hero-title span{color:var(--teal)}
+    .hero-desc{font-size:.95rem;color:var(--t2);line-height:1.6;max-width:560px}
+
+    /* ─── STAT STRIP ─────────────────────────────────────── */
+    .stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+    .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px 18px;box-shadow:var(--sh-sm);transition:box-shadow .15s,transform .15s}
+    .stat-card:hover{box-shadow:var(--sh-md);transform:translateY(-1px)}
+    .sc-val{font-family:var(--display);font-size:2rem;font-weight:800;color:var(--t1);letter-spacing:-.04em;line-height:1;margin-bottom:5px}
+    .sc-lbl{font-size:.78rem;color:var(--t2);font-weight:500}
+    .sc-sub{font-size:.72rem;color:var(--t3);font-family:var(--mono);margin-top:3px}
+
+    /* ─── FILTER BAR ─────────────────────────────────────── */
+    .filter-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--sh-sm);padding:14px 18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:22px}
+    .status-tabs{display:flex;gap:4px;flex-wrap:wrap}
+    .stab{padding:6px 14px;border-radius:var(--r-sm);font-size:.82rem;font-weight:600;color:var(--t2);background:transparent;border:1.5px solid var(--border);cursor:pointer;transition:all .15s;white-space:nowrap}
+    .stab:hover{background:var(--s2);border-color:var(--bmid)}
+    .stab.active{background:var(--t1);border-color:var(--t1);color:#fff}
+    .stab-count{font-family:var(--mono);font-size:.7rem;opacity:.7;margin-left:4px}
+    .fb-divider{width:1px;height:24px;background:var(--border)}
+    .fb-search-wrap{position:relative;display:flex;align-items:center;flex:1;min-width:160px}
+    .fb-search-ico{position:absolute;left:9px;width:14px;height:14px;color:var(--t3);pointer-events:none}
+    .fb-search{height:36px;padding:0 10px 0 30px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:.84rem;color:var(--t1);background:var(--surface);outline:none;width:100%;transition:all .15s}
+    .fb-search:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,148,136,.1)}
+    .sort-select{height:36px;padding:0 10px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:.83rem;color:var(--t2);background:var(--surface);outline:none;cursor:pointer;white-space:nowrap}
+    .sort-select:focus{border-color:var(--teal)}
+    .fb-count{font-size:.8rem;color:var(--t3);font-family:var(--mono);white-space:nowrap}
+
+    /* ─── GRID + CARDS ───────────────────────────────────── */
+    .requests-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:18px}
+    .req-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--sh-sm);overflow:hidden;transition:box-shadow .18s,transform .18s;display:flex;flex-direction:column}
+    .req-card:hover{box-shadow:var(--sh-md);transform:translateY(-2px)}
+    .req-card.urg{border-top:3px solid var(--red)}
+    .req-card.comp{border-top:3px solid var(--green)}
+    .req-card.prog{border-top:3px solid var(--blue)}
+    .req-card.pend{border-top:3px solid var(--amber)}
+    .req-card.canc{border-top:3px solid var(--t3);opacity:.65}
+
+    /* Card header */
+    .rc-head{padding:16px 18px 12px;display:flex;align-items:flex-start;gap:12px;border-bottom:1px solid var(--border)}
+    .rc-mat-icon{width:44px;height:44px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.2rem}
+    .mi-urg{background:var(--red-lt);border:1px solid var(--red-bd)}
+    .mi-comp{background:var(--grn-lt);border:1px solid var(--grn-bd)}
+    .mi-pend{background:var(--amb-lt);border:1px solid var(--amb-bd)}
+    .mi-prog{background:var(--blue-lt);border:1px solid #BDD0FB}
+    .mi-canc{background:var(--s2);border:1px solid var(--border)}
+    .rc-meta-wrap{flex:1;min-width:0}
+    .rc-mat{font-family:var(--mono);font-size:.9rem;font-weight:500;color:var(--t1)}
+    .rc-desc{font-size:.84rem;color:var(--t2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .rc-who{font-size:.73rem;color:var(--t3);margin-top:4px}
+    .rc-status-badge{font-size:.72rem;font-weight:700;padding:3px 9px;border-radius:99px;white-space:nowrap;align-self:flex-start;flex-shrink:0}
+    .rsb-urg{background:var(--red-lt);color:var(--red);border:1px solid var(--red-bd)}
+    .rsb-comp{background:var(--grn-lt);color:var(--green);border:1px solid var(--grn-bd)}
+    .rsb-pend{background:var(--amb-lt);color:var(--amber);border:1px solid var(--amb-bd)}
+    .rsb-prog{background:var(--blue-lt);color:var(--blue);border:1px solid #BDD0FB}
+    .rsb-canc{background:var(--s2);color:var(--t3);border:1px solid var(--border)}
+
+    /* Variance row */
+    .rc-variance{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .var-block{display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;min-width:60px}
+    .vb-label{font-size:.67rem;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);font-weight:600}
+    .vb-value{font-family:var(--mono);font-size:1.05rem;font-weight:600;color:var(--t1)}
+    .vb-value.v-over{color:var(--green)} .vb-value.v-under{color:var(--red)} .vb-value.v-match{color:var(--green)}
+    .var-divider{width:1px;height:32px;background:var(--border)}
+    .var-diff-chip{display:inline-flex;align-items:center;gap:5px;border-radius:var(--r-sm);padding:6px 12px;font-family:var(--mono);font-size:.84rem;font-weight:700}
+    .vdc-over{background:var(--grn-lt);color:var(--green);border:1px solid var(--grn-bd)}
+    .vdc-under{background:var(--red-lt);color:var(--red);border:1px solid var(--red-bd)}
+    .vdc-match{background:var(--grn-lt);color:var(--green);border:1px solid var(--grn-bd)}
+    .vdc-pending{background:var(--s2);color:var(--t3);border:1px solid var(--border)}
+
+    /* Result info row */
+    .rc-result{padding:10px 18px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:6px}
+    .ri-item{display:flex;flex-direction:column;gap:1px}
+    .ri-lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);font-weight:600;font-family:var(--mono)}
+    .ri-val{font-size:.83rem;font-weight:500;color:var(--t1);font-family:var(--mono)}
+
+    /* Notes row */
+    .rc-notes{padding:12px 18px;border-bottom:1px solid var(--border);font-size:.83rem;color:var(--t2);line-height:1.55;font-style:italic}
+    .rc-notes::before{content:'"';color:var(--t3);font-size:1.1rem;font-style:normal;margin-right:2px}
+    .rc-notes::after{content:'"';color:var(--t3);font-size:1.1rem;font-style:normal;margin-left:2px}
+
+    /* Photo thumbnail */
+    .rc-photo{border-bottom:1px solid var(--border)}
+    .photo-thumb{width:100%;max-height:200px;object-fit:cover;display:block;cursor:pointer;transition:opacity .15s}
+    .photo-thumb:hover{opacity:.9}
+    .photo-placeholder{background:var(--s2);border:2px dashed var(--border);border-radius:var(--r-sm);margin:12px 18px;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--t3);font-size:.8rem;text-align:center;cursor:pointer}
+    .photo-placeholder svg{width:24px;height:24px;opacity:.4}
+    .photo-placeholder .pp-label{font-weight:600}
+
+    /* Manager notes (request notes) */
+    .rc-req-notes{padding:10px 18px;background:var(--amb-lt);border-bottom:1px solid var(--amb-bd);font-size:.78rem;color:var(--amber);display:flex;align-items:flex-start;gap:6px;line-height:1.5}
+    .rc-req-notes::before{content:'📋';font-style:normal;flex-shrink:0}
+
+    /* Card footer */
+    .rc-foot{padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto}
+    .rc-foot-meta{font-size:.74rem;color:var(--t3);font-family:var(--mono)}
+    .rc-foot-actions{display:flex;gap:6px}
+    .btn-foot{height:28px;padding:0 10px;border-radius:var(--r-sm);font-size:.76rem;font-weight:600;cursor:pointer;transition:all .12s}
+    .btn-foot-ghost{background:transparent;border:1px solid var(--border);color:var(--t2)}
+    .btn-foot-ghost:hover{background:var(--s2)}
+    .btn-foot-red{background:var(--red-lt);border:1px solid var(--red-bd);color:var(--red)}
+    .btn-foot-red:hover{background:var(--red);color:#fff}
+    .btn-foot-teal{background:var(--teal-lt);border:1px solid var(--teal-bd);color:var(--teal)}
+    .btn-foot-teal:hover{background:var(--teal);color:#fff}
+
+    /* ─── EMPTY STATE ────────────────────────────────────── */
+    .empty-state{text-align:center;padding:80px 24px;color:var(--t3)}
+    .es-icon{font-size:3rem;margin-bottom:16px;display:block}
+    .es-title{font-family:var(--display);font-size:1.2rem;font-weight:700;color:var(--t2);margin-bottom:8px}
+    .es-desc{font-size:.9rem;line-height:1.6}
+    .es-action{display:inline-flex;align-items:center;gap:6px;margin-top:20px;padding:9px 20px;background:var(--teal);color:#fff;border-radius:var(--r-md);font-size:.88rem;font-weight:600;transition:all .15s}
+    .es-action:hover{background:#0B8276}
+
+    /* ─── PHOTO LIGHTBOX ─────────────────────────────────── */
+    .lightbox-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:300;align-items:center;justify-content:center;padding:20px}
+    .lightbox-ov.open{display:flex}
+    .lightbox-img{max-width:90vw;max-height:88vh;border-radius:var(--r-md);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+    .lb-close{position:absolute;top:16px;right:16px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);color:#fff;font-size:1.2rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s}
+    .lb-close:hover{background:rgba(255,255,255,.25)}
+    .lb-meta{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.6);color:#fff;font-size:.78rem;padding:6px 16px;border-radius:99px;font-family:var(--mono);white-space:nowrap}
+
+    /* ─── PAGINATION ─────────────────────────────────────── */
+    .pagination-bar{display:flex;align-items:center;justify-content:space-between;margin-top:24px;flex-wrap:wrap;gap:10px}
+    .pg-info{font-size:.8rem;color:var(--t3);font-family:var(--mono)}
+    .pagination{display:flex;gap:4px}
+    .pg-btn{height:30px;min-width:30px;padding:0 8px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);font-size:.8rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center}
+    .pg-btn:hover{background:var(--s2)} .pg-btn.active{background:var(--t1);border-color:var(--t1);color:#fff}
+    .pg-btn:disabled{opacity:.3;cursor:not-allowed}
+    .pg-btn svg{width:12px;height:12px}
+
+    /* ─── TOAST ──────────────────────────────────────────── */
+    .toast-wrap{position:fixed;bottom:20px;right:20px;z-index:500;display:flex;flex-direction:column;gap:6px}
+    .toast{background:var(--t1);color:#fff;border-radius:var(--r-md);padding:10px 16px;font-size:.86rem;font-weight:500;box-shadow:var(--sh-lg);display:flex;align-items:center;gap:8px;min-width:220px;animation:tIn .2s ease}
+    @keyframes tIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+    .t-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+    .t-g .t-dot{background:#4ADE80} .t-a .t-dot{background:#FCD34D} .t-r .t-dot{background:#F87171}
+
+    /* ─── FOOTER ─────────────────────────────────────────── */
+    .site-footer{border-top:1px solid var(--border);padding:16px 24px;text-align:center;font-size:.78rem;color:var(--t3);font-family:var(--mono)}
+
+
+    /* ─── REQUESTER PANEL ────────────────────────────────── */
+    .req-panel{background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--r-lg);box-shadow:var(--sh-sm);margin-bottom:24px;overflow:hidden}
+    .req-panel-hdr{display:flex;align-items:center;justify-content:space-between;
+      padding:16px 20px;border-bottom:1px solid var(--border);background:var(--s2)}
+    .req-panel-title{font-family:var(--display);font-size:.95rem;font-weight:700;
+      color:var(--t1);letter-spacing:-.01em;display:flex;align-items:center;gap:8px}
+    .req-panel-title svg{width:15px;height:15px;color:var(--teal)}
+    .req-panel-sub{font-size:.76rem;color:var(--t3)}
+    .req-form-body{padding:18px 20px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .req-field{display:flex;flex-direction:column;gap:4px}
+    .req-field.span2{grid-column:1/-1}
+    .req-lbl{font-size:.74rem;font-weight:700;color:var(--t2);
+      text-transform:uppercase;letter-spacing:.05em}
+    .req-inp{height:40px;padding:0 11px;border:1.5px solid var(--border);
+      border-radius:var(--r-md);font-size:.9rem;color:var(--t1);
+      background:var(--surface);outline:none;
+      transition:border-color .13s,box-shadow .13s;font-family:var(--font)}
+    .req-inp:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,148,136,.1)}
+    .req-textarea{min-height:64px;resize:vertical;padding:9px 11px;
+      border:1.5px solid var(--border);border-radius:var(--r-md);
+      font-size:.88rem;color:var(--t1);background:var(--surface);
+      outline:none;line-height:1.5;font-family:var(--font);
+      transition:border-color .13s}
+    .req-textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,148,136,.1)}
+    .req-priority-row{display:flex;gap:8px}
+    .prio-opt{position:relative;flex:1}
+    .prio-opt input{position:absolute;opacity:0;width:0;height:0}
+    .prio-card{display:flex;align-items:center;justify-content:center;gap:6px;
+      height:38px;border:1.5px solid var(--border);border-radius:var(--r-sm);
+      font-size:.82rem;font-weight:700;color:var(--t3);cursor:pointer;
+      background:var(--surface);transition:all .13s}
+    .prio-opt input:checked + .prio-card{border-color:currentColor}
+    .prio-opt.normal input:checked + .prio-card{color:var(--teal);background:var(--teal-lt);border-color:var(--teal)}
+    .prio-opt.urgent input:checked + .prio-card{color:var(--red);background:var(--red-lt);border-color:var(--red)}
+    .req-form-footer{display:flex;align-items:center;justify-content:flex-end;gap:10px;
+      padding:12px 20px;border-top:1px solid var(--border);background:var(--s2)}
+    .btn-req-submit{height:40px;padding:0 20px;background:var(--teal);color:#fff;
+      border:none;border-radius:var(--r-md);font-size:.88rem;font-weight:700;
+      cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .15s;
+      font-family:var(--font);letter-spacing:-.01em}
+    .btn-req-submit:hover{background:#0B8276;box-shadow:var(--sh-md)}
+    .btn-req-submit:active{transform:scale(.98)}
+    .btn-req-submit svg{width:14px;height:14px}
+    .btn-req-clear{height:40px;padding:0 16px;background:transparent;
+      border:1.5px solid var(--border);border-radius:var(--r-md);
+      font-size:.86rem;font-weight:600;color:var(--t2);cursor:pointer;
+      transition:all .13s;font-family:var(--font)}
+    .btn-req-clear:hover{background:var(--s2)}
+    /* requester "my requests" banner */
+    .my-req-banner{display:flex;align-items:center;justify-content:space-between;
+      padding:10px 16px;background:var(--teal-lt);border:1px solid var(--teal-bd);
+      border-radius:var(--r-md);margin-bottom:16px;font-size:.82rem;color:var(--teal);
+      font-weight:600;gap:10px;flex-wrap:wrap}
+    .my-req-banner svg{width:14px;height:14px;flex-shrink:0}
+    .btn-show-all{font-size:.78rem;font-weight:600;color:var(--t2);background:transparent;
+      border:1px solid var(--border);border-radius:99px;padding:3px 10px;cursor:pointer;
+      transition:all .12s}
+    .btn-show-all:hover{background:var(--s2)}
+    /* ─── RESPONSIVE ─────────────────────────────────────── */
+    @media(max-width:640px){
+      .requests-grid{grid-template-columns:1fr}
+      .stat-strip{grid-template-columns:repeat(2,1fr)}
+      .hero-title{font-size:1.4rem}
+      .tb-right .btn-sm-dark,.tb-right .btn-sm{display:none}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════ TOP BAR -->
+<header class="topbar">
+  <div class="tb-left">
+    <a href="index.html" class="btn-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Hub
+    </a>
+    <div class="tb-divider"></div>
+    <div class="tb-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+    </div>
+    <div>
+      <div class="tb-title">Ad-Hoc Count Reports</div>
+      <div class="tb-sub" id="js-sub">Loading…</div>
+    </div>
+  </div>
+  <div class="tb-right">
+    <a href="monitor.html" class="btn-sm">← Back to Dashboard</a>
+    <button class="btn-sm btn-sm-dark" id="btn-export">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export CSV
+    </button>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- ═══════════ HERO -->
+  <div class="page-hero">
+    <div class="hero-eyebrow">Ad-Hoc Cycle Count System</div>
+    <h1 class="hero-title">Floor Request<br /><span>Reports</span></h1>
+    <p class="hero-desc">All management-requested cycle counts with auditor findings, photo evidence, and quantity variances. Use this report to action SAP adjustments.</p>
+  </div>
+
+  <!-- ═══════════ REQUESTER PANEL (shown only for requesters) -->
+  <div class="req-panel" id="js-req-panel" style="display:none">
+    <div class="req-panel-hdr">
+      <div>
+        <div class="req-panel-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          New Count Request
+        </div>
+        <div class="req-panel-sub">Submit a request — floor auditors will see it immediately</div>
+      </div>
+    </div>
+    <div class="req-form-body">
+      <div class="req-field">
+        <label class="req-lbl" for="rp-mat">Material ID</label>
+        <input type="text" id="rp-mat" class="req-inp"
+          placeholder="e.g. 3309009" autocapitalize="characters" />
+      </div>
+      <div class="req-field">
+        <label class="req-lbl" for="rp-desc">Description (optional)</label>
+        <input type="text" id="rp-desc" class="req-inp"
+          placeholder="e.g. Fresh Tomato" />
+      </div>
+      <div class="req-field span2">
+        <label class="req-lbl" for="rp-notes">Reason / Notes</label>
+        <textarea id="rp-notes" class="req-textarea"
+          placeholder="e.g. Short count flagged during production run — need physical verification"></textarea>
+      </div>
+      <div class="req-field">
+        <label class="req-lbl">Priority</label>
+        <div class="req-priority-row">
+          <label class="prio-opt normal">
+            <input type="radio" name="rp-prio" value="normal" checked />
+            <div class="prio-card">Normal</div>
+          </label>
+          <label class="prio-opt urgent">
+            <input type="radio" name="rp-prio" value="urgent" />
+            <div class="prio-card">🔴 Urgent</div>
+          </label>
+        </div>
+      </div>
+      <div class="req-field">
+        <label class="req-lbl" for="rp-by">Your Name</label>
+        <input type="text" id="rp-by" class="req-inp"
+          placeholder="e.g. J. Doe" />
+      </div>
+    </div>
+    <div class="req-form-footer">
+      <button class="btn-req-clear" id="btn-rp-clear">Clear</button>
+      <button class="btn-req-submit" id="btn-rp-submit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+        Submit Request
+      </button>
+    </div>
+  </div>
+
+  <!-- my-requests banner (shown for requesters) -->
+  <div class="my-req-banner" id="js-my-banner" style="display:none">
+    <div style="display:flex;align-items:center;gap:7px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+      </svg>
+      <span id="js-my-banner-txt">Showing your requests</span>
+    </div>
+    <button class="btn-show-all" id="btn-show-all">Show all requests</button>
+  </div>
+
+  <!-- ═══════════ STATS STRIP -->
+  <div class="stat-strip">
+    <div class="stat-card">
+      <div class="sc-val" id="stat-total">0</div>
+      <div class="sc-lbl">Total Requests</div>
+      <div class="sc-sub" id="stat-total-sub">All time</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-val" id="stat-completed" style="color:var(--green)">0</div>
+      <div class="sc-lbl">Completed</div>
+      <div class="sc-sub" id="stat-comp-sub">0 today</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-val" id="stat-pending" style="color:var(--amber)">0</div>
+      <div class="sc-lbl">Pending / Active</div>
+      <div class="sc-sub" id="stat-pend-sub">Awaiting floor count</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-val" id="stat-photos" style="color:var(--blue)">0</div>
+      <div class="sc-lbl">Photos Captured</div>
+      <div class="sc-sub" id="stat-photo-sub">Evidence attached</div>
+    </div>
+  </div>
+
+  <!-- ═══════════ FILTER BAR -->
+  <div class="filter-bar">
+    <div class="status-tabs" id="status-tabs">
+      <button class="stab active" data-status="all">All <span class="stab-count" id="cnt-all">0</span></button>
+      <button class="stab" data-status="pending">Pending <span class="stab-count" id="cnt-pending">0</span></button>
+      <button class="stab" data-status="in_progress">In Progress <span class="stab-count" id="cnt-inprog">0</span></button>
+      <button class="stab" data-status="completed">Completed <span class="stab-count" id="cnt-comp">0</span></button>
+      <button class="stab" data-status="cancelled">Cancelled <span class="stab-count" id="cnt-canc">0</span></button>
+    </div>
+    <div class="fb-divider"></div>
+    <div class="fb-search-wrap">
+      <svg class="fb-search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="search-input" class="fb-search" placeholder="Search material, auditor, bin…" />
+    </div>
+    <select id="sort-select" class="sort-select">
+      <option value="newest">Newest first</option>
+      <option value="oldest">Oldest first</option>
+      <option value="urgent">Urgent first</option>
+      <option value="variance">Largest variance</option>
+    </select>
+    <span class="fb-count" id="result-count">0 records</span>
+  </div>
+
+  <!-- ═══════════ CARDS GRID -->
+  <div id="requests-grid" class="requests-grid"></div>
+  <div id="empty-state" class="empty-state" style="display:none;">
+    <span class="es-icon">📋</span>
+    <div class="es-title" id="es-title">No requests yet</div>
+    <p class="es-desc" id="es-desc">Ad-hoc cycle count requests submitted from the dashboard will appear here once completed by floor auditors.</p>
+    <a href="monitor.html" class="es-action">Submit a Request →</a>
+  </div>
+
+  <!-- ═══════════ PAGINATION -->
+  <div class="pagination-bar" id="pagination-bar" style="display:none;">
+    <span class="pg-info" id="pg-info">—</span>
+    <div class="pagination" id="pagination"></div>
+  </div>
+
+</div>
+
+<!-- ═══════════ PHOTO LIGHTBOX -->
+<div class="lightbox-ov" id="lightbox">
+  <button class="lb-close" id="lb-close">✕</button>
+  <img class="lightbox-img" id="lb-img" src="" alt="Evidence photo" />
+  <div class="lb-meta" id="lb-meta">Photo Evidence</div>
+</div>
+
+<footer class="site-footer">
+  CycleOps · Plant 1730 · <span id="footer-date"></span> · <a href="monitor.html" style="color:var(--teal)">Dashboard</a> · <a href="scanner.html" style="color:var(--blue)">Scanner</a>
+</footer>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   STORAGE
+══════════════════════════════════════════════════════ */
+const LS_REQ = 'cc_adhoc_requests_v1';
+const readReq  = () => { try{return JSON.parse(localStorage.getItem(LS_REQ))||[];}catch{return[];} };
+const writeReq = v  => localStorage.setItem(LS_REQ, JSON.stringify(v));
+
+/* ══════════════════════════════════════════════════════
+   MOCK DATA (seeds when localStorage is empty or has no completed entries)
+   STUB: Replace readReq() with Supabase query:
+   const { data } = await supabase.from('adhoc_requests').select('*').order('requested_at', {ascending:false})
+══════════════════════════════════════════════════════ */
+const MOCK_REQUESTS = [
+  {
+    id:'ADHOC-DEMO-001', material_id:'3309032',
+    description:'IQF Org Wht Onion Diced 3/8"',
+    notes:'Short count flagged in yesterday\'s production run — need physical verification of all pallets in FZ01.',
+    requested_by:'J. Martinez', priority:'urgent',
+    status:'completed',
+    requested_at:'2025-07-15T09:00:00.000Z',
+    in_progress_by:'A. Lopez',  in_progress_at:'2025-07-15T10:15:00.000Z',
+    completed_by:'A. Lopez',    completed_at:'2025-07-15T11:23:00.000Z',
+    result_hu:'800057608', result_bin:'FZ01-FA02A',
+    result_qty:1320, expected_qty:1575, qty_variance:-255,
+    auditor_notes:'Located HU 800057608 in FA02A. Pallet was partially pulled for production Line 2E this morning. Label intact and readable. Remaining 1320 LB confirmed physical count.',
+    photo_evidence:'MOCK_PHOTO_1',
+    is_adhoc_request:true, session_id:'SES-1730-047',
+  },
+  {
+    id:'ADHOC-DEMO-002', material_id:'3307503',
+    description:'Avo Pulp Chnky 03105',
+    notes:'QA hold items moved to MIXAREA — confirm current qty and stock type status.',
+    requested_by:'A. Reyes', priority:'urgent',
+    status:'completed',
+    requested_at:'2025-07-14T13:00:00.000Z',
+    in_progress_by:'M. Torres', in_progress_at:'2025-07-14T14:05:00.000Z',
+    completed_by:'M. Torres',   completed_at:'2025-07-14T14:51:00.000Z',
+    result_hu:'800074909', result_bin:'FZ01-FA05B',
+    result_qty:2000, expected_qty:2000, qty_variance:0,
+    auditor_notes:'All 4 pallets present in FA05B. Q4 stock type confirmed. No label damage. QA hold flags visible on all HUs.',
+    photo_evidence:'MOCK_PHOTO_2',
+    is_adhoc_request:true, session_id:'SES-1730-043',
+  },
+  {
+    id:'ADHOC-DEMO-003', material_id:'3309145',
+    description:'IQF Mango 3/8" Diced Blanched 45lb',
+    notes:'Inventory discrepancy vs production plan. Please count all FZ01 and FZ02 mango pallets.',
+    requested_by:'R. Castillo', priority:'normal',
+    status:'completed',
+    requested_at:'2025-07-14T08:00:00.000Z',
+    in_progress_by:'J. Medina',  in_progress_at:'2025-07-14T09:10:00.000Z',
+    completed_by:'J. Medina',    completed_at:'2025-07-14T10:44:00.000Z',
+    result_hu:'800067357', result_bin:'FZ01-FA02A',
+    result_qty:2400, expected_qty:2400, qty_variance:0,
+    auditor_notes:'Counted 6 mango pallets across FA02A, FA05A, FA06A, FC08A, FD03A. All quantities match SAP. HU 800062287 has split quantity across Q4 and F2 stock types — may need posting correction.',
+    photo_evidence:null,
+    is_adhoc_request:true, session_id:'SES-1730-044',
+  },
+  {
+    id:'ADHOC-DEMO-004', material_id:'3304001',
+    description:'IQF Cilantro - Coarse Cut 142',
+    notes:'Production line short — need to know if any cilantro pallets are in FD or FB rows.',
+    requested_by:'J. Martinez', priority:'urgent',
+    status:'completed',
+    requested_at:'2025-07-13T11:00:00.000Z',
+    in_progress_by:'A. Lopez',   in_progress_at:'2025-07-13T11:30:00.000Z',
+    completed_by:'A. Lopez',     completed_at:'2025-07-13T12:05:00.000Z',
+    result_hu:'800079090', result_bin:'FZ01-FA08B',
+    result_qty:840, expected_qty:840, qty_variance:0,
+    auditor_notes:'Found HU in FA08B as expected. Also located HU 800079201 in FD03A and 800079087 in FD01B. All quantities verified. Total cilantro available: 5,040 LB across 4 HUs.',
+    photo_evidence:'MOCK_PHOTO_3',
+    is_adhoc_request:true, session_id:'SES-1730-042',
+  },
+  {
+    id:'ADHOC-DEMO-005', material_id:'3308309',
+    description:'IQF Pepper Bell Grn Org 3/8" Diced',
+    notes:'Need to verify the 3 organic bell pepper pallets before tonight\'s Rojos production run.',
+    requested_by:'A. Reyes', priority:'normal',
+    status:'in_progress',
+    requested_at:'2025-07-15T10:00:00.000Z',
+    in_progress_by:'M. Torres',  in_progress_at:'2025-07-15T11:00:00.000Z',
+    completed_by:null, completed_at:null,
+    result_hu:null, result_bin:null, result_qty:null, expected_qty:5292, qty_variance:null,
+    auditor_notes:'', photo_evidence:null,
+    is_adhoc_request:true, session_id:null,
+  },
+  {
+    id:'ADHOC-DEMO-006', material_id:'3307733',
+    description:'IQF Chile Hab Rstd #1192',
+    notes:'QA flagged Q4 habanero pallets — please verify location and document condition.',
+    requested_by:'R. Castillo', priority:'urgent',
+    status:'completed',
+    requested_at:'2025-07-12T14:00:00.000Z',
+    in_progress_by:'J. Medina',  in_progress_at:'2025-07-12T14:45:00.000Z',
+    completed_by:'J. Medina',    completed_at:'2025-07-12T15:20:00.000Z',
+    result_hu:'800066549', result_bin:'FZ01-FB05B',
+    result_qty:1085, expected_qty:1085, qty_variance:0,
+    auditor_notes:'HU in FB05B confirmed. Q4 stock holds still active per QA sticker on pallet. Pallet wrap intact but one corner slightly damaged from forklift. Recommend re-wrapping before production release.',
+    photo_evidence:'MOCK_PHOTO_4',
+    is_adhoc_request:true, session_id:'SES-1730-039',
+  },
+  {
+    id:'ADHOC-DEMO-007', material_id:'3309022',
+    description:'IQF Grn Bell Pepper Diced 1/4"',
+    notes:'Scheduler needs updated count before building tomorrow\'s production plan.',
+    requested_by:'J. Martinez', priority:'normal',
+    status:'pending',
+    requested_at:'2025-07-15T12:30:00.000Z',
+    in_progress_by:null, in_progress_at:null,
+    completed_by:null, completed_at:null,
+    result_hu:null, result_bin:null, result_qty:null, expected_qty:null, qty_variance:null,
+    auditor_notes:'', photo_evidence:null,
+    is_adhoc_request:true, session_id:null,
+  },
+  {
+    id:'ADHOC-DEMO-008', material_id:'3309145',
+    description:'IQF Mango 3/8" Diced Blanched 45lb',
+    notes:'Second mango audit per QA request — cross-check with previous count on 7/14.',
+    requested_by:'A. Reyes', priority:'normal',
+    status:'cancelled',
+    requested_at:'2025-07-14T15:00:00.000Z',
+    in_progress_by:null, in_progress_at:null,
+    completed_by:null, completed_at:null,
+    result_hu:null, result_bin:null, result_qty:null, expected_qty:null, qty_variance:null,
+    auditor_notes:'', photo_evidence:null,
+    is_adhoc_request:true, session_id:null,
+  },
+];
+
+/* ══════════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════════ */
+const PAGE_SIZE = 9;
+let state = { status:'all', search:'', sort:'newest', page:1 };
+let allRequests = [];
+
+/* ══════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════ */
+window.addEventListener('load', () => {
+  loadData();
+  updateStats();
+  updateCounts();
+  renderGrid();
+  document.getElementById('js-sub').textContent =
+    'Updated ' + new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  document.getElementById('footer-date').textContent =
+    new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+});
+
+function loadData() {
+  const stored = readReq();
+  if (stored.length > 0) {
+    // Use exactly what's in localStorage — no re-merging mocks.
+    // Re-merging would resurrect cancelled/archived items on every reload.
+    allRequests = [...stored];
+  } else {
+    // First visit: seed mock data so the page isn't empty
+    allRequests = [...MOCK_REQUESTS];
+    writeReq(allRequests);
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   STATS
+══════════════════════════════════════════════════════ */
+function updateStats() {
+  const visible   = allRequests.filter(r => r.status !== 'archived');
+  const total     = visible.length;
+  const completed = visible.filter(r=>r.status==='completed').length;
+  const pending   = visible.filter(r=>r.status==='pending'||r.status==='in_progress').length;
+  const photos    = visible.filter(r=>r.photo_evidence).length;
+  const sod       = new Date(); sod.setHours(0,0,0,0);
+  const todayComp = visible.filter(r=>r.completed_at&&new Date(r.completed_at)>=sod).length;
+
+  const $ = id => document.getElementById(id);
+  $('stat-total').textContent     = total;
+  $('stat-total-sub').textContent = `${visible.filter(r=>r.priority==='urgent').length} urgent`;
+  $('stat-completed').textContent = completed;
+  $('stat-comp-sub').textContent  = `${todayComp} today`;
+  $('stat-pending').textContent   = pending;
+  $('stat-pend-sub').textContent  = pending===0?'All clear ✓':'Awaiting floor count';
+  $('stat-photos').textContent    = photos;
+  $('stat-photo-sub').textContent = `${Math.round((photos/Math.max(completed,1))*100)}% of completed`;
+}
+
+function updateCounts() {
+  const visible = allRequests.filter(r => r.status !== 'archived');
+  document.getElementById('cnt-all').textContent    = visible.length;
+  document.getElementById('cnt-pending').textContent= visible.filter(r=>r.status==='pending').length;
+  document.getElementById('cnt-inprog').textContent = visible.filter(r=>r.status==='in_progress').length;
+  document.getElementById('cnt-comp').textContent   = visible.filter(r=>r.status==='completed').length;
+  document.getElementById('cnt-canc').textContent   = visible.filter(r=>r.status==='cancelled').length;
+}
+
+/* ══════════════════════════════════════════════════════
+   FILTER + SORT
+══════════════════════════════════════════════════════ */
+function getFiltered() {
+  // Never show archived items regardless of filter state
+  let d = [...allRequests].filter(r => r.status !== 'archived');
+
+  // Status filter
+  if (state.status !== 'all') d = d.filter(r => r.status === state.status);
+
+  // Search
+  if (state.search) {
+    const q = state.search.toLowerCase();
+    d = d.filter(r =>
+      r.material_id.toLowerCase().includes(q) ||
+      (r.description||'').toLowerCase().includes(q) ||
+      (r.requested_by||'').toLowerCase().includes(q) ||
+      (r.completed_by||'').toLowerCase().includes(q) ||
+      (r.result_bin||'').toLowerCase().includes(q) ||
+      (r.auditor_notes||'').toLowerCase().includes(q) ||
+      r.id.toLowerCase().includes(q)
+    );
+  }
+
+  // Sort
+  switch (state.sort) {
+    case 'newest':   d.sort((a,b)=>new Date(b.requested_at)-new Date(a.requested_at)); break;
+    case 'oldest':   d.sort((a,b)=>new Date(a.requested_at)-new Date(b.requested_at)); break;
+    case 'urgent':   d.sort((a,b)=>{if(a.priority===b.priority)return 0;return a.priority==='urgent'?-1:1;}); break;
+    case 'variance': d.sort((a,b)=>Math.abs(b.qty_variance||0)-Math.abs(a.qty_variance||0)); break;
+  }
+  return d;
+}
+
+/* ══════════════════════════════════════════════════════
+   RENDER GRID
+══════════════════════════════════════════════════════ */
+function renderGrid() {
+  const data  = getFiltered();
+  const total = data.length;
+  const start = (state.page-1)*PAGE_SIZE;
+  const end   = Math.min(start+PAGE_SIZE, total);
+  const page  = data.slice(start, end);
+
+  document.getElementById('result-count').textContent = `${total} record${total!==1?'s':''}`;
+
+  const grid   = document.getElementById('requests-grid');
+  const empty  = document.getElementById('empty-state');
+  const pgBar  = document.getElementById('pagination-bar');
+
+  if (!page.length) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    pgBar.style.display = 'none';
+    if (state.search || state.status !== 'all') {
+      document.getElementById('es-title').textContent = 'No matching requests';
+      document.getElementById('es-desc').textContent  = 'Try adjusting your search or filters.';
+    } else {
+      document.getElementById('es-title').textContent = 'No ad-hoc requests yet';
+      document.getElementById('es-desc').textContent  = 'Requests submitted from the dashboard will appear here.';
+    }
+    return;
+  }
+  empty.style.display = 'none';
+  pgBar.style.display = total>PAGE_SIZE?'flex':'none';
+  document.getElementById('pg-info').textContent = `Showing ${start+1}–${end} of ${total}`;
+
+  grid.innerHTML = page.map(req => buildCard(req)).join('');
+
+  // Wire up card actions
+  grid.querySelectorAll('[data-action="photo"]').forEach(btn => {
+    btn.addEventListener('click', () => openLightbox(btn.dataset.src, btn.dataset.meta));
+  });
+  grid.querySelectorAll('[data-action="cancel"]').forEach(btn => {
+    btn.addEventListener('click', () => cancelRequest(btn.dataset.id));
+  });
+  grid.querySelectorAll('[data-action="delete"]').forEach(btn => {
+    btn.addEventListener('click', () => deleteRequest(btn.dataset.id));
+  });
+
+  renderPagination(total);
+}
+
+function buildCard(req) {
+  const urg  = req.priority === 'urgent';
+  const isComp= req.status === 'completed';
+  const isPend= req.status === 'pending';
+  const isProg= req.status === 'in_progress';
+  const isCanc= req.status === 'cancelled';
+
+  const cardClass = urg&&isPend?'urg':isComp?'comp':isProg?'prog':isPend?'pend':isCanc?'canc':'pend';
+
+  // Status badge config
+  const sbMap = {
+    completed  : ['rsb-comp','✓ Completed'],
+    pending    : ['rsb-pend', urg?'🔴 URGENT':'Pending'],
+    in_progress: ['rsb-prog','▶ In Progress'],
+    cancelled  : ['rsb-canc','Cancelled'],
+  };
+  const [sbCls, sbTxt] = sbMap[req.status]||['rsb-pend','Unknown'];
+
+  // Icon
+  const iconMap = { completed:'✅', pending:urg?'🔴':'📋', in_progress:'▶️', cancelled:'✕' };
+  const iconCls = { completed:'mi-comp', pending:urg?'mi-urg':'mi-pend', in_progress:'mi-prog', cancelled:'mi-canc' };
+  const icon = iconMap[req.status]||'📋';
+  const icCls= iconCls[req.status]||'mi-pend';
+
+  // Variance
+  const hasResult = req.result_qty != null && req.expected_qty != null;
+  const variance  = hasResult ? req.qty_variance : null;
+  let varHtml = '';
+  if (isComp && req.result_hu) {
+    const vcls = variance===0?'v-match':variance>0?'v-over':'v-under';
+    const dchip= variance===0?'vdc-match':variance>0?'vdc-over':'vdc-under';
+    const vTxt = variance===0?'✓ Match':variance>0?`+${variance} Over`:`${variance} Short`;
+    varHtml = `<div class="rc-variance">
+      <div class="var-block"><div class="vb-label">System Qty</div><div class="vb-value">${fmt(req.expected_qty)}</div></div>
+      <div class="var-divider"></div>
+      <div class="var-block"><div class="vb-label">Actual Count</div><div class="vb-value ${vcls}">${fmt(req.result_qty)}</div></div>
+      <div class="var-divider"></div>
+      <div class="var-diff-chip ${dchip}">${vTxt}</div>
+    </div>`;
+  } else if (isProg || isPend) {
+    varHtml = `<div class="rc-variance">
+      <div class="var-block"><div class="vb-label">Expected Qty</div><div class="vb-value">${req.expected_qty!=null?fmt(req.expected_qty):'—'}</div></div>
+      <div class="var-divider"></div>
+      <div class="var-diff-chip vdc-pending">Count Pending</div>
+    </div>`;
+  }
+
+  // Result info (only for completed)
+  let resultHtml = '';
+  if (isComp && req.result_hu) {
+    resultHtml = `<div class="rc-result">
+      <div class="ri-item"><div class="ri-lbl">HU Found</div><div class="ri-val">${req.result_hu}</div></div>
+      <div class="ri-item"><div class="ri-lbl">Location Found</div><div class="ri-val">${req.result_bin||'—'}</div></div>
+      <div class="ri-item"><div class="ri-lbl">Completed By</div><div class="ri-val" style="font-family:var(--font);font-weight:500">${req.completed_by||'—'}</div></div>
+      <div class="ri-item"><div class="ri-lbl">Completed At</div><div class="ri-val">${req.completed_at?fmtDate(req.completed_at):'—'}</div></div>
+    </div>`;
+  } else if (isProg) {
+    resultHtml = `<div class="rc-result">
+      <div class="ri-item"><div class="ri-lbl">In Progress By</div><div class="ri-val" style="font-family:var(--font);font-weight:500">${req.in_progress_by||'—'}</div></div>
+      <div class="ri-item"><div class="ri-lbl">Started</div><div class="ri-val">${req.in_progress_at?timeAgo(req.in_progress_at):'—'}</div></div>
+    </div>`;
+  }
+
+  // Manager request notes
+  const reqNotesHtml = req.notes
+    ? `<div class="rc-req-notes">${req.notes}</div>`
+    : '';
+
+  // Auditor notes
+  const auditNotesHtml = isComp && req.auditor_notes
+    ? `<div class="rc-notes">${escHtml(req.auditor_notes)}</div>`
+    : '';
+
+  // Photo
+  let photoHtml = '';
+  if (isComp) {
+    if (req.photo_evidence && req.photo_evidence !== 'MOCK_PHOTO_1' && req.photo_evidence !== 'MOCK_PHOTO_2' &&
+        req.photo_evidence !== 'MOCK_PHOTO_3' && req.photo_evidence !== 'MOCK_PHOTO_4') {
+      // Real base64 photo
+      photoHtml = `<div class="rc-photo">
+        <img class="photo-thumb" src="${req.photo_evidence}" alt="Evidence photo"
+             data-action="photo" data-src="${req.photo_evidence}" data-meta="${req.material_id} · ${req.result_bin||'unknown bin'}" />
+      </div>`;
+    } else if (req.photo_evidence) {
+      // Mock photo placeholder with placeholder image
+      const colors=['#1D4ED8','#0D9488','#16A34A','#7C3AED'];
+      const ci = parseInt(req.id.slice(-1))||0;
+      const color = colors[ci%colors.length];
+      photoHtml = `<div class="rc-photo" style="background:${color}10;border-bottom:1px solid var(--border);">
+        <div style="padding:20px;display:flex;align-items:center;gap:12px;cursor:pointer;"
+             data-action="photo" data-src="" data-meta="${req.material_id} · ${req.result_bin||''}">
+          <div style="width:52px;height:52px;border-radius:var(--r-md);background:${color}22;border:1px solid ${color}44;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;">📷</div>
+          <div>
+            <div style="font-weight:600;font-size:.86rem;color:var(--t1)">Photo Evidence Attached</div>
+            <div style="font-size:.76rem;color:var(--t3);margin-top:2px;">Captured by ${req.completed_by||'auditor'} · ${req.completed_at?fmtDate(req.completed_at):'—'}</div>
+            <div style="font-size:.72rem;color:${color};margin-top:3px;font-weight:600;">Click to view (mock — real images store as base64)</div>
+          </div>
+        </div>
+      </div>`;
+    } else {
+      photoHtml = `<div class="rc-photo">
+        <div class="photo-placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          <span class="pp-label">No Photo Evidence</span>
+          <span>Auditor did not attach a photo for this count</span>
+        </div>
+      </div>`;
+    }
+  }
+
+  // Actions — Cancel shown for active requests; Archive shown on every card
+  const cancelBtn = (!isCanc && !isComp)
+    ? `<button class="btn-foot btn-foot-red" data-action="cancel" data-id="${req.id}">Cancel</button>`
+    : '';
+  const archiveBtn = `<button class="btn-foot btn-foot-ghost" data-action="delete" data-id="${req.id}">Archive</button>`;
+  const footActions = cancelBtn + archiveBtn;
+
+  return `
+    <div class="req-card ${cardClass}">
+      <div class="rc-head">
+        <div class="rc-mat-icon ${icCls}">${icon}</div>
+        <div class="rc-meta-wrap">
+          <div class="rc-mat">${req.material_id}</div>
+          <div class="rc-desc">${escHtml(req.description||'No description')}</div>
+          <div class="rc-who">Requested by ${escHtml(req.requested_by)} · ${timeAgo(req.requested_at)}</div>
+        </div>
+        <span class="rc-status-badge ${sbCls}">${sbTxt}</span>
+      </div>
+      ${reqNotesHtml}
+      ${varHtml}
+      ${resultHtml}
+      ${photoHtml}
+      ${auditNotesHtml}
+      <div class="rc-foot">
+        <div class="rc-foot-meta">${req.id.replace('ADHOC-DEMO-','REQ-').replace('ADHOC-','')} · ${fmtDate(req.requested_at)}</div>
+        <div class="rc-foot-actions">${footActions}</div>
+      </div>
+    </div>`;
+}
+
+/* ══════════════════════════════════════════════════════
+   PAGINATION
+══════════════════════════════════════════════════════ */
+function renderPagination(total) {
+  const pages = Math.ceil(total/PAGE_SIZE);
+  const pg    = document.getElementById('pagination');
+  if (pages<=1){pg.innerHTML='';return;}
+  let html=`<button class="pg-btn" id="pg-prev" ${state.page===1?'disabled':''}>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>`;
+  for(let i=1;i<=pages;i++){
+    if(pages>6&&i>2&&i<pages-1&&Math.abs(i-state.page)>1){if(i===3||i===pages-2)html+=`<span style="padding:0 3px;color:var(--t3)">…</span>`;continue;}
+    html+=`<button class="pg-btn${i===state.page?' active':''}" data-page="${i}">${i}</button>`;
+  }
+  html+=`<button class="pg-btn" id="pg-next" ${state.page===pages?'disabled':''}>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>`;
+  pg.innerHTML=html;
+  pg.querySelector('#pg-prev')?.addEventListener('click',()=>{if(state.page>1){state.page--;renderGrid();}window.scrollTo({top:0,behavior:'smooth'});});
+  pg.querySelector('#pg-next')?.addEventListener('click',()=>{if(state.page<pages){state.page++;renderGrid();}window.scrollTo({top:0,behavior:'smooth'});});
+  pg.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>{state.page=parseInt(b.dataset.page);renderGrid();window.scrollTo({top:0,behavior:'smooth'});}));
+}
+
+/* ══════════════════════════════════════════════════════
+   FILTER CONTROLS
+══════════════════════════════════════════════════════ */
+document.querySelectorAll('.stab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.stab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    state.status = t.dataset.status;
+    state.page   = 1;
+    renderGrid();
+  });
+});
+
+let searchTO;
+document.getElementById('search-input').addEventListener('input', e => {
+  clearTimeout(searchTO);
+  searchTO = setTimeout(() => { state.search=e.target.value; state.page=1; renderGrid(); }, 260);
+});
+
+document.getElementById('sort-select').addEventListener('change', e => {
+  state.sort = e.target.value; state.page = 1; renderGrid();
+});
+
+/* ══════════════════════════════════════════════════════
+   CARD ACTIONS
+══════════════════════════════════════════════════════ */
+function cancelRequest(id) {
+  const local = allRequests.find(r=>r.id===id);
+  if (!local) return;
+  local.status = 'cancelled';
+  // STUB: await supabase.from('adhoc_requests').update({status:'cancelled'}).eq('id', id)
+  const stored = readReq();
+  const i = stored.findIndex(r => r.id === id);
+  if (i >= 0) {
+    stored[i].status = 'cancelled';
+  } else {
+    stored.push({ ...local }); // was a mock-only item — save it now
+  }
+  writeReq(stored);
+  updateStats(); updateCounts(); renderGrid();
+  toast('Request cancelled.', 'a');
+}
+
+function deleteRequest(id) {
+  if (!confirm('Remove this request from the list?')) return;
+  const local = allRequests.find(r => r.id === id);
+  if (!local) return;
+  local.status = 'archived';
+  const stored = readReq();
+  const i = stored.findIndex(r => r.id === id);
+  if (i >= 0) {
+    stored[i].status = 'archived';
+  } else {
+    stored.push({ ...local }); // was a mock-only item — persist the archived state
+  }
+  writeReq(stored);
+  updateStats(); updateCounts(); renderGrid();
+  toast('Request removed.', 'a');
+}
+
+/* ══════════════════════════════════════════════════════
+   PHOTO LIGHTBOX
+══════════════════════════════════════════════════════ */
+function openLightbox(src, meta) {
+  const lb = document.getElementById('lightbox');
+  const img= document.getElementById('lb-img');
+  const mt = document.getElementById('lb-meta');
+  if (!src || src==='') {
+    toast('Photo stored as mock — upload a real SAP export and capture photos on scanner.html to see actual images.','a');
+    return;
+  }
+  img.src=src; mt.textContent=meta||'Evidence Photo';
+  lb.classList.add('open');
+}
+
+document.getElementById('lb-close').addEventListener('click', () => document.getElementById('lightbox').classList.remove('open'));
+document.getElementById('lightbox').addEventListener('click', e => { if(e.target===document.getElementById('lightbox'))document.getElementById('lightbox').classList.remove('open'); });
+document.addEventListener('keydown', e => { if(e.key==='Escape')document.getElementById('lightbox').classList.remove('open'); });
+
+/* ══════════════════════════════════════════════════════
+   EXPORT CSV
+══════════════════════════════════════════════════════ */
+document.getElementById('btn-export').addEventListener('click', () => {
+  const d = getFiltered();
+  const hdr = ['Request ID','Material','Description','Requested By','Requested At','Priority','Status',
+                'Completed By','Completed At','HU Found','Bin Found','Expected Qty','Actual Qty',
+                'Variance','Auditor Notes','Photo Evidence'].join(',');
+  const rows = d.map(r => [
+    r.id, r.material_id, `"${(r.description||'').replace(/"/g,'""')}"`,
+    r.requested_by, r.requested_at, r.priority, r.status,
+    r.completed_by||'', r.completed_at||'', r.result_hu||'', r.result_bin||'',
+    r.expected_qty??'', r.result_qty??'', r.qty_variance??'',
+    `"${(r.auditor_notes||'').replace(/"/g,'""')}"`,
+    r.photo_evidence?'Yes':'No',
+  ].join(','));
+  const csv = [hdr,...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = `adhoc_requests_${new Date().toISOString().split('T')[0]}.csv`; a.click(); URL.revokeObjectURL(a.href);
+  toast(`Exported ${d.length} records.`,'g');
+});
+
+/* ══════════════════════════════════════════════════════
+   CROSS-TAB UPDATES
+══════════════════════════════════════════════════════ */
+window.addEventListener('storage', e => {
+  if (e.key === LS_REQ) {
+    loadData(); updateStats(); updateCounts(); renderGrid();
+  }
+});
+
+/* ══════════════════════════════════════════════════════
+   UTILITIES
+══════════════════════════════════════════════════════ */
+function fmtDate(d) {
+  const dt=new Date(d);
+  return dt.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})+' '+dt.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+}
+function timeAgo(iso) {
+  const m=Math.floor((Date.now()-new Date(iso))/60000);
+  if(m<1)return'just now'; if(m<60)return`${m}m ago`;
+  const h=Math.floor(m/60); if(h<24)return`${h}h ago`; return`${Math.floor(h/24)}d ago`;
+}
+function fmt(n) { return n!=null?Number(n).toLocaleString():'—'; }
+function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function toast(msg, t='g') {
+  const w=document.getElementById('toast-wrap'),el=document.createElement('div');
+  el.className=`toast t-${t}`;el.innerHTML=`<div class="t-dot"></div><span>${msg}</span>`;
+  w.appendChild(el); setTimeout(()=>el.remove(),3200);
+}
+
+
+/* ══════════════════════════════════════════════════════
+   REQUESTER MODE
+══════════════════════════════════════════════════════ */
+(function initRequesterMode() {
+  const name    = (localStorage.getItem('cc_auditor_name') || '').trim();
+  const role    = localStorage.getItem('cc_user_role') || 'auditor';
+  const isReq   = role === 'requester';
+
+  // Pre-fill "your name" in request form
+  const rpBy = document.getElementById('rp-by');
+  if (name) rpBy.value = name;
+
+  if (isReq) {
+    // Show the new-request panel
+    document.getElementById('js-req-panel').style.display = 'block';
+
+    // Update topbar subtitle
+    document.getElementById('js-sub').textContent =
+      `Signed in as ${name || 'Unknown'} · Requester`;
+
+    // If they have requests, show "my requests" banner and filter
+    if (name) {
+      const myReqs = allRequests.filter(r =>
+        (r.requested_by || '').toLowerCase() === name.toLowerCase()
+      );
+      if (myReqs.length) {
+        const banner = document.getElementById('js-my-banner');
+        banner.style.display = 'flex';
+        document.getElementById('js-my-banner-txt').textContent =
+          `Showing your ${myReqs.length} request${myReqs.length !== 1 ? 's' : ''} — live updates on`;
+        // Filter to their requests
+        state.search = name;
+        document.getElementById('search-input').value = name;
+        renderGrid();
+      }
+    }
+  }
+
+  // Show-all button clears the filter
+  document.getElementById('btn-show-all').addEventListener('click', () => {
+    state.search = '';
+    document.getElementById('search-input').value = '';
+    document.getElementById('js-my-banner').style.display = 'none';
+    renderGrid();
+  });
+
+  // ── Submit new request from panel ──────────────────────────
+  document.getElementById('btn-rp-submit').addEventListener('click', () => {
+    const mat   = document.getElementById('rp-mat').value.trim().toUpperCase();
+    const desc  = document.getElementById('rp-desc').value.trim();
+    const notes = document.getElementById('rp-notes').value.trim();
+    const prio  = document.querySelector('input[name="rp-prio"]:checked')?.value || 'normal';
+    const reqBy = document.getElementById('rp-by').value.trim() || name || 'Unknown';
+
+    if (!mat) {
+      document.getElementById('rp-mat').focus();
+      document.getElementById('rp-mat').style.borderColor = 'var(--red)';
+      setTimeout(() => document.getElementById('rp-mat').style.borderColor = '', 1500);
+      return;
+    }
+
+    const task = {
+      id           : `ADHOC-${Date.now()}`,
+      material_id  : mat,
+      description  : desc,
+      notes        : notes,
+      requested_by : reqBy,
+      priority     : prio,
+      status       : 'pending',
+      requested_at : new Date().toISOString(),
+      in_progress_by: null, in_progress_at: null,
+      completed_by: null, completed_at: null,
+      result_hu: null, result_bin: null, result_qty: null,
+      expected_qty: null, qty_variance: null,
+      auditor_notes: '', photo_evidence: null, is_adhoc_request: true,
+    };
+
+    // Save to localStorage
+    const stored = readReq();
+    stored.unshift(task);
+    writeReq(stored);
+    allRequests.unshift(task);
+
+    // Reset form
+    document.getElementById('rp-mat').value   = '';
+    document.getElementById('rp-desc').value  = '';
+    document.getElementById('rp-notes').value = '';
+    document.querySelector('input[name="rp-prio"][value="normal"]').checked = true;
+
+    // Refresh grid and stats
+    updateStats(); updateCounts(); renderGrid();
+
+    // Update the banner
+    const myNow = allRequests.filter(r =>
+      (r.requested_by||'').toLowerCase() === reqBy.toLowerCase()
+    );
+    const banner = document.getElementById('js-my-banner');
+    banner.style.display = 'flex';
+    document.getElementById('js-my-banner-txt').textContent =
+      `Showing your ${myNow.length} request${myNow.length !== 1 ? 's' : ''} — live updates on`;
+
+    // Re-filter to show their requests
+    state.search = reqBy;
+    document.getElementById('search-input').value = reqBy;
+    renderGrid();
+
+    // Flash success
+    const btn = document.getElementById('btn-rp-submit');
+    btn.textContent = '✓ Submitted!';
+    btn.style.background = 'var(--green)';
+    setTimeout(() => {
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Submit Request';
+      btn.style.background = '';
+    }, 2000);
+  });
+
+  document.getElementById('btn-rp-clear').addEventListener('click', () => {
+    document.getElementById('rp-mat').value   = '';
+    document.getElementById('rp-desc').value  = '';
+    document.getElementById('rp-notes').value = '';
+    document.querySelector('input[name="rp-prio"][value="normal"]').checked = true;
+  });
+
+  // ── Live updates: re-render when storage changes (scanner/monitor updated a request) ──
+  window.addEventListener('storage', e => {
+    if (e.key !== 'cc_adhoc_requests_v1') return;
+    loadData();
+    updateStats(); updateCounts(); renderGrid();
+    document.getElementById('js-sub').textContent =
+      'Updated ' + new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  });
+})();
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="supabase-wiring.js"></script>
+</body>
+</html>
