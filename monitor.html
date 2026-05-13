@@ -586,7 +586,16 @@
 
 <div class="toast-wrap" id="toast-wrap"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
+
+/* ── Supabase client ────────────────────────────────────
+   Global inventory is read/written here so all devices
+   see the same data instantly.                          */
+const _SB_URL = 'https://zdbgynzycjjaawzjyptv.supabase.co';
+const _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkYmd5bnp5Y2pqYWF3emp5cHR2IiwicmVsZSI6ImFub24iLCJpYXQiOjE3Nzg2ODI2MDMsImV4cCI6MjA5NDI1ODYwM30.85EvZWcNkZDBYdgpzFZu5z4Lda-twbAfZBw-B0_ep5s';
+let _sb = null;
+try { _sb = supabase.createClient(_SB_URL, _SB_KEY); } catch(e) {}
 /* ══════════════════════════════════════════════════════
    STORAGE KEYS & HELPERS
 ══════════════════════════════════════════════════════ */
@@ -1036,25 +1045,20 @@ function parseInventoryRows(rows, filename) {
     return { success:false, loaded:0, skipped, skippedNoHU,
              errors:['No valid items parsed after processing all rows.'], items:[] };
 
-  // ── Persist ─────────────────────────────────────────────────────────────
-  try {
-    localStorage.setItem(LS.INV, JSON.stringify(items));
-  } catch (quotaErr) {
-    // QuotaExceededError — storage full.  Clear old inventory and retry once.
-    console.warn('[Upload] localStorage quota hit — clearing old inventory and retrying');
-    try {
-      localStorage.removeItem(LS.INV);
-      localStorage.setItem(LS.INV, JSON.stringify(items));
-    } catch (retryErr) {
-      return { success:false, loaded:0, skipped, skippedNoHU,
-               errors:[`Storage full. Try closing other tabs or clearing browser data. (${retryErr.message})`], items:[] };
-    }
+  // ── Persist locally first (instant feedback) ───────────────────────────
+  try { localStorage.setItem(LS.INV, JSON.stringify(items)); } catch(e) {
+    try { localStorage.removeItem(LS.INV); localStorage.setItem(LS.INV, JSON.stringify(items)); }
+    catch(e2) { return { success:false, loaded:0, skipped, skippedNoHU,
+      errors:[`Storage full: ${e2.message}`], items:[] }; }
   }
-
   localStorage.setItem('cc_last_upload_v1', JSON.stringify({
     filename, uploaded_at: new Date().toISOString(),
     items_loaded: items.length, items_skipped: skipped, skipped_no_hu: skippedNoHU,
   }));
+
+  // ── Push to Supabase (global — all devices will refresh) ─────────────────
+  // Don't await: let it run in the background after returning success to UI
+  _pushInventoryToSupabase(items, filename).catch(e => console.warn('[SB] push error:', e));
 
   console.info(`[Upload] Loaded ${items.length} HU records from "${filename}". Skipped: ${skipped} (${skippedNoHU} no-HU rows).`);
   return { success:true, loaded: items.length, skipped, skippedNoHU, errors, items };
@@ -1663,6 +1667,38 @@ function toast(msg, t='g') {
 }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="supabase-wiring.js"></script>
+<script src="supabase-wiring.js">
+/* ── Supabase: delete-all then batch insert ─────────────────────────────── */
+async function _pushInventoryToSupabase(items, filename) {
+  if (!_sb) return;
+  const uploadedAt = new Date().toISOString();
+  const batchId    = `upload-${Date.now()}`;
+
+  // Step 1: Delete ALL previous inventory rows
+  const { error: delErr } = await _sb
+    .from('inventory_items')
+    .delete()
+    .not('hu_number', 'is', null);   // matches every row (hu_number is always set)
+  if (delErr) console.warn('[SB] delete-all error:', delErr.message);
+
+  // Step 2: Batch insert in chunks of 500 (Supabase row limit per request)
+  const CHUNK = 500;
+  const stamped = items.map(i => ({ ...i, upload_batch_id: batchId, uploaded_at: uploadedAt }));
+  let inserted = 0;
+  for (let i = 0; i < stamped.length; i += CHUNK) {
+    const { error: insErr } = await _sb
+      .from('inventory_items')
+      .insert(stamped.slice(i, i + CHUNK));
+    if (insErr) { console.error('[SB] insert chunk error:', insErr.message); break; }
+    inserted += Math.min(CHUNK, stamped.length - i);
+  }
+
+  console.info(`[SB] Upload complete — ${inserted}/${items.length} rows in database.`);
+
+  // Update the topbar "last updated" label
+  const el = document.getElementById('js-last-updated');
+  if (el) el.textContent = `Supabase: ${inserted.toLocaleString()} items synced`;
+}
+</script>
 </body>
 </html>
