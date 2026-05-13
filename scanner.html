@@ -486,6 +486,46 @@ const LS_DONE = 'cc_done_bins';
 
 const readInv  = () => { try{return JSON.parse(localStorage.getItem(LS_INV))||[];}catch{return[];} };
 const writeInv = v  => { try{localStorage.setItem(LS_INV,JSON.stringify(v));}catch{} };
+
+/* ── Supabase client ─────────────────────────────────── */
+const _SB_URL = 'https://zdbgynzycjjaawzjyptv.supabase.co';
+const _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkYmd5bnp5Y2pqYWF3emp5cHR2IiwicmVsZSI6ImFub24iLCJpYXQiOjE3Nzg2ODI2MDMsImV4cCI6MjA5NDI1ODYwM30.85EvZWcNkZDBYdgpzFZu5z4Lda-twbAfZBw-B0_ep5s';
+let _sb = null;
+try { _sb = supabase.createClient(_SB_URL, _SB_KEY); } catch(e) {}
+
+/* ── Supabase inventory sync (scanner) ────────────────────────────────────
+   Fetches inventory from Supabase, caches to localStorage, then re-renders.
+   All existing readInv() calls continue to work — they read the cache.     */
+async function _sbSync() {
+  if (!_sb) return;
+  try {
+    const { data, error } = await _sb
+      .from('inventory_items')
+      .select('*')
+      .order('expected_bin');
+    if (error) throw error;
+    if (data && data.length) {
+      localStorage.setItem(LS_INV, JSON.stringify(data));
+      buildGrid();
+      updateStats();
+      const el = document.getElementById('stat-progress');
+      if (el) el.textContent = 'Synced ' + new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+    }
+  } catch(e) { console.warn('[SB] scanner sync failed:', e.message); }
+}
+
+/* Real-time: auto-refresh when monitor uploads new data */
+function _sbSubscribe() {
+  if (!_sb) return;
+  _sb.channel('scanner-inv')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'inventory_items' },
+      () => { _sbSync(); })
+    .subscribe();
+}
+
+// Run on load
+setTimeout(() => { _sbSync(); _sbSubscribe(); }, 100);
+
 const readSes  = () => { try{return JSON.parse(localStorage.getItem(LS_SES));}catch{return null;} };
 const writeSes = v  => { try{localStorage.setItem(LS_SES,JSON.stringify(v));}catch{} };
 const getName  = () => (localStorage.getItem(LS_NAME)||'').trim();
@@ -1205,5 +1245,6 @@ function escHtml(s){const d=document.createElement('div');d.textContent=String(s
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="supabase-wiring.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </body>
 </html>
