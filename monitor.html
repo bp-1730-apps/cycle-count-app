@@ -1667,7 +1667,9 @@ function toast(msg, t='g') {
 }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="supabase-wiring.js">
+
+<script>
+
 /* ── Supabase: delete-all then batch insert ─────────────────────────────── */
 async function _pushInventoryToSupabase(items, filename) {
   if (!_sb) return;
@@ -1699,6 +1701,7 @@ async function _pushInventoryToSupabase(items, filename) {
   const el = document.getElementById('js-last-updated');
   if (el) el.textContent = `Supabase: ${inserted.toLocaleString()} items synced`;
 }
+
 </script>
 </body>
 </html>
