@@ -344,6 +344,7 @@
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="supabase-wiring.js"></script>
 </head>
 <body>
 
@@ -576,37 +577,8 @@ const writeFresh= v  => localStorage.setItem(LS_FRESH, JSON.stringify(v));
 const readInv   = () => { try{return JSON.parse(localStorage.getItem(LS_INV))||[];}catch{return[];} };
 
 /* ── Supabase client ─────────────────────────────────── */
-const _SB_URL = 'https://zdbgynzycjjaawzjyptv.supabase.co';
-const _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkYmd5bnp5Y2pqYWF3emp5cHR2IiwicmVsZSI6ImFub24iLCJpYXQiOjE3Nzg2ODI2MDMsImV4cCI6MjA5NDI1ODYwM30.85EvZWcNkZDBYdgpzFZu5z4Lda-twbAfZBw-B0_ep5s';
-let _sb = null;
-try { _sb = supabase.createClient(_SB_URL, _SB_KEY); } catch(e) {}
 
-/* ── Supabase inventory sync (fresh-count) ──────────────────────────────── */
-async function _sbSync() {
-  if (!_sb) return;
-  try {
-    const { data, error } = await _sb
-      .from('inventory_items')
-      .select('*')
-      .order('expected_bin');
-    if (error) throw error;
-    if (data && data.length) {
-      localStorage.setItem(LS_INV, JSON.stringify(data));
-      const sub = document.getElementById('tb-sub');
-      if (sub) sub.textContent = data.length.toLocaleString() + ' SAP items loaded';
-    }
-  } catch(e) { console.warn('[SB] fresh sync failed:', e.message); }
-}
 
-function _sbSubscribe() {
-  if (!_sb) return;
-  _sb.channel('fresh-inv')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'inventory_items' },
-      () => { _sbSync(); })
-    .subscribe();
-}
-
-setTimeout(() => { _sbSync(); _sbSubscribe(); }, 100);
 
 
 /* ══════════════════════════════════════════════════════
@@ -1434,6 +1406,17 @@ function toast(msg, t='g') {
 }
 function escHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function escAttr(s){ return String(s||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+/* ── Supabase: load inventory + subscribe ── */
+if (window.DB) {
+  DB.getInventory().then(data => {
+    if (data && data.length) {
+      const s = document.getElementById('tb-sub');
+      if (s) s.textContent = data.length.toLocaleString() + ' SAP items loaded';
+    }
+  });
+  DB.subscribeInventory(() => DB.getInventory());
+}
 </script>
 </body>
 </html>
