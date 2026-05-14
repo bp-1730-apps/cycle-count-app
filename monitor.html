@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -32,247 +33,250 @@
     a{color:inherit;text-decoration:none} button{font-family:var(--font);cursor:pointer;border:none}
     input,select,textarea{font-family:var(--font)}
 
-    /* ─── TOP BAR ────────────────────────────────────────── */
-    .topbar{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);box-shadow:var(--sh-sm);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-    .tb-left{display:flex;align-items:center;gap:14px}
-    .btn-back{display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;font-size:.83rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all .15s}
-    .btn-back:hover{background:var(--s2);border-color:var(--bmid)}
-    .btn-back svg{width:14px;height:14px}
-    .tb-divider{width:1px;height:20px;background:var(--border)}
-    .tb-title{font-family:var(--display);font-size:1rem;font-weight:700;color:var(--t1);letter-spacing:-.01em}
-    .tb-sub{font-size:.78rem;color:var(--t3)}
-    .tb-right{display:flex;align-items:center;gap:8px}
-    .btn-sm{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r-sm);border:1.5px solid var(--border);background:var(--surface);font-size:.83rem;font-weight:600;color:var(--t2);transition:all .15s}
-    .btn-sm:hover{background:var(--s2);border-color:var(--bmid)}
-    .btn-sm svg{width:14px;height:14px}
-    .btn-sm-dark{background:var(--t1);color:#fff;border-color:var(--t1)}
-    .btn-sm-dark:hover{background:#1E2A3A}
-    .btn-sm-blue{background:var(--blue);color:#fff;border-color:var(--blue)}
-    .btn-sm-blue:hover{background:#1A44C2}
-    .btn-sm-teal{background:var(--teal);color:#fff;border-color:var(--teal)}
-    .btn-sm-teal:hover{background:#0B8276}
-    .btn-sm-green{background:var(--green);color:#fff;border-color:var(--green)}
-    .btn-sm-green:hover{background:#138040}
-    /* Retention badge */
-    .retention-note{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;font-weight:600;
-      font-family:var(--mono);color:var(--amber);background:var(--amb-lt);
-      border:1px solid var(--amb-bd);border-radius:99px;padding:3px 9px;white-space:nowrap}
+```
+/* ─── TOP BAR ────────────────────────────────────────── */
+.topbar{position:sticky;top:0;z-index:100;background:var(--surface);border-bottom:1px solid var(--border);box-shadow:var(--sh-sm);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.tb-left{display:flex;align-items:center;gap:14px}
+.btn-back{display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;font-size:.83rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all .15s}
+.btn-back:hover{background:var(--s2);border-color:var(--bmid)}
+.btn-back svg{width:14px;height:14px}
+.tb-divider{width:1px;height:20px;background:var(--border)}
+.tb-title{font-family:var(--display);font-size:1rem;font-weight:700;color:var(--t1);letter-spacing:-.01em}
+.tb-sub{font-size:.78rem;color:var(--t3)}
+.tb-right{display:flex;align-items:center;gap:8px}
+.btn-sm{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r-sm);border:1.5px solid var(--border);background:var(--surface);font-size:.83rem;font-weight:600;color:var(--t2);transition:all .15s}
+.btn-sm:hover{background:var(--s2);border-color:var(--bmid)}
+.btn-sm svg{width:14px;height:14px}
+.btn-sm-dark{background:var(--t1);color:#fff;border-color:var(--t1)}
+.btn-sm-dark:hover{background:#1E2A3A}
+.btn-sm-blue{background:var(--blue);color:#fff;border-color:var(--blue)}
+.btn-sm-blue:hover{background:#1A44C2}
+.btn-sm-teal{background:var(--teal);color:#fff;border-color:var(--teal)}
+.btn-sm-teal:hover{background:#0B8276}
+.btn-sm-green{background:var(--green);color:#fff;border-color:var(--green)}
+.btn-sm-green:hover{background:#138040}
+/* Retention badge */
+.retention-note{display:inline-flex;align-items:center;gap:5px;font-size:.72rem;font-weight:600;
+  font-family:var(--mono);color:var(--amber);background:var(--amb-lt);
+  border:1px solid var(--amb-bd);border-radius:99px;padding:3px 9px;white-space:nowrap}
 
-    /* ─── LAYOUT ─────────────────────────────────────────── */
-    .page{flex:1;max-width:1280px;margin:0 auto;width:100%;padding:24px 24px 48px}
+/* ─── LAYOUT ─────────────────────────────────────────── */
+.page{flex:1;max-width:1280px;margin:0 auto;width:100%;padding:24px 24px 48px}
 
-    /* ─── SECTION HEADERS ────────────────────────────────── */
-    .sec-hdr{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:16px;gap:12px}
-    .sec-title{font-family:var(--display);font-size:1.05rem;font-weight:700;color:var(--t1);letter-spacing:-.01em}
-    .sec-sub{font-size:.8rem;color:var(--t3);margin-top:2px}
+/* ─── SECTION HEADERS ────────────────────────────────── */
+.sec-hdr{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:16px;gap:12px}
+.sec-title{font-family:var(--display);font-size:1.05rem;font-weight:700;color:var(--t1);letter-spacing:-.01em}
+.sec-sub{font-size:.8rem;color:var(--t3);margin-top:2px}
 
-    /* ─── REQUEST PANEL ──────────────────────────────────── */
-    .req-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--sh-sm);overflow:hidden;margin-bottom:28px}
-    .rp-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--s2);gap:12px;flex-wrap:wrap}
-    .rp-hl{display:flex;align-items:center;gap:10px}
-    .rp-icon{width:36px;height:36px;border-radius:var(--r-sm);background:var(--teal-lt);border:1px solid #A2DED9;display:flex;align-items:center;justify-content:center;color:var(--teal)}
-    .rp-icon svg{width:18px;height:18px}
-    .rp-hd-title{font-family:var(--display);font-size:.95rem;font-weight:700;color:var(--t1);letter-spacing:-.01em}
-    .rp-hd-sub{font-size:.78rem;color:var(--t3);margin-top:1px}
-    .rp-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
-    .rp-form{padding:20px;border-right:1px solid var(--border)}
-    .rp-queue{padding:20px}
-    .field-row{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
-    .field-lbl{font-size:.8rem;font-weight:600;color:var(--t2);letter-spacing:.01em}
-    .field-input{height:42px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--r-md);font-size:.9rem;color:var(--t1);background:var(--surface);outline:none;transition:border-color .15s,box-shadow .15s;width:100%}
-    .field-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,78,216,.1)}
-    .field-input::placeholder{color:var(--t3)}
-    .field-select{height:42px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--r-md);font-size:.9rem;color:var(--t1);background:var(--surface);outline:none;transition:border-color .15s;width:100%;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238C94A8' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
-    .field-select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,78,216,.1)}
-    .field-textarea{padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--r-md);font-size:.88rem;color:var(--t1);background:var(--surface);outline:none;transition:border-color .15s;width:100%;resize:vertical;min-height:72px;line-height:1.5}
-    .field-textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,78,216,.1)}
-    .field-textarea::placeholder{color:var(--t3)}
-    .form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .btn-submit-req{width:100%;height:42px;background:var(--teal);color:#fff;border-radius:var(--r-md);font-size:.9rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s;letter-spacing:-.01em}
-    .btn-submit-req:hover{background:#0B8276;box-shadow:var(--sh-md)}
-    .btn-submit-req:active{transform:scale(.98)}
-    .btn-submit-req svg{width:16px;height:16px}
+/* ─── REQUEST PANEL ──────────────────────────────────── */
+.req-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--sh-sm);overflow:hidden;margin-bottom:28px}
+.rp-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);background:var(--s2);gap:12px;flex-wrap:wrap}
+.rp-hl{display:flex;align-items:center;gap:10px}
+.rp-icon{width:36px;height:36px;border-radius:var(--r-sm);background:var(--teal-lt);border:1px solid #A2DED9;display:flex;align-items:center;justify-content:center;color:var(--teal)}
+.rp-icon svg{width:18px;height:18px}
+.rp-hd-title{font-family:var(--display);font-size:.95rem;font-weight:700;color:var(--t1);letter-spacing:-.01em}
+.rp-hd-sub{font-size:.78rem;color:var(--t3);margin-top:1px}
+.rp-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.rp-form{padding:20px;border-right:1px solid var(--border)}
+.rp-queue{padding:20px}
+.field-row{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.field-lbl{font-size:.8rem;font-weight:600;color:var(--t2);letter-spacing:.01em}
+.field-input{height:42px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--r-md);font-size:.9rem;color:var(--t1);background:var(--surface);outline:none;transition:border-color .15s,box-shadow .15s;width:100%}
+.field-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,78,216,.1)}
+.field-input::placeholder{color:var(--t3)}
+.field-select{height:42px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--r-md);font-size:.9rem;color:var(--t1);background:var(--surface);outline:none;transition:border-color .15s;width:100%;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238C94A8' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.field-select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,78,216,.1)}
+.field-textarea{padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--r-md);font-size:.88rem;color:var(--t1);background:var(--surface);outline:none;transition:border-color .15s;width:100%;resize:vertical;min-height:72px;line-height:1.5}
+.field-textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,78,216,.1)}
+.field-textarea::placeholder{color:var(--t3)}
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-submit-req{width:100%;height:42px;background:var(--teal);color:#fff;border-radius:var(--r-md);font-size:.9rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s;letter-spacing:-.01em}
+.btn-submit-req:hover{background:#0B8276;box-shadow:var(--sh-md)}
+.btn-submit-req:active{transform:scale(.98)}
+.btn-submit-req svg{width:16px;height:16px}
 
-    /* Active requests queue in the panel */
-    .rq-title{font-size:.82rem;font-weight:600;color:var(--t2);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
-    .rq-count{font-family:var(--mono);font-size:.72rem;background:var(--teal-lt);color:var(--teal);border:1px solid #A2DED9;border-radius:99px;padding:2px 8px}
-    .rq-list{display:flex;flex-direction:column;gap:8px;max-height:240px;overflow-y:auto}
-    .rq-item{background:var(--s2);border:1px solid var(--border);border-radius:var(--r-md);padding:10px 12px;display:flex;align-items:flex-start;gap:10px}
-    .rq-item.urg{border-left:3px solid var(--red);background:var(--red-lt)}
-    .rq-item.nrm{border-left:3px solid var(--teal)}
-    .rq-mat{font-family:var(--mono);font-size:.84rem;font-weight:500;color:var(--t1)}
-    .rq-desc{font-size:.75rem;color:var(--t3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
-    .rq-meta{font-size:.72rem;color:var(--t3);margin-top:3px}
-    .rq-item-body{flex:1;min-width:0}
-    .rq-status-badge{font-size:.69rem;font-weight:700;padding:2px 7px;border-radius:99px;white-space:nowrap;align-self:center;flex-shrink:0}
-    .sb-pending{background:var(--amb-lt);color:var(--amber);border:1px solid var(--amb-bd)}
-    .sb-progress{background:var(--blue-lt);color:var(--blue);border:1px solid #BDD0FB}
-    .rq-empty{padding:20px 0;text-align:center;font-size:.84rem;color:var(--t3)}
-    .rq-view-all{display:block;text-align:center;margin-top:12px;font-size:.8rem;font-weight:600;color:var(--teal);padding:8px}
+/* Active requests queue in the panel */
+.rq-title{font-size:.82rem;font-weight:600;color:var(--t2);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.rq-count{font-family:var(--mono);font-size:.72rem;background:var(--teal-lt);color:var(--teal);border:1px solid #A2DED9;border-radius:99px;padding:2px 8px}
+.rq-list{display:flex;flex-direction:column;gap:8px;max-height:240px;overflow-y:auto}
+.rq-item{background:var(--s2);border:1px solid var(--border);border-radius:var(--r-md);padding:10px 12px;display:flex;align-items:flex-start;gap:10px}
+.rq-item.urg{border-left:3px solid var(--red);background:var(--red-lt)}
+.rq-item.nrm{border-left:3px solid var(--teal)}
+.rq-mat{font-family:var(--mono);font-size:.84rem;font-weight:500;color:var(--t1)}
+.rq-desc{font-size:.75rem;color:var(--t3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+.rq-meta{font-size:.72rem;color:var(--t3);margin-top:3px}
+.rq-item-body{flex:1;min-width:0}
+.rq-status-badge{font-size:.69rem;font-weight:700;padding:2px 7px;border-radius:99px;white-space:nowrap;align-self:center;flex-shrink:0}
+.sb-pending{background:var(--amb-lt);color:var(--amber);border:1px solid var(--amb-bd)}
+.sb-progress{background:var(--blue-lt);color:var(--blue);border:1px solid #BDD0FB}
+.rq-empty{padding:20px 0;text-align:center;font-size:.84rem;color:var(--t3)}
+.rq-view-all{display:block;text-align:center;margin-top:12px;font-size:.8rem;font-weight:600;color:var(--teal);padding:8px}
 
-    /* ─── KPI GRID ───────────────────────────────────────── */
-    .kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:20px}
-    .kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px 22px 18px;box-shadow:var(--sh-sm);position:relative;overflow:hidden;transition:box-shadow .18s,transform .18s}
-    .kpi-card:hover{box-shadow:var(--sh-md);transform:translateY(-1px)}
-    .kpi-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;border-radius:0 0 var(--r-lg) var(--r-lg)}
-    .kpi-green::after{background:var(--green)}
-    .kpi-blue::after{background:var(--blue)}
-    .kpi-amber::after{background:var(--amber)}
-    .kpi-teal::after{background:var(--teal)}
-    .kpi-icon-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-    .kpi-icon{width:40px;height:40px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center}
-    .kpi-icon svg{width:19px;height:19px}
-    .ki-g{background:var(--grn-lt);color:var(--green)} .ki-b{background:var(--blue-lt);color:var(--blue)} .ki-a{background:var(--amb-lt);color:var(--amber)} .ki-t{background:var(--teal-lt);color:var(--teal)}
-    .kpi-trend{display:flex;align-items:center;gap:4px;font-size:.76rem;font-weight:600;padding:3px 8px;border-radius:99px}
-    .kpi-trend svg{width:11px;height:11px}
-    .tr-up{background:var(--grn-lt);color:var(--green)} .tr-dn{background:var(--red-lt);color:var(--red)} .tr-fl{background:var(--s2);color:var(--t3)}
-    .kpi-value{font-family:var(--display);font-size:2.3rem;font-weight:800;color:var(--t1);letter-spacing:-.04em;line-height:1;margin-bottom:5px}
-    .kpi-label{font-size:.85rem;color:var(--t2);font-weight:500;margin-bottom:2px}
-    .kpi-sub{font-size:.76rem;color:var(--t3);font-family:var(--mono)}
-    .kpi-spark{margin-top:12px;height:34px}
-    .kpi-spark canvas{width:100%!important;height:34px!important}
+/* ─── KPI GRID ───────────────────────────────────────── */
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:20px}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:22px 22px 18px;box-shadow:var(--sh-sm);position:relative;overflow:hidden;transition:box-shadow .18s,transform .18s}
+.kpi-card:hover{box-shadow:var(--sh-md);transform:translateY(-1px)}
+.kpi-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;border-radius:0 0 var(--r-lg) var(--r-lg)}
+.kpi-green::after{background:var(--green)}
+.kpi-blue::after{background:var(--blue)}
+.kpi-amber::after{background:var(--amber)}
+.kpi-teal::after{background:var(--teal)}
+.kpi-icon-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.kpi-icon{width:40px;height:40px;border-radius:var(--r-md);display:flex;align-items:center;justify-content:center}
+.kpi-icon svg{width:19px;height:19px}
+.ki-g{background:var(--grn-lt);color:var(--green)} .ki-b{background:var(--blue-lt);color:var(--blue)} .ki-a{background:var(--amb-lt);color:var(--amber)} .ki-t{background:var(--teal-lt);color:var(--teal)}
+.kpi-trend{display:flex;align-items:center;gap:4px;font-size:.76rem;font-weight:600;padding:3px 8px;border-radius:99px}
+.kpi-trend svg{width:11px;height:11px}
+.tr-up{background:var(--grn-lt);color:var(--green)} .tr-dn{background:var(--red-lt);color:var(--red)} .tr-fl{background:var(--s2);color:var(--t3)}
+.kpi-value{font-family:var(--display);font-size:2.3rem;font-weight:800;color:var(--t1);letter-spacing:-.04em;line-height:1;margin-bottom:5px}
+.kpi-label{font-size:.85rem;color:var(--t2);font-weight:500;margin-bottom:2px}
+.kpi-sub{font-size:.76rem;color:var(--t3);font-family:var(--mono)}
+.kpi-spark{margin-top:12px;height:34px}
+.kpi-spark canvas{width:100%!important;height:34px!important}
 
-    /* ─── SUMMARY STRIP ──────────────────────────────────── */
-    .summary-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:28px}
-    .ss-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;box-shadow:var(--sh-sm);text-align:center}
-    .ss-val{font-family:var(--mono);font-size:1.25rem;font-weight:500;color:var(--t1);line-height:1;margin-bottom:5px}
-    .ss-lbl{font-size:.72rem;color:var(--t3);font-weight:500;text-transform:uppercase;letter-spacing:.04em}
+/* ─── SUMMARY STRIP ──────────────────────────────────── */
+.summary-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:28px}
+.ss-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;box-shadow:var(--sh-sm);text-align:center}
+.ss-val{font-family:var(--mono);font-size:1.25rem;font-weight:500;color:var(--t1);line-height:1;margin-bottom:5px}
+.ss-lbl{font-size:.72rem;color:var(--t3);font-weight:500;text-transform:uppercase;letter-spacing:.04em}
 
-    /* ─── UPLOAD PANEL ───────────────────────────────────── */
-    .upload-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--sh-sm);overflow:hidden;margin-bottom:28px}
-    .up-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);background:var(--s2);gap:12px;flex-wrap:wrap}
-    .up-hl{display:flex;align-items:center;gap:10px}
-    .up-title{font-family:var(--display);font-size:.92rem;font-weight:700;color:var(--t1);letter-spacing:-.01em}
-    .up-sub{font-size:.76rem;color:var(--t3);margin-top:1px}
-    .up-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
-    .drop-zone{padding:22px;border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;cursor:pointer;transition:background .15s;min-height:130px}
-    .drop-zone:hover{background:var(--blue-lt)}
-    .dz-icon{width:44px;height:44px;border-radius:50%;background:var(--blue-lt);border:1px solid #BDD0FB;display:flex;align-items:center;justify-content:center;color:var(--blue)}
-    .dz-icon svg{width:20px;height:20px}
-    .dz-title{font-weight:600;font-size:.88rem;color:var(--t1)}
-    .dz-sub{font-size:.76rem;color:var(--t3)}
-    .inv-status-panel{padding:18px 20px}
-    .isp-count{font-family:var(--display);font-size:1.7rem;font-weight:800;color:var(--t1);letter-spacing:-.03em;line-height:1;margin-bottom:3px}
-    .isp-sub{font-size:.8rem;color:var(--t2);margin-bottom:12px}
-    .progress-bar{height:5px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:6px}
-    .pb-fill{height:100%;background:var(--blue);border-radius:99px;transition:width .4s ease}
-    .pb-labels{display:flex;justify-content:space-between;font-size:.73rem;font-family:var(--mono);margin-bottom:12px}
-    .pb-l{color:var(--blue)} .pb-r{color:var(--t3)}
-    .status-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-    .st-chip{display:flex;align-items:center;gap:6px;border-radius:var(--r-sm);padding:7px 9px}
-    .stc-icon{font-size:.82rem} .stc-val{font-family:var(--mono);font-weight:600;font-size:.85rem} .stc-lbl{font-size:.69rem;color:var(--t3);font-weight:500}
-    .up-result{display:none;padding:10px 20px;border-top:1px solid var(--border);font-size:.82rem}
+/* ─── UPLOAD PANEL ───────────────────────────────────── */
+.upload-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--sh-sm);overflow:hidden;margin-bottom:28px}
+.up-header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--border);background:var(--s2);gap:12px;flex-wrap:wrap}
+.up-hl{display:flex;align-items:center;gap:10px}
+.up-title{font-family:var(--display);font-size:.92rem;font-weight:700;color:var(--t1);letter-spacing:-.01em}
+.up-sub{font-size:.76rem;color:var(--t3);margin-top:1px}
+.up-body{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.drop-zone{padding:22px;border-right:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;cursor:pointer;transition:background .15s;min-height:130px}
+.drop-zone:hover{background:var(--blue-lt)}
+.dz-icon{width:44px;height:44px;border-radius:50%;background:var(--blue-lt);border:1px solid #BDD0FB;display:flex;align-items:center;justify-content:center;color:var(--blue)}
+.dz-icon svg{width:20px;height:20px}
+.dz-title{font-weight:600;font-size:.88rem;color:var(--t1)}
+.dz-sub{font-size:.76rem;color:var(--t3)}
+.inv-status-panel{padding:18px 20px}
+.isp-count{font-family:var(--display);font-size:1.7rem;font-weight:800;color:var(--t1);letter-spacing:-.03em;line-height:1;margin-bottom:3px}
+.isp-sub{font-size:.8rem;color:var(--t2);margin-bottom:12px}
+.progress-bar{height:5px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:6px}
+.pb-fill{height:100%;background:var(--blue);border-radius:99px;transition:width .4s ease}
+.pb-labels{display:flex;justify-content:space-between;font-size:.73rem;font-family:var(--mono);margin-bottom:12px}
+.pb-l{color:var(--blue)} .pb-r{color:var(--t3)}
+.status-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.st-chip{display:flex;align-items:center;gap:6px;border-radius:var(--r-sm);padding:7px 9px}
+.stc-icon{font-size:.82rem} .stc-val{font-family:var(--mono);font-weight:600;font-size:.85rem} .stc-lbl{font-size:.69rem;color:var(--t3);font-weight:500}
+.up-result{display:none;padding:10px 20px;border-top:1px solid var(--border);font-size:.82rem}
 
-    /* ─── TABLE CARD ─────────────────────────────────────── */
-    .table-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--sh-sm);overflow:hidden}
-    .tc-toolbar{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);gap:12px;flex-wrap:wrap}
-    .tc-tl{display:flex;align-items:center;gap:10px}
-    .tc-title{font-family:var(--display);font-size:.93rem;font-weight:700;color:var(--t1);letter-spacing:-.01em}
-    .row-pill{font-size:.72rem;font-weight:600;font-family:var(--mono);background:var(--s2);border:1px solid var(--border);border-radius:99px;padding:2px 8px;color:var(--t2)}
-    .tc-tr{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-    .date-tabs{display:flex;border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden}
-    .dt-tab{padding:6px 12px;font-size:.78rem;font-weight:500;color:var(--t2);background:transparent;border-right:1px solid var(--border);cursor:pointer;transition:all .12s;border:none}
-    .dt-tab:last-child{border-right:none}
-    .dt-tab:hover{background:var(--s2)}
-    .dt-tab.active{background:var(--t1);color:#fff}
-    .search-wrap{position:relative;display:flex;align-items:center}
-    .search-ico{position:absolute;left:9px;width:14px;height:14px;color:var(--t3);pointer-events:none}
-    .search-input{height:34px;padding:0 10px 0 30px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:.83rem;color:var(--t1);background:var(--surface);outline:none;width:200px;transition:all .15s}
-    .search-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,78,216,.1);width:240px}
-    .status-sel{height:34px;padding:0 8px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:.83rem;color:var(--t1);background:var(--surface);outline:none;cursor:pointer}
+/* ─── TABLE CARD ─────────────────────────────────────── */
+.table-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--sh-sm);overflow:hidden}
+.tc-toolbar{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);gap:12px;flex-wrap:wrap}
+.tc-tl{display:flex;align-items:center;gap:10px}
+.tc-title{font-family:var(--display);font-size:.93rem;font-weight:700;color:var(--t1);letter-spacing:-.01em}
+.row-pill{font-size:.72rem;font-weight:600;font-family:var(--mono);background:var(--s2);border:1px solid var(--border);border-radius:99px;padding:2px 8px;color:var(--t2)}
+.tc-tr{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.date-tabs{display:flex;border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden}
+.dt-tab{padding:6px 12px;font-size:.78rem;font-weight:500;color:var(--t2);background:transparent;border-right:1px solid var(--border);cursor:pointer;transition:all .12s;border:none}
+.dt-tab:last-child{border-right:none}
+.dt-tab:hover{background:var(--s2)}
+.dt-tab.active{background:var(--t1);color:#fff}
+.search-wrap{position:relative;display:flex;align-items:center}
+.search-ico{position:absolute;left:9px;width:14px;height:14px;color:var(--t3);pointer-events:none}
+.search-input{height:34px;padding:0 10px 0 30px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:.83rem;color:var(--t1);background:var(--surface);outline:none;width:200px;transition:all .15s}
+.search-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(29,78,216,.1);width:240px}
+.status-sel{height:34px;padding:0 8px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:.83rem;color:var(--t1);background:var(--surface);outline:none;cursor:pointer}
 
-    /* TABLE */
-    .tbl-scroll{overflow-x:auto}
-    table{width:100%;border-collapse:collapse}
-    thead tr{background:var(--s2);border-bottom:1px solid var(--border)}
-    th{padding:10px 15px;text-align:left;font-size:.72rem;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;cursor:pointer;user-select:none;transition:color .12s}
-    th:hover{color:var(--t1)}
-    .sort-ico{opacity:.25;margin-left:4px;font-size:.65rem}
-    th.sort-asc .sort-ico,th.sort-desc .sort-ico{opacity:1;color:var(--blue)}
-    tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
-    tbody tr:last-child{border-bottom:none}
-    tbody tr:hover{background:#FAFBFD}
-    td{padding:12px 15px;font-size:.86rem;color:var(--t2);white-space:nowrap;vertical-align:middle}
-    .td-primary{color:var(--t1);font-weight:500} .td-mono{font-family:var(--mono);font-size:.8rem} .td-center{text-align:center}
+/* TABLE */
+.tbl-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--s2);border-bottom:1px solid var(--border)}
+th{padding:10px 15px;text-align:left;font-size:.72rem;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;cursor:pointer;user-select:none;transition:color .12s}
+th:hover{color:var(--t1)}
+.sort-ico{opacity:.25;margin-left:4px;font-size:.65rem}
+th.sort-asc .sort-ico,th.sort-desc .sort-ico{opacity:1;color:var(--blue)}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#FAFBFD}
+td{padding:12px 15px;font-size:.86rem;color:var(--t2);white-space:nowrap;vertical-align:middle}
+.td-primary{color:var(--t1);font-weight:500} .td-mono{font-family:var(--mono);font-size:.8rem} .td-center{text-align:center}
 
-    /* Status badges */
-    .status-badge{display:inline-flex;align-items:center;gap:5px;font-size:.74rem;font-weight:600;padding:3px 9px;border-radius:99px}
-    .status-badge::before{content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0}
-    .sb-reconciled{background:var(--grn-lt);color:var(--green);border:1px solid var(--grn-bd)}
-    .sb-reconciled::before{background:var(--green)}
-    .sb-pending{background:var(--amb-lt);color:var(--amber);border:1px solid var(--amb-bd)}
-    .sb-pending::before{background:var(--amber)}
-    .sb-review{background:var(--red-lt);color:var(--red);border:1px solid var(--red-bd)}
-    .sb-review::before{background:var(--red)}
-    .sb-submitted{background:var(--blue-lt);color:var(--blue);border:1px solid #BDD0FB}
-    .sb-submitted::before{background:var(--blue)}
-    .disc-chip{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:20px;padding:0 6px;border-radius:99px;font-family:var(--mono);font-size:.76rem;font-weight:600}
-    .dc-none{color:var(--t3)} .dc-low{background:var(--amb-lt);color:var(--amber);border:1px solid var(--amb-bd)} .dc-high{background:var(--red-lt);color:var(--red);border:1px solid var(--red-bd)}
-    .view-btn{height:26px;padding:0 9px;border:1px solid var(--border);border-radius:var(--r-sm);background:transparent;font-size:.75rem;font-weight:600;color:var(--t2);cursor:pointer;transition:all .12s;display:flex;align-items:center;gap:4px}
-    .view-btn:hover{background:var(--blue-lt);border-color:#BDD0FB;color:var(--blue)}
-    .view-btn svg{width:11px;height:11px}
+/* Status badges */
+.status-badge{display:inline-flex;align-items:center;gap:5px;font-size:.74rem;font-weight:600;padding:3px 9px;border-radius:99px}
+.status-badge::before{content:'';width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.sb-reconciled{background:var(--grn-lt);color:var(--green);border:1px solid var(--grn-bd)}
+.sb-reconciled::before{background:var(--green)}
+.sb-pending{background:var(--amb-lt);color:var(--amber);border:1px solid var(--amb-bd)}
+.sb-pending::before{background:var(--amber)}
+.sb-review{background:var(--red-lt);color:var(--red);border:1px solid var(--red-bd)}
+.sb-review::before{background:var(--red)}
+.sb-submitted{background:var(--blue-lt);color:var(--blue);border:1px solid #BDD0FB}
+.sb-submitted::before{background:var(--blue)}
+.disc-chip{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:20px;padding:0 6px;border-radius:99px;font-family:var(--mono);font-size:.76rem;font-weight:600}
+.dc-none{color:var(--t3)} .dc-low{background:var(--amb-lt);color:var(--amber);border:1px solid var(--amb-bd)} .dc-high{background:var(--red-lt);color:var(--red);border:1px solid var(--red-bd)}
+.view-btn{height:26px;padding:0 9px;border:1px solid var(--border);border-radius:var(--r-sm);background:transparent;font-size:.75rem;font-weight:600;color:var(--t2);cursor:pointer;transition:all .12s;display:flex;align-items:center;gap:4px}
+.view-btn:hover{background:var(--blue-lt);border-color:#BDD0FB;color:var(--blue)}
+.view-btn svg{width:11px;height:11px}
 
-    /* TABLE FOOTER */
-    .tc-footer{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;border-top:1px solid var(--border);background:var(--s2);flex-wrap:wrap;gap:8px}
-    .pg-info{font-size:.8rem;color:var(--t3);font-family:var(--mono)}
-    .pagination{display:flex;gap:3px;align-items:center}
-    .pg-btn{height:28px;min-width:28px;padding:0 7px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);font-size:.8rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center}
-    .pg-btn:hover{background:var(--s2)} .pg-btn.active{background:var(--t1);border-color:var(--t1);color:#fff}
-    .pg-btn:disabled{opacity:.3;cursor:not-allowed}
-    .pg-btn svg{width:12px;height:12px}
+/* TABLE FOOTER */
+.tc-footer{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;border-top:1px solid var(--border);background:var(--s2);flex-wrap:wrap;gap:8px}
+.pg-info{font-size:.8rem;color:var(--t3);font-family:var(--mono)}
+.pagination{display:flex;gap:3px;align-items:center}
+.pg-btn{height:28px;min-width:28px;padding:0 7px;border:1px solid var(--border);border-radius:var(--r-sm);background:var(--surface);font-size:.8rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center}
+.pg-btn:hover{background:var(--s2)} .pg-btn.active{background:var(--t1);border-color:var(--t1);color:#fff}
+.pg-btn:disabled{opacity:.3;cursor:not-allowed}
+.pg-btn svg{width:12px;height:12px}
 
-    /* ─── DETAIL DRAWER ──────────────────────────────────── */
-    .drawer-ov{display:none;position:fixed;inset:0;background:rgba(12,17,29,.35);z-index:200}
-    .drawer-ov.open{display:block}
-    .drawer{position:fixed;top:0;right:0;bottom:0;width:440px;background:var(--surface);box-shadow:-8px 0 32px rgba(12,17,29,.12);z-index:201;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
-    .drawer-ov.open .drawer{transform:translateX(0)}
-    .drw-hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--border);flex-shrink:0}
-    .drw-title{font-family:var(--display);font-size:1rem;font-weight:700;color:var(--t1)}
-    .drw-close{width:30px;height:30px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .12s;color:var(--t2)}
-    .drw-close:hover{background:var(--s2)}
-    .drw-close svg{width:14px;height:14px}
-    .drw-body{flex:1;overflow-y:auto;padding:20px}
-    .drw-sec{margin-bottom:20px}
-    .drw-sec-lbl{font-size:.7rem;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--t3);font-weight:500;margin-bottom:10px}
-    .drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .drw-field{background:var(--s2);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 12px}
-    .df-lbl{font-size:.7rem;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;font-family:var(--mono);margin-bottom:3px}
-    .df-val{font-size:.88rem;font-weight:600;color:var(--t1)}
-    .df-val.mono{font-family:var(--mono)}
-    .drw-notes{background:var(--s2);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;font-size:.85rem;color:var(--t2);line-height:1.6}
-    .drw-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0}
-    .btn-drw{flex:1;height:38px;border-radius:var(--r-sm);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .12s}
-    .btn-drw-ghost{background:transparent;border:1.5px solid var(--border);color:var(--t2)}
-    .btn-drw-ghost:hover{background:var(--s2)}
-    .btn-drw-primary{background:var(--blue);border:none;color:#fff}
-    .btn-drw-primary:hover{background:#1A44C2}
+/* ─── DETAIL DRAWER ──────────────────────────────────── */
+.drawer-ov{display:none;position:fixed;inset:0;background:rgba(12,17,29,.35);z-index:200}
+.drawer-ov.open{display:block}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:440px;background:var(--surface);box-shadow:-8px 0 32px rgba(12,17,29,.12);z-index:201;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
+.drawer-ov.open .drawer{transform:translateX(0)}
+.drw-hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--border);flex-shrink:0}
+.drw-title{font-family:var(--display);font-size:1rem;font-weight:700;color:var(--t1)}
+.drw-close{width:30px;height:30px;border-radius:var(--r-sm);border:1px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .12s;color:var(--t2)}
+.drw-close:hover{background:var(--s2)}
+.drw-close svg{width:14px;height:14px}
+.drw-body{flex:1;overflow-y:auto;padding:20px}
+.drw-sec{margin-bottom:20px}
+.drw-sec-lbl{font-size:.7rem;font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--t3);font-weight:500;margin-bottom:10px}
+.drw-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.drw-field{background:var(--s2);border:1px solid var(--border);border-radius:var(--r-sm);padding:10px 12px}
+.df-lbl{font-size:.7rem;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;font-family:var(--mono);margin-bottom:3px}
+.df-val{font-size:.88rem;font-weight:600;color:var(--t1)}
+.df-val.mono{font-family:var(--mono)}
+.drw-notes{background:var(--s2);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;font-size:.85rem;color:var(--t2);line-height:1.6}
+.drw-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0}
+.btn-drw{flex:1;height:38px;border-radius:var(--r-sm);font-size:.85rem;font-weight:600;cursor:pointer;transition:all .12s}
+.btn-drw-ghost{background:transparent;border:1.5px solid var(--border);color:var(--t2)}
+.btn-drw-ghost:hover{background:var(--s2)}
+.btn-drw-primary{background:var(--blue);border:none;color:#fff}
+.btn-drw-primary:hover{background:#1A44C2}
 
-    /* ─── TOAST ──────────────────────────────────────────── */
-    .toast-wrap{position:fixed;bottom:20px;right:20px;z-index:500;display:flex;flex-direction:column;gap:6px}
-    .toast{background:var(--t1);color:#fff;border-radius:var(--r-md);padding:10px 16px;font-size:.86rem;font-weight:500;box-shadow:var(--sh-lg);display:flex;align-items:center;gap:8px;min-width:240px;animation:tIn .2s ease}
-    @keyframes tIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
-    .t-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-    .t-g .t-dot{background:#4ADE80} .t-a .t-dot{background:#FCD34D} .t-r .t-dot{background:#F87171}
+/* ─── TOAST ──────────────────────────────────────────── */
+.toast-wrap{position:fixed;bottom:20px;right:20px;z-index:500;display:flex;flex-direction:column;gap:6px}
+.toast{background:var(--t1);color:#fff;border-radius:var(--r-md);padding:10px 16px;font-size:.86rem;font-weight:500;box-shadow:var(--sh-lg);display:flex;align-items:center;gap:8px;min-width:240px;animation:tIn .2s ease}
+@keyframes tIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+.t-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.t-g .t-dot{background:#4ADE80} .t-a .t-dot{background:#FCD34D} .t-r .t-dot{background:#F87171}
 
-    /* ─── FOOTER ─────────────────────────────────────────── */
-    .site-footer{border-top:1px solid var(--border);padding:16px 24px;text-align:center;font-size:.78rem;color:var(--t3);font-family:var(--mono)}
+/* ─── FOOTER ─────────────────────────────────────────── */
+.site-footer{border-top:1px solid var(--border);padding:16px 24px;text-align:center;font-size:.78rem;color:var(--t3);font-family:var(--mono)}
 
-    /* ─── RESPONSIVE ─────────────────────────────────────── */
-    @media(max-width:900px){
-      .kpi-grid{grid-template-columns:repeat(2,1fr)}
-      .summary-strip{grid-template-columns:repeat(3,1fr)}
-      .rp-body,.up-body{grid-template-columns:1fr}
-      .rp-form{border-right:none;border-bottom:1px solid var(--border)}
-      .drop-zone{border-right:none;border-bottom:1px solid var(--border)}
-    }
-    @media(max-width:600px){
-      .page{padding:16px 12px 40px}
-      .kpi-grid{grid-template-columns:1fr}
-      .summary-strip{grid-template-columns:repeat(2,1fr)}
-      .tb-right{display:none}
-      .search-input{width:140px}
-      .drawer{width:100%}
-    }
+/* ─── RESPONSIVE ─────────────────────────────────────── */
+@media(max-width:900px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .summary-strip{grid-template-columns:repeat(3,1fr)}
+  .rp-body,.up-body{grid-template-columns:1fr}
+  .rp-form{border-right:none;border-bottom:1px solid var(--border)}
+  .drop-zone{border-right:none;border-bottom:1px solid var(--border)}
+}
+@media(max-width:600px){
+  .page{padding:16px 12px 40px}
+  .kpi-grid{grid-template-columns:1fr}
+  .summary-strip{grid-template-columns:repeat(2,1fr)}
+  .tb-right{display:none}
+  .search-input{width:140px}
+  .drawer{width:100%}
+}
+```
+
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="supabase-wiring.js"></script>
@@ -280,6 +284,7 @@
 <body>
 
 <!-- ═══════════ TOP BAR -->
+
 <header class="topbar">
   <div class="tb-left">
     <a href="index.html" class="btn-back">
@@ -320,6 +325,7 @@
 <div class="page">
 
   <!-- ═══════════ REQUEST CYCLE COUNT PANEL -->
+
   <div class="sec-hdr">
     <div>
       <div class="sec-title">Ad-Hoc Cycle Count Requests</div>
@@ -343,55 +349,59 @@
       </a>
     </div>
 
-    <div class="rp-body">
-      <!-- Form -->
-      <div class="rp-form">
-        <div class="form-row-2">
-          <div class="field-row">
-            <label class="field-lbl" for="req-material">Material / Product #</label>
-            <input type="text" id="req-material" class="field-input" placeholder="e.g. 3301514" autocomplete="off" />
-          </div>
-          <div class="field-row">
-            <label class="field-lbl" for="req-priority">Priority</label>
-            <select id="req-priority" class="field-select">
-              <option value="normal">Normal</option>
-              <option value="urgent">Urgent 🔴</option>
-            </select>
-          </div>
-        </div>
-        <div class="field-row">
-          <label class="field-lbl" for="req-desc">Description (optional)</label>
-          <input type="text" id="req-desc" class="field-input" placeholder="Material name or notes for auditor" />
-        </div>
-        <div class="field-row">
-          <label class="field-lbl" for="req-notes">Manager Notes</label>
-          <textarea id="req-notes" class="field-textarea" placeholder="e.g. Short count flagged in yesterday's production run — need physical verification"></textarea>
-        </div>
-        <div class="field-row">
-          <label class="field-lbl" for="req-requestor">Requested By</label>
-          <input type="text" id="req-requestor" class="field-input" placeholder="Your name" />
-        </div>
-        <button class="btn-submit-req" id="btn-submit-req">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Request Cycle Count
-        </button>
+```
+<div class="rp-body">
+  <!-- Form -->
+  <div class="rp-form">
+    <div class="form-row-2">
+      <div class="field-row">
+        <label class="field-lbl" for="req-material">Material / Product #</label>
+        <input type="text" id="req-material" class="field-input" placeholder="e.g. 3301514" autocomplete="off" />
       </div>
-
-      <!-- Active queue -->
-      <div class="rp-queue">
-        <div class="rq-title">
-          Active Requests
-          <span class="rq-count" id="rq-active-count">0</span>
-        </div>
-        <div class="rq-list" id="rq-active-list">
-          <div class="rq-empty">No active requests.</div>
-        </div>
-        <a href="requests.html" class="rq-view-all">View all completed reports →</a>
+      <div class="field-row">
+        <label class="field-lbl" for="req-priority">Priority</label>
+        <select id="req-priority" class="field-select">
+          <option value="normal">Normal</option>
+          <option value="urgent">Urgent 🔴</option>
+        </select>
       </div>
     </div>
+    <div class="field-row">
+      <label class="field-lbl" for="req-desc">Description (optional)</label>
+      <input type="text" id="req-desc" class="field-input" placeholder="Material name or notes for auditor" />
+    </div>
+    <div class="field-row">
+      <label class="field-lbl" for="req-notes">Manager Notes</label>
+      <textarea id="req-notes" class="field-textarea" placeholder="e.g. Short count flagged in yesterday's production run — need physical verification"></textarea>
+    </div>
+    <div class="field-row">
+      <label class="field-lbl" for="req-requestor">Requested By</label>
+      <input type="text" id="req-requestor" class="field-input" placeholder="Your name" />
+    </div>
+    <button class="btn-submit-req" id="btn-submit-req">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Request Cycle Count
+    </button>
+  </div>
+
+  <!-- Active queue -->
+  <div class="rp-queue">
+    <div class="rq-title">
+      Active Requests
+      <span class="rq-count" id="rq-active-count">0</span>
+    </div>
+    <div class="rq-list" id="rq-active-list">
+      <div class="rq-empty">No active requests.</div>
+    </div>
+    <a href="requests.html" class="rq-view-all">View all completed reports →</a>
+  </div>
+</div>
+```
+
   </div>
 
   <!-- ═══════════ SAP IMPORT -->
+
   <div class="sec-hdr" style="margin-top:4px;">
     <div>
       <div class="sec-title">SAP Inventory Import</div>
@@ -436,6 +446,7 @@
   </div>
 
   <!-- ═══════════ KPI CARDS -->
+
   <div class="sec-hdr">
     <div>
       <div class="sec-title">Key Performance Indicators</div>
@@ -460,40 +471,44 @@
       <div class="kpi-spark"><canvas id="spark-acc"></canvas></div>
     </div>
 
-    <div class="kpi-card kpi-blue">
-      <div class="kpi-icon-row">
-        <div class="kpi-icon ki-b">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-        </div>
-        <div class="kpi-trend tr-up" id="trend-bins">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
-          +12
-        </div>
-      </div>
-      <div class="kpi-value" id="kpi-bins">0</div>
-      <div class="kpi-label">HUs Audited Today</div>
-      <div class="kpi-sub" id="kpi-bins-sub">Daily goal: 60 · 0% complete</div>
-      <div class="kpi-spark"><canvas id="spark-bins"></canvas></div>
+```
+<div class="kpi-card kpi-blue">
+  <div class="kpi-icon-row">
+    <div class="kpi-icon ki-b">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
     </div>
+    <div class="kpi-trend tr-up" id="trend-bins">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+      +12
+    </div>
+  </div>
+  <div class="kpi-value" id="kpi-bins">0</div>
+  <div class="kpi-label">HUs Audited Today</div>
+  <div class="kpi-sub" id="kpi-bins-sub">Daily goal: 60 · 0% complete</div>
+  <div class="kpi-spark"><canvas id="spark-bins"></canvas></div>
+</div>
 
-    <div class="kpi-card kpi-amber">
-      <div class="kpi-icon-row">
-        <div class="kpi-icon ki-a">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        </div>
-        <div class="kpi-trend tr-fl" id="trend-sap">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          No change
-        </div>
-      </div>
-      <div class="kpi-value" id="kpi-sap">0</div>
-      <div class="kpi-label">Pending SAP Adjustments</div>
-      <div class="kpi-sub" id="kpi-sap-sub">0 moves · 0 missing · 0 qty adj</div>
-      <div class="kpi-spark"><canvas id="spark-sap"></canvas></div>
+<div class="kpi-card kpi-amber">
+  <div class="kpi-icon-row">
+    <div class="kpi-icon ki-a">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
     </div>
+    <div class="kpi-trend tr-fl" id="trend-sap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      No change
+    </div>
+  </div>
+  <div class="kpi-value" id="kpi-sap">0</div>
+  <div class="kpi-label">Pending SAP Adjustments</div>
+  <div class="kpi-sub" id="kpi-sap-sub">0 moves · 0 missing · 0 qty adj</div>
+  <div class="kpi-spark"><canvas id="spark-sap"></canvas></div>
+</div>
+```
+
   </div>
 
   <!-- Summary strip -->
+
   <div class="summary-strip" style="margin-bottom:28px;">
     <div class="ss-card"><div class="ss-val" id="ss-sess">0</div><div class="ss-lbl">Sessions MTD</div></div>
     <div class="ss-card"><div class="ss-val" id="ss-disc">0</div><div class="ss-lbl">Discrepancies</div></div>
@@ -503,6 +518,7 @@
   </div>
 
   <!-- ═══════════ HISTORY TABLE -->
+
   <div class="sec-hdr">
     <div>
       <div class="sec-title">Cycle Count History</div>
@@ -561,11 +577,13 @@
   </div>
 
   <!-- Reconciliation report section (injected by JS) -->
+
   <div id="recon-section" style="display:none;margin-top:32px;"></div>
 
 </div><!-- /page -->
 
 <!-- ═══════════ DETAIL DRAWER -->
+
 <div class="drawer-ov" id="drawer-ov">
   <div class="drawer">
     <div class="drw-hdr">
@@ -588,13 +606,79 @@
 
 <div class="toast-wrap" id="toast-wrap"></div>
 <script>
+/* ══════════════════════════════════════════════════════
+   PAGE INIT — runs once when monitor.html opens
+══════════════════════════════════════════════════════ */
+function _monitorInit() {
+  seedHistory();
+  renderUploadPanel();
+  refreshKPIs();
+  renderTable();
+  renderActiveRequests();
+  updateReqTopbarBadge();
+  initSparklines();
+}
 
+/* ── Pull fresh data from Supabase then re-render everything ── */
+async function _monitorSyncAll() {
+if (!window.DB) { _monitorInit(); return; }
 
+try {
+// Load inventory + requests in parallel
+const [inv, reqs] = await Promise.all([
+DB.getInventory(),
+DB.getRequests(),
+]);
 
-  const readInv  = () => readLS(LS.INV);
-  const writeInv = v  => localStorage.setItem(LS.INV, JSON.stringify(v));
-  const readHist  = () => readLS(LS.HIST || 'cc_session_history_v1');
-  const writeHist = v  => localStorage.setItem(LS.HIST || 'cc_session_history_v1', JSON.stringify(v));
+```
+if (inv && inv.length) {
+  document.getElementById('js-last-updated').textContent =
+    inv.length.toLocaleString() + ' items · synced ' +
+    new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+}
+if (reqs) {
+  // Sync requests into AdhocStore cache
+  try { localStorage.setItem(LS.REQ, JSON.stringify(reqs)); } catch(e) {}
+}
+```
+
+} catch(e) {
+console.warn(’[Monitor] Supabase sync failed, using local cache:’, e.message);
+}
+
+// Always re-render regardless of whether Supabase succeeded
+_monitorInit();
+}
+
+/* ── Subscribe to live changes from scanner / requests page ── */
+function _monitorSubscribe() {
+if (!window.DB) return;
+
+DB.subscribeInventory(() => {
+DB.getInventory().then(() => {
+refreshKPIs();
+renderUploadPanel();
+initSparklines();
+});
+});
+
+DB.subscribeRequests(() => {
+DB.getRequests().then(reqs => {
+if (reqs) try { localStorage.setItem(LS.REQ, JSON.stringify(reqs)); } catch(e) {}
+renderActiveRequests();
+updateReqTopbarBadge();
+});
+});
+}
+
+// Run on page open
+_monitorSyncAll().then(() => _monitorSubscribe());
+</script>
+
+const readInv  = () => readLS(LS.INV);
+const writeInv = v  => localStorage.setItem(LS.INV, JSON.stringify(v));
+const readHist  = () => readLS(LS.HIST || ‘cc_session_history_v1’);
+const writeHist = v  => localStorage.setItem(LS.HIST || ‘cc_session_history_v1’, JSON.stringify(v));
 // ── Session history state ──────────────────────────────────────────────
 const MOCK_HIST  = [];         // no hard-coded mock data — real sessions only
 let   allData    = [];         // flat rows consumed by the history table
@@ -602,402 +686,393 @@ let   activeRow  = null;       // ID of the row whose detail drawer is open
 
 // ── History table filter / sort / page state ────────────────────────────
 const PAGE_SIZE  = 20;
-let   tState     = { range:'all', status:'all', search:'', sortCol:'date', sortDir:'desc', page:1 };
+let   tState     = { range:‘all’, status:‘all’, search:’’, sortCol:‘date’, sortDir:‘desc’, page:1 };
 
 function seedHistory() {
-  const real = readHist();
-  const realRows = real.map(s => ({
-    id    : s.id,
-    date  : s.ended_at || s.started_at,
-    user  : s.user,
-    bin   : (s.bins_visited||[]).join(', ') || '—',
-    items : (s.hu_scanned||[]).length,
-    disc  : ((s.summary_snapshot?.missing||0)+(s.summary_snapshot?.qty_adjustments||0)+(s.summary_snapshot?.moved||0)+(s.summary_snapshot?.found_unlisted||0)),
-    photos: 0,
-    status: deriveStatus(s),
-    notes : `Bins: ${(s.bins_visited||[]).join(', ')}`,
-  }));
-  allData = [...realRows, ...MOCK_HIST];  // MOCK_HIST is [] — real sessions only
+const real = readHist();
+const realRows = real.map(s => ({
+id    : s.id,
+date  : s.ended_at || s.started_at,
+user  : s.user,
+bin   : (s.bins_visited||[]).join(’, ’) || ‘—’,
+items : (s.hu_scanned||[]).length,
+disc  : ((s.summary_snapshot?.missing||0)+(s.summary_snapshot?.qty_adjustments||0)+(s.summary_snapshot?.moved||0)+(s.summary_snapshot?.found_unlisted||0)),
+photos: 0,
+status: deriveStatus(s),
+notes : `Bins: ${(s.bins_visited||[]).join(', ')}`,
+}));
+allData = […realRows, …MOCK_HIST];  // MOCK_HIST is [] — real sessions only
 }
 seedHistory();
 
 function deriveStatus(s) {
-  const snap = s.summary_snapshot;
-  if (!snap) return 'Submitted';
-  if (snap.missing > 0 || snap.found_unlisted > 0) return 'Under Review';
-  if (snap.qty_adjustments > 0 || snap.moved > 0) return 'Pending SAP';
-  return 'Reconciled';
+const snap = s.summary_snapshot;
+if (!snap) return ‘Submitted’;
+if (snap.missing > 0 || snap.found_unlisted > 0) return ‘Under Review’;
+if (snap.qty_adjustments > 0 || snap.moved > 0) return ‘Pending SAP’;
+return ‘Reconciled’;
 }
 
 /* ══════════════════════════════════════════════════════
-   SUBMIT AD-HOC REQUEST
+SUBMIT AD-HOC REQUEST
 ══════════════════════════════════════════════════════ */
 // ── Pre-fill requestor name from shared localStorage key ──────────────
 (function prefillAuditor() {
-  const name = (localStorage.getItem('cc_auditor_name') || '').trim();
-  if (name) document.getElementById('req-requestor').value = name;
+const name = (localStorage.getItem(‘cc_auditor_name’) || ‘’).trim();
+if (name) document.getElementById(‘req-requestor’).value = name;
 })();
 
-document.getElementById('btn-submit-req').addEventListener('click', () => {
-  const mat  = document.getElementById('req-material').value.trim();
-  const desc = document.getElementById('req-desc').value.trim();
-  const note = document.getElementById('req-notes').value.trim();
-  const pri  = document.getElementById('req-priority').value;
-  const reqBy= document.getElementById('req-requestor').value.trim() || 'Manager';
+document.getElementById(‘btn-submit-req’).addEventListener(‘click’, () => {
+const mat  = document.getElementById(‘req-material’).value.trim();
+const desc = document.getElementById(‘req-desc’).value.trim();
+const note = document.getElementById(‘req-notes’).value.trim();
+const pri  = document.getElementById(‘req-priority’).value;
+const reqBy= document.getElementById(‘req-requestor’).value.trim() || ‘Manager’;
 
-  if (!mat) { toast('Enter a Material / Product number.', 'a'); document.getElementById('req-material').focus(); return; }
+if (!mat) { toast(‘Enter a Material / Product number.’, ‘a’); document.getElementById(‘req-material’).focus(); return; }
 
-  const task = AdhocStore.create({ material_id: mat, description: desc, notes: note, priority: pri, requested_by: reqBy });
-  if (!task) return;
+const task = AdhocStore.create({ material_id: mat, description: desc, notes: note, priority: pri, requested_by: reqBy });
+if (!task) return;
 
-  // Clear form
-  document.getElementById('req-material').value = '';
-  document.getElementById('req-desc').value     = '';
-  document.getElementById('req-notes').value    = '';
-  document.getElementById('req-priority').value = 'normal';
+// Clear form
+document.getElementById(‘req-material’).value = ‘’;
+document.getElementById(‘req-desc’).value     = ‘’;
+document.getElementById(‘req-notes’).value    = ‘’;
+document.getElementById(‘req-priority’).value = ‘normal’;
 
-  renderActiveRequests();
-  updateReqTopbarBadge();
-  toast(`Request for ${task.material_id} sent to floor auditors.`, 'g');
+renderActiveRequests();
+updateReqTopbarBadge();
+toast(`Request for ${task.material_id} sent to floor auditors.`, ‘g’);
 });
 
 /* ══════════════════════════════════════════════════════
-   RENDER ACTIVE REQUESTS QUEUE
+RENDER ACTIVE REQUESTS QUEUE
 ══════════════════════════════════════════════════════ */
 function renderActiveRequests() {
-  const pending = AdhocStore.getPending();
-  const list    = document.getElementById('rq-active-list');
-  const count   = document.getElementById('rq-active-count');
-  count.textContent = pending.length;
+const pending = AdhocStore.getPending();
+const list    = document.getElementById(‘rq-active-list’);
+const count   = document.getElementById(‘rq-active-count’);
+count.textContent = pending.length;
 
-  if (!pending.length) {
-    list.innerHTML = '<div class="rq-empty">No active requests — all clear ✓</div>';
-    return;
-  }
+if (!pending.length) {
+list.innerHTML = ‘<div class="rq-empty">No active requests — all clear ✓</div>’;
+return;
+}
 
-  list.innerHTML = pending.map(r => {
-    const urg = r.priority === 'urgent';
-    const sc  = r.status === 'in_progress' ? 'sb-progress' : 'sb-pending';
-    const sl  = r.status === 'in_progress' ? 'In Progress' : 'Pending';
-    return `<div class="rq-item ${urg?'urg':'nrm'}">
-      <div class="rq-item-body">
-        <div class="rq-mat">${r.material_id}</div>
-        <div class="rq-desc">${r.description || 'No description'}</div>
-        <div class="rq-meta">By ${r.requested_by} · ${timeAgo(r.requested_at)}</div>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;">
-        <span class="rq-status-badge ${sc}">${sl}</span>
-        <button onclick="cancelReq('${r.id}')" style="font-size:.7rem;color:var(--t3);background:none;border:none;cursor:pointer;padding:0;">✕ Cancel</button>
-      </div>
-    </div>`;
-  }).join('');
+list.innerHTML = pending.map(r => {
+const urg = r.priority === ‘urgent’;
+const sc  = r.status === ‘in_progress’ ? ‘sb-progress’ : ‘sb-pending’;
+const sl  = r.status === ‘in_progress’ ? ‘In Progress’ : ‘Pending’;
+return `<div class="rq-item ${urg?'urg':'nrm'}"> <div class="rq-item-body"> <div class="rq-mat">${r.material_id}</div> <div class="rq-desc">${r.description || 'No description'}</div> <div class="rq-meta">By ${r.requested_by} · ${timeAgo(r.requested_at)}</div> </div> <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;"> <span class="rq-status-badge ${sc}">${sl}</span> <button onclick="cancelReq('${r.id}')" style="font-size:.7rem;color:var(--t3);background:none;border:none;cursor:pointer;padding:0;">✕ Cancel</button> </div> </div>`;
+}).join(’’);
 }
 
 function cancelReq(id) {
-  AdhocStore.cancel(id);
-  renderActiveRequests();
-  updateReqTopbarBadge();
-  toast('Request cancelled.', 'a');
+AdhocStore.cancel(id);
+renderActiveRequests();
+updateReqTopbarBadge();
+toast(‘Request cancelled.’, ‘a’);
 }
 
 function updateReqTopbarBadge() {
-  const n   = AdhocStore.getPending().length;
-  const el  = document.getElementById('req-badge-topbar');
-  el.textContent = n;
-  el.style.display = n > 0 ? 'inline' : 'none';
+const n   = AdhocStore.getPending().length;
+const el  = document.getElementById(‘req-badge-topbar’);
+el.textContent = n;
+el.style.display = n > 0 ? ‘inline’ : ‘none’;
 }
 
 /* ══════════════════════════════════════════════════════
-   KPI REFRESH
-   STUB: Replace with Supabase aggregation queries
+KPI REFRESH
+STUB: Replace with Supabase aggregation queries
 ══════════════════════════════════════════════════════ */
 function refreshKPIs() {
-  const inv   = readInv();
-  const total = inv.length;
-  const sod   = new Date(); sod.setHours(0,0,0,0);
+const inv   = readInv();
+const total = inv.length;
+const sod   = new Date(); sod.setHours(0,0,0,0);
 
-  // Counts by status
-  const cnt = (st) => inv.filter(i => i.status === st).length;
-  const audited  = inv.filter(i => i.status !== 'pending_count').length;
-  const verified = cnt('verified');
-  const qtyAdj   = cnt('qty_adjustment');
-  const missing  = cnt('missing');
-  const moved    = cnt('moved');
-  const unlisted = cnt('found_unlisted');
-  const accuracy = audited > 0 ? (verified / audited) * 100 : 0;
-  const today    = inv.filter(i => i.audited_at && new Date(i.audited_at) >= sod).length;
-  const photos   = inv.filter(i => i.photo_evidence).length;
-  const labels   = inv.filter(i => i.print_label).length;
-  const pendSAP  = missing + qtyAdj + unlisted + moved;
+// Counts by status
+const cnt = (st) => inv.filter(i => i.status === st).length;
+const audited  = inv.filter(i => i.status !== ‘pending_count’).length;
+const verified = cnt(‘verified’);
+const qtyAdj   = cnt(‘qty_adjustment’);
+const missing  = cnt(‘missing’);
+const moved    = cnt(‘moved’);
+const unlisted = cnt(‘found_unlisted’);
+const accuracy = audited > 0 ? (verified / audited) * 100 : 0;
+const today    = inv.filter(i => i.audited_at && new Date(i.audited_at) >= sod).length;
+const photos   = inv.filter(i => i.photo_evidence).length;
+const labels   = inv.filter(i => i.print_label).length;
+const pendSAP  = missing + qtyAdj + unlisted + moved;
 
-  // KPI cards
-  const $= id => document.getElementById(id);
-  $('kpi-acc').textContent     = total > 0 ? `${accuracy.toFixed(1)}%` : '—';
-  $('kpi-acc-sub').textContent = `Target ≥ 99.0% · ${audited} of ${total} bins audited`;
-  $('kpi-bins').textContent    = today;
-  $('kpi-bins-sub').textContent= `${Math.round((today/60)*100)}% of daily goal`;
-  $('kpi-sap').textContent     = pendSAP;
-  $('kpi-sap-sub').textContent = `${moved} moves · ${missing} missing · ${qtyAdj} qty adj`;
+// KPI cards
+const $= id => document.getElementById(id);
+$(‘kpi-acc’).textContent     = total > 0 ? `${accuracy.toFixed(1)}%` : ‘—’;
+$(‘kpi-acc-sub’).textContent = `Target ≥ 99.0% · ${audited} of ${total} bins audited`;
+$(‘kpi-bins’).textContent    = today;
+$(‘kpi-bins-sub’).textContent= `${Math.round((today/60)*100)}% of daily goal`;
+$(‘kpi-sap’).textContent     = pendSAP;
+$(‘kpi-sap-sub’).textContent = `${moved} moves · ${missing} missing · ${qtyAdj} qty adj`;
 
-  // Summary strip
-  $('ss-sess').textContent   = readHist().length;
-  $('ss-disc').textContent   = qtyAdj + missing + moved + unlisted;
-  $('ss-labels').textContent = labels;
-  $('ss-moves').textContent  = moved;
-  $('ss-photos').textContent = photos;
+// Summary strip
+$(‘ss-sess’).textContent   = readHist().length;
+$(‘ss-disc’).textContent   = qtyAdj + missing + moved + unlisted;
+$(‘ss-labels’).textContent = labels;
+$(‘ss-moves’).textContent  = moved;
+$(‘ss-photos’).textContent = photos;
 }
 
 /* ══════════════════════════════════════════════════════
-   UPLOAD PANEL
+UPLOAD PANEL
 ══════════════════════════════════════════════════════ */
 function renderUploadPanel() {
-  const inv   = readInv();
-  const total = inv.length;
-  const meta  = (() => { try { return JSON.parse(localStorage.getItem('cc_last_upload_v1')); } catch { return null; } })();
-  const audited = inv.filter(i => i.status !== 'pending_count').length;
-  const pct   = total > 0 ? Math.round((audited/total)*100) : 0;
+const inv   = readInv();
+const total = inv.length;
+const meta  = (() => { try { return JSON.parse(localStorage.getItem(‘cc_last_upload_v1’)); } catch { return null; } })();
+const audited = inv.filter(i => i.status !== ‘pending_count’).length;
+const pct   = total > 0 ? Math.round((audited/total)*100) : 0;
 
-  document.getElementById('isp-count').textContent = total > 0 ? total.toLocaleString() : '—';
-  document.getElementById('pb-fill').style.width   = pct + '%';
-  document.getElementById('pb-l').textContent      = `${audited} audited`;
-  document.getElementById('pb-r').textContent      = `${total - audited} pending`;
+document.getElementById(‘isp-count’).textContent = total > 0 ? total.toLocaleString() : ‘—’;
+document.getElementById(‘pb-fill’).style.width   = pct + ‘%’;
+document.getElementById(‘pb-l’).textContent      = `${audited} audited`;
+document.getElementById(‘pb-r’).textContent      = `${total - audited} pending`;
 
-  const statuses = [
-    ['✅','Verified',    inv.filter(i=>i.status==='verified').length,       'var(--grn-lt)','var(--green)'],
-    ['⚠️','Qty Adj',     inv.filter(i=>i.status==='qty_adjustment').length,  'var(--amb-lt)','var(--amber)'],
-    ['❌','Missing',     inv.filter(i=>i.status==='missing').length,         'var(--red-lt)','var(--red)'],
-    ['🔄','Moved',       inv.filter(i=>i.status==='moved').length,           'var(--pur-lt)','var(--purple)'],
-    ['🔍','Unlisted',    inv.filter(i=>i.status==='found_unlisted').length,  'var(--red-lt)','var(--red)'],
-    ['📷','w/ Photo',    inv.filter(i=>i.photo_evidence).length,             'var(--blue-lt)','var(--blue)'],
-  ];
-  document.getElementById('status-grid').innerHTML = statuses.map(([ic,lb,v,bg,c])=>
-    `<div class="st-chip" style="background:${bg}">
-      <span class="stc-icon">${ic}</span>
-      <div><div class="stc-val" style="color:${c}">${v}</div><div class="stc-lbl">${lb}</div></div>
-    </div>`).join('');
+const statuses = [
+[‘✅’,‘Verified’,    inv.filter(i=>i.status===‘verified’).length,       ‘var(–grn-lt)’,‘var(–green)’],
+[‘⚠️’,‘Qty Adj’,     inv.filter(i=>i.status===‘qty_adjustment’).length,  ‘var(–amb-lt)’,‘var(–amber)’],
+[‘❌’,‘Missing’,     inv.filter(i=>i.status===‘missing’).length,         ‘var(–red-lt)’,‘var(–red)’],
+[‘🔄’,‘Moved’,       inv.filter(i=>i.status===‘moved’).length,           ‘var(–pur-lt)’,‘var(–purple)’],
+[‘🔍’,‘Unlisted’,    inv.filter(i=>i.status===‘found_unlisted’).length,  ‘var(–red-lt)’,‘var(–red)’],
+[‘📷’,‘w/ Photo’,    inv.filter(i=>i.photo_evidence).length,             ‘var(–blue-lt)’,‘var(–blue)’],
+];
+document.getElementById(‘status-grid’).innerHTML = statuses.map(([ic,lb,v,bg,c])=>
+`<div class="st-chip" style="background:${bg}"> <span class="stc-icon">${ic}</span> <div><div class="stc-val" style="color:${c}">${v}</div><div class="stc-lbl">${lb}</div></div> </div>`).join(’’);
 
-  document.getElementById('btn-reset-inv').style.display = total > 0 ? 'inline-flex' : 'none';
+document.getElementById(‘btn-reset-inv’).style.display = total > 0 ? ‘inline-flex’ : ‘none’;
 }
 
 // Drop zone
-const dropZone = document.getElementById('drop-zone');
-const fileInput = document.getElementById('file-input');
-dropZone.addEventListener('click', () => fileInput.click());
-dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.style.background = 'var(--blue-lt)'; });
-dropZone.addEventListener('dragleave', () => dropZone.style.background = '');
-dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.style.background = ''; if(e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]); });
-fileInput.addEventListener('change', e => { if(e.target.files[0]) { processFile(e.target.files[0]); fileInput.value=''; }});
+const dropZone = document.getElementById(‘drop-zone’);
+const fileInput = document.getElementById(‘file-input’);
+dropZone.addEventListener(‘click’, () => fileInput.click());
+dropZone.addEventListener(‘dragover’, e => { e.preventDefault(); dropZone.style.background = ‘var(–blue-lt)’; });
+dropZone.addEventListener(‘dragleave’, () => dropZone.style.background = ‘’);
+dropZone.addEventListener(‘drop’, e => { e.preventDefault(); dropZone.style.background = ‘’; if(e.dataTransfer.files[0]) processFile(e.dataTransfer.files[0]); });
+fileInput.addEventListener(‘change’, e => { if(e.target.files[0]) { processFile(e.target.files[0]); fileInput.value=’’; }});
 
 function processFile(file) {
-  const ext = file.name.split('.').pop().toLowerCase();
-  const res = document.getElementById('up-result');
-  res.style.display = 'block';
-  res.innerHTML = `<span style="color:var(--blue)">⏳ Processing ${file.name}…</span>`;
+const ext = file.name.split(’.’).pop().toLowerCase();
+const res = document.getElementById(‘up-result’);
+res.style.display = ‘block’;
+res.innerHTML = `<span style="color:var(--blue)">⏳ Processing ${file.name}…</span>`;
 
-  if (ext === 'xlsx' || ext === 'xlsm') {
-    if (typeof XLSX === 'undefined') {
-      res.innerHTML = '<span style="color:var(--red)">✗ SheetJS not loaded. Refresh the page.</span>'; return;
-    }
-    const reader = new FileReader();
-    reader.onload = e => {
-      try {
-        const wb = XLSX.read(e.target.result, { type:'array', cellDates:true });
-        const ws = wb.Sheets[wb.SheetNames[0]];
+if (ext === ‘xlsx’ || ext === ‘xlsm’) {
+if (typeof XLSX === ‘undefined’) {
+res.innerHTML = ‘<span style="color:var(--red)">✗ SheetJS not loaded. Refresh the page.</span>’; return;
+}
+const reader = new FileReader();
+reader.onload = e => {
+try {
+const wb = XLSX.read(e.target.result, { type:‘array’, cellDates:true });
+const ws = wb.Sheets[wb.SheetNames[0]];
 
-        // ── Use sheet_to_json instead of sheet_to_csv ─────────────────────
-        // sheet_to_csv can silently truncate large SAP exports due to how it
-        // resolves shared string table references.  sheet_to_json({header:1})
-        // returns a native 2-D array — no string conversion, no line-splitting,
-        // no embedded-character edge cases, handles all 3,000+ rows correctly.
-        const rows = XLSX.utils.sheet_to_json(ws, {
-          header : 1,      // array-of-arrays (row 0 = headers)
-          raw    : false,  // format dates as strings, not serial numbers
-          defval : '',     // empty string for blank cells
-        });
-        const r = parseInventoryRows(rows, file.name);
-        showParseResult(r, file.name, res);
-        renderUploadPanel(); refreshKPIs(); renderTable();
-      } catch(err) {
-        res.innerHTML = `<span style="color:var(--red)">✗ XLSX error: ${err.message}</span>`;
-        console.error('[Upload] XLSX parse error:', err);
-      }
-    };
-    reader.readAsArrayBuffer(file);
-
-  } else if (ext === 'csv' || ext === 'txt') {
-    const reader = new FileReader();
-    reader.onload = e => finishCSVParse(e.target.result, file.name, res);
-    reader.readAsText(file);
-  } else {
-    res.innerHTML = `<span style="color:var(--red)">✗ Unsupported file type ".${ext}". Use .xlsx or .csv.</span>`;
+```
+    // ── Use sheet_to_json instead of sheet_to_csv ─────────────────────
+    // sheet_to_csv can silently truncate large SAP exports due to how it
+    // resolves shared string table references.  sheet_to_json({header:1})
+    // returns a native 2-D array — no string conversion, no line-splitting,
+    // no embedded-character edge cases, handles all 3,000+ rows correctly.
+    const rows = XLSX.utils.sheet_to_json(ws, {
+      header : 1,      // array-of-arrays (row 0 = headers)
+      raw    : false,  // format dates as strings, not serial numbers
+      defval : '',     // empty string for blank cells
+    });
+    const r = parseInventoryRows(rows, file.name);
+    showParseResult(r, file.name, res);
+    renderUploadPanel(); refreshKPIs(); renderTable();
+  } catch(err) {
+    res.innerHTML = `<span style="color:var(--red)">✗ XLSX error: ${err.message}</span>`;
+    console.error('[Upload] XLSX parse error:', err);
   }
+};
+reader.readAsArrayBuffer(file);
+```
+
+} else if (ext === ‘csv’ || ext === ‘txt’) {
+const reader = new FileReader();
+reader.onload = e => finishCSVParse(e.target.result, file.name, res);
+reader.readAsText(file);
+} else {
+res.innerHTML = `<span style="color:var(--red)">✗ Unsupported file type ".${ext}". Use .xlsx or .csv.</span>`;
+}
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
-   parseInventoryRows  — processes a 2-D array from sheet_to_json directly.
-   Row 0 = header.  Rows 1-N = data.  Each inner array is ordered by column.
-   This is the PRIMARY parser for .xlsx uploads.
-   ────────────────────────────────────────────────────────────────────────── */
+parseInventoryRows  — processes a 2-D array from sheet_to_json directly.
+Row 0 = header.  Rows 1-N = data.  Each inner array is ordered by column.
+This is the PRIMARY parser for .xlsx uploads.
+────────────────────────────────────────────────────────────────────────── */
 function parseInventoryRows(rows, filename) {
-  const STATUS      = 'pending_count';
-  const BIN_COMPOUND= true;
+const STATUS      = ‘pending_count’;
+const BIN_COMPOUND= true;
 
-  if (!rows || rows.length < 2)
-    return { success:false, loaded:0, skipped:0, skippedNoHU:0, errors:['File has no data rows.'], items:[] };
+if (!rows || rows.length < 2)
+return { success:false, loaded:0, skipped:0, skippedNoHU:0, errors:[‘File has no data rows.’], items:[] };
 
-  // ── Map header names → column indices ──────────────────────────────────
-  const COLMAP = {
-    'handling unit'             : 'hu_number',
-    'hu'                        : 'hu_number',
-    'product'                   : 'material_id',
-    'material'                  : 'material_id',
-    'storage bin'               : 'expected_bin',
-    'storage type'              : 'storage_type',
-    'quantity'                  : 'expected_qty',
-    'batch'                     : 'batch_number',
-    'base unit of measure'      : 'uom',
-    'product short description' : 'description',
-    'stock type'                : 'stock_type',
-    'goods receipt date'        : 'gr_date',
-    'shelf life expiration date': 'sled',
-  };
+// ── Map header names → column indices ──────────────────────────────────
+const COLMAP = {
+‘handling unit’             : ‘hu_number’,
+‘hu’                        : ‘hu_number’,
+‘product’                   : ‘material_id’,
+‘material’                  : ‘material_id’,
+‘storage bin’               : ‘expected_bin’,
+‘storage type’              : ‘storage_type’,
+‘quantity’                  : ‘expected_qty’,
+‘batch’                     : ‘batch_number’,
+‘base unit of measure’      : ‘uom’,
+‘product short description’ : ‘description’,
+‘stock type’                : ‘stock_type’,
+‘goods receipt date’        : ‘gr_date’,
+‘shelf life expiration date’: ‘sled’,
+};
 
-  const headerRow = rows[0];
-  const COL = {};  // { fieldName: colIndex }
-  headerRow.forEach((h, i) => {
-    const key = String(h || '').toLowerCase().trim().replace(/^\uFEFF/, '');
-    if (COLMAP[key]) COL[COLMAP[key]] = i;
-  });
+const headerRow = rows[0];
+const COL = {};  // { fieldName: colIndex }
+headerRow.forEach((h, i) => {
+const key = String(h || ‘’).toLowerCase().trim().replace(/^\uFEFF/, ‘’);
+if (COLMAP[key]) COL[COLMAP[key]] = i;
+});
 
-  const required = ['hu_number', 'material_id', 'expected_bin', 'expected_qty'];
-  const missing  = required.filter(f => !(f in COL));
-  if (missing.length)
-    return { success:false, loaded:0, skipped:0, skippedNoHU:0,
-             errors:[`Required columns not found: ${missing.join(', ')}. Headers detected: ${headerRow.join(' | ')}`], items:[] };
+const required = [‘hu_number’, ‘material_id’, ‘expected_bin’, ‘expected_qty’];
+const missing  = required.filter(f => !(f in COL));
+if (missing.length)
+return { success:false, loaded:0, skipped:0, skippedNoHU:0,
+errors:[`Required columns not found: ${missing.join(', ')}. Headers detected: ${headerRow.join(' | ')}`], items:[] };
 
-  // ── Parse data rows ─────────────────────────────────────────────────────
-  const items      = [];
-  const seen       = new Set();
-  let skipped      = 0;
-  let skippedNoHU  = 0;
-  const errors     = [];
+// ── Parse data rows ─────────────────────────────────────────────────────
+const items      = [];
+const seen       = new Set();
+let skipped      = 0;
+let skippedNoHU  = 0;
+const errors     = [];
 
-  const get = (row, field) => {
-    const idx = COL[field];
-    return (idx !== undefined && row[idx] !== undefined && row[idx] !== null)
-      ? String(row[idx]).trim()
-      : '';
-  };
+const get = (row, field) => {
+const idx = COL[field];
+return (idx !== undefined && row[idx] !== undefined && row[idx] !== null)
+? String(row[idx]).trim()
+: ‘’;
+};
 
-  for (let i = 1; i < rows.length; i++) {
-    const row = rows[i];
-    // Skip completely empty rows (trailing blank rows from SheetJS)
-    if (!row || row.every(c => c === '' || c === null || c === undefined)) { skipped++; continue; }
+for (let i = 1; i < rows.length; i++) {
+const row = rows[i];
+// Skip completely empty rows (trailing blank rows from SheetJS)
+if (!row || row.every(c => c === ‘’ || c === null || c === undefined)) { skipped++; continue; }
 
-    const huRaw = get(row, 'hu_number');
-    if (!huRaw) { skippedNoHU++; skipped++; continue; }
+```
+const huRaw = get(row, 'hu_number');
+if (!huRaw) { skippedNoHU++; skipped++; continue; }
 
-    const matId  = get(row, 'material_id');
-    const binRaw = get(row, 'expected_bin');
-    if (!matId && !binRaw) { skipped++; continue; }
+const matId  = get(row, 'material_id');
+const binRaw = get(row, 'expected_bin');
+if (!matId && !binRaw) { skipped++; continue; }
 
-    const hu = huRaw.toUpperCase();
+const hu = huRaw.toUpperCase();
 
-    // Handle duplicate HUs: keep last occurrence (SAP split-quantity rows)
-    if (seen.has(hu)) {
-      errors.push(`Duplicate HU ${hu} on data row ${i} — last occurrence kept`);
-      const di = items.findIndex(x => x.hu_number === hu);
-      if (di >= 0) items.splice(di, 1);
-    }
-    seen.add(hu);
+// Handle duplicate HUs: keep last occurrence (SAP split-quantity rows)
+if (seen.has(hu)) {
+  errors.push(`Duplicate HU ${hu} on data row ${i} — last occurrence kept`);
+  const di = items.findIndex(x => x.hu_number === hu);
+  if (di >= 0) items.splice(di, 1);
+}
+seen.add(hu);
 
-    // Build compound bin key: STORAGETYPE-STORAGEBIN  e.g. FZ01-FA01A
-    const stType = get(row, 'storage_type').toUpperCase();
-    const binKey = BIN_COMPOUND && stType && binRaw
-      ? `${stType}-${binRaw.toUpperCase()}`
-      : binRaw.toUpperCase();
+// Build compound bin key: STORAGETYPE-STORAGEBIN  e.g. FZ01-FA01A
+const stType = get(row, 'storage_type').toUpperCase();
+const binKey = BIN_COMPOUND && stType && binRaw
+  ? `${stType}-${binRaw.toUpperCase()}`
+  : binRaw.toUpperCase();
 
-    const qtyRaw = get(row, 'expected_qty').replace(/,/g, '');
-    const qty    = parseFloat(qtyRaw) || 0;
+const qtyRaw = get(row, 'expected_qty').replace(/,/g, '');
+const qty    = parseFloat(qtyRaw) || 0;
 
-    // Dates come as formatted strings from sheet_to_json({raw:false})
-    const grDate = get(row, 'gr_date')  || null;
-    const sled   = get(row, 'sled')     || null;
+// Dates come as formatted strings from sheet_to_json({raw:false})
+const grDate = get(row, 'gr_date')  || null;
+const sled   = get(row, 'sled')     || null;
 
-    items.push({
-      hu_number      : hu,
-      material_id    : matId,
-      description    : get(row, 'description'),
-      batch_number   : get(row, 'batch_number'),
-      expected_bin   : binKey,
-      expected_qty   : qty,
-      uom            : get(row, 'uom'),
-      stock_type     : get(row, 'stock_type'),
-      storage_type   : stType,
-      gr_date        : grDate,
-      sled           : sled,
-      status         : STATUS,
-      actual_bin     : null, actual_qty: null, qty_variance: null,
-      auditor_notes  : '', photo_evidence: null,
-      print_label    : false, is_adhoc_request: false,
-      audited_by     : null, audited_at: null, session_id: null,
-      created_at     : new Date().toISOString(),
-    });
-  }
+items.push({
+  hu_number      : hu,
+  material_id    : matId,
+  description    : get(row, 'description'),
+  batch_number   : get(row, 'batch_number'),
+  expected_bin   : binKey,
+  expected_qty   : qty,
+  uom            : get(row, 'uom'),
+  stock_type     : get(row, 'stock_type'),
+  storage_type   : stType,
+  gr_date        : grDate,
+  sled           : sled,
+  status         : STATUS,
+  actual_bin     : null, actual_qty: null, qty_variance: null,
+  auditor_notes  : '', photo_evidence: null,
+  print_label    : false, is_adhoc_request: false,
+  audited_by     : null, audited_at: null, session_id: null,
+  created_at     : new Date().toISOString(),
+});
+```
 
-  if (!items.length)
-    return { success:false, loaded:0, skipped, skippedNoHU,
-             errors:['No valid items parsed after processing all rows.'], items:[] };
+}
 
-  // ── Persist locally (instant feedback) then push to Supabase ──────────
-  try { localStorage.setItem(LS.INV, JSON.stringify(items)); } catch(e) {
-    try { localStorage.removeItem(LS.INV); localStorage.setItem(LS.INV, JSON.stringify(items)); }
-    catch(e2) { return { success:false, loaded:0, skipped, skippedNoHU,
-      errors:[`Storage full: ${e2.message}`], items:[] }; }
-  }
-  localStorage.setItem('cc_last_upload_v1', JSON.stringify({
-    filename, uploaded_at: new Date().toISOString(),
-    items_loaded: items.length, items_skipped: skipped, skipped_no_hu: skippedNoHU,
-  }));
-  // Push to Supabase — all other devices will receive this automatically
-  if (window.DB) {
-    DB.replaceInventory(items, `upload-${Date.now()}`)
-      .then(r => {
-        const el = document.getElementById('js-last-updated');
-        if (el) el.textContent = `Synced ${r.loaded.toLocaleString()} rows to database`;
-      })
-      .catch(e => console.error('[DB] replaceInventory failed:', e));
-  }
+if (!items.length)
+return { success:false, loaded:0, skipped, skippedNoHU,
+errors:[‘No valid items parsed after processing all rows.’], items:[] };
 
-  console.info(`[Upload] Loaded ${items.length} HU records from "${filename}". Skipped: ${skipped} (${skippedNoHU} no-HU rows).`);
-  return { success:true, loaded: items.length, skipped, skippedNoHU, errors, items };
+// ── Persist locally (instant feedback) then push to Supabase ──────────
+try { localStorage.setItem(LS.INV, JSON.stringify(items)); } catch(e) {
+try { localStorage.removeItem(LS.INV); localStorage.setItem(LS.INV, JSON.stringify(items)); }
+catch(e2) { return { success:false, loaded:0, skipped, skippedNoHU,
+errors:[`Storage full: ${e2.message}`], items:[] }; }
+}
+localStorage.setItem(‘cc_last_upload_v1’, JSON.stringify({
+filename, uploaded_at: new Date().toISOString(),
+items_loaded: items.length, items_skipped: skipped, skipped_no_hu: skippedNoHU,
+}));
+// Push to Supabase — all other devices will receive this automatically
+if (window.DB) {
+DB.replaceInventory(items, `upload-${Date.now()}`)
+.then(r => {
+const el = document.getElementById(‘js-last-updated’);
+if (el) el.textContent = `Synced ${r.loaded.toLocaleString()} rows to database`;
+})
+.catch(e => console.error(’[DB] replaceInventory failed:’, e));
+}
+
+console.info(`[Upload] Loaded ${items.length} HU records from "${filename}". Skipped: ${skipped} (${skippedNoHU} no-HU rows).`);
+return { success:true, loaded: items.length, skipped, skippedNoHU, errors, items };
 }
 
 function finishCSVParse(csvText, filename, resEl) {
-  // Delegate to CC.CSVParser if the engine is loaded, otherwise inline fallback
-  if (typeof CC !== 'undefined' && CC.CSVParser) {
-    const r = CC.CSVParser.loadFromCSV(csvText, filename);
-    showParseResult(r, filename, resEl);
-  } else {
-    // Inline SAP CSV parser (matches sap-format-patch.js column names)
-    const r = parseInventoryCSV(csvText, filename);
-    showParseResult(r, filename, resEl);
-  }
-  renderUploadPanel();
-  refreshKPIs();
-  renderTable();
+// Delegate to CC.CSVParser if the engine is loaded, otherwise inline fallback
+if (typeof CC !== ‘undefined’ && CC.CSVParser) {
+const r = CC.CSVParser.loadFromCSV(csvText, filename);
+showParseResult(r, filename, resEl);
+} else {
+// Inline SAP CSV parser (matches sap-format-patch.js column names)
+const r = parseInventoryCSV(csvText, filename);
+showParseResult(r, filename, resEl);
+}
+renderUploadPanel();
+refreshKPIs();
+renderTable();
 }
 
 function showParseResult(r, filename, resEl) {
-  if (r.success) {
-    resEl.innerHTML = `<span style="color:var(--green);font-weight:600">✓ Loaded <strong>${r.loaded}</strong> HU records from <strong>${filename}</strong></span>
-      ${r.skipped > 0 ? `<span style="color:var(--amber);margin-left:12px;font-size:.78rem">(${r.skipped} rows skipped)</span>` : ''}`;
-    toast(`${r.loaded} items loaded from SAP export.`, 'g');
-  } else {
-    resEl.innerHTML = `<span style="color:var(--red)">✗ ${r.errors?.[0] || 'Parse failed'}</span>`;
-    toast('CSV parse failed — check console.', 'r');
-    console.error('Parse errors:', r.errors);
-  }
+if (r.success) {
+resEl.innerHTML = `<span style="color:var(--green);font-weight:600">✓ Loaded <strong>${r.loaded}</strong> HU records from <strong>${filename}</strong></span> ${r.skipped > 0 ? `<span style="color:var(--amber);margin-left:12px;font-size:.78rem">(${r.skipped} rows skipped)</span>` : ''}`;
+toast(`${r.loaded} items loaded from SAP export.`, ‘g’);
+} else {
+resEl.innerHTML = `<span style="color:var(--red)">✗ ${r.errors?.[0] || 'Parse failed'}</span>`;
+toast(‘CSV parse failed — check console.’, ‘r’);
+console.error(‘Parse errors:’, r.errors);
+}
 }
 
 // Inline CSV parser (fallback if cyclecount-engine.js is not loaded)
@@ -1005,312 +1080,274 @@ function showParseResult(r, filename, resEl) {
 //               Handling Unit, Product, Product Short Description, Quantity, Batch,
 //               Base UoM, Stock Type, SLED
 function parseInventoryCSV(csvText, filename) {
-  const STATUS = { PENDING_COUNT:'pending_count' };
-  const BIN_COMPOUND = true;
-  const lines = csvText.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
-  if (lines.length < 2) return { success:false, loaded:0, skipped:0, errors:['No data rows found.'], items:[] };
+const STATUS = { PENDING_COUNT:‘pending_count’ };
+const BIN_COMPOUND = true;
+const lines = csvText.split(/\r?\n/).map(l=>l.trim()).filter(Boolean);
+if (lines.length < 2) return { success:false, loaded:0, skipped:0, errors:[‘No data rows found.’], items:[] };
 
-  const tabCount = (lines[0].match(/\t/g)||[]).length;
-  const delim = tabCount > 2 ? '\t' : ',';
-  const split = l => delim === '\t' ? l.split('\t').map(f=>f.trim()) : l.split(',').map(f=>f.trim().replace(/^"|"$/g,''));
+const tabCount = (lines[0].match(/\t/g)||[]).length;
+const delim = tabCount > 2 ? ‘\t’ : ‘,’;
+const split = l => delim === ‘\t’ ? l.split(’\t’).map(f=>f.trim()) : l.split(’,’).map(f=>f.trim().replace(/^”|”$/g,’’));
 
-  const rawHdr = split(lines[0]).map(h => h.replace(/^\uFEFF/,'').toLowerCase().trim());
-  const COL = {};
-  const MAP = {
-    'handling unit':'hu_number','hu':'hu_number','product':'material_id','material':'material_id',
-    'storage bin':'expected_bin','bin':'expected_bin','storage type':'storage_type',
-    'quantity':'expected_qty','qty':'expected_qty','batch':'batch_number',
-    'base unit of measure':'uom','product short description':'description',
-    'stock type':'stock_type',
-  };
-  rawHdr.forEach((h,i) => { if(MAP[h]) COL[i]=MAP[h]; });
+const rawHdr = split(lines[0]).map(h => h.replace(/^\uFEFF/,’’).toLowerCase().trim());
+const COL = {};
+const MAP = {
+‘handling unit’:‘hu_number’,‘hu’:‘hu_number’,‘product’:‘material_id’,‘material’:‘material_id’,
+‘storage bin’:‘expected_bin’,‘bin’:‘expected_bin’,‘storage type’:‘storage_type’,
+‘quantity’:‘expected_qty’,‘qty’:‘expected_qty’,‘batch’:‘batch_number’,
+‘base unit of measure’:‘uom’,‘product short description’:‘description’,
+‘stock type’:‘stock_type’,
+};
+rawHdr.forEach((h,i) => { if(MAP[h]) COL[i]=MAP[h]; });
 
-  const req = ['hu_number','material_id','expected_bin','expected_qty'];
-  const miss = req.filter(f => !Object.values(COL).includes(f));
-  if (miss.length) return { success:false, loaded:0, skipped:0, errors:[`Missing columns: ${miss.join(', ')}. Headers: ${rawHdr.join(' | ')}`], items:[] };
+const req = [‘hu_number’,‘material_id’,‘expected_bin’,‘expected_qty’];
+const miss = req.filter(f => !Object.values(COL).includes(f));
+if (miss.length) return { success:false, loaded:0, skipped:0, errors:[`Missing columns: ${miss.join(', ')}. Headers: ${rawHdr.join(' | ')}`], items:[] };
 
-  const items=[]; const seen=new Set(); let skipped=0; const errors=[];
-  for (let i=1;i<lines.length;i++){
-    const flds=split(lines[i]); const row={};
-    Object.entries(COL).forEach(([ci,fn])=>{ row[fn]=flds[ci]||''; });
-    if (!row.hu_number) { skipped++; continue; }
-    if (!row.material_id && !row.expected_bin) { skipped++; continue; }
-    const hu = String(row.hu_number).trim().toUpperCase();
-    if (seen.has(hu)) { errors.push(`Dup HU ${hu} on line ${i+1}`); const di=items.findIndex(x=>x.hu_number===hu); if(di>=0)items.splice(di,1); }
-    seen.add(hu);
-    const binKey = BIN_COMPOUND && row.storage_type && row.expected_bin
-      ? `${String(row.storage_type).trim().toUpperCase()}-${String(row.expected_bin).trim().toUpperCase()}`
-      : String(row.expected_bin).trim().toUpperCase();
-    items.push({
-      hu_number:hu, material_id:String(row.material_id).trim(),
-      description:row.description||'', batch_number:row.batch_number||'',
-      expected_bin:binKey, expected_qty:parseFloat(String(row.expected_qty||0).replace(/,/g,''))||0,
-      uom:row.uom||'', stock_type:row.stock_type||'', storage_type:row.storage_type||'',
-      status:STATUS.PENDING_COUNT, actual_bin:null,actual_qty:null,qty_variance:null,
-      auditor_notes:'', photo_evidence:null, print_label:false, is_adhoc_request:false,
-      audited_by:null,audited_at:null,session_id:null,created_at:new Date().toISOString()
-    });
-  }
-  if (!items.length) return { success:false, loaded:0, skipped, errors:['No valid items parsed.'], items:[] };
-  localStorage.setItem(LS.INV, JSON.stringify(items));
-  localStorage.setItem('cc_last_upload_v1', JSON.stringify({ filename, uploaded_at:new Date().toISOString(), items_loaded:items.length, items_skipped:skipped }));
-  return { success:true, loaded:items.length, skipped, errors, items };
+const items=[]; const seen=new Set(); let skipped=0; const errors=[];
+for (let i=1;i<lines.length;i++){
+const flds=split(lines[i]); const row={};
+Object.entries(COL).forEach(([ci,fn])=>{ row[fn]=flds[ci]||’’; });
+if (!row.hu_number) { skipped++; continue; }
+if (!row.material_id && !row.expected_bin) { skipped++; continue; }
+const hu = String(row.hu_number).trim().toUpperCase();
+if (seen.has(hu)) { errors.push(`Dup HU ${hu} on line ${i+1}`); const di=items.findIndex(x=>x.hu_number===hu); if(di>=0)items.splice(di,1); }
+seen.add(hu);
+const binKey = BIN_COMPOUND && row.storage_type && row.expected_bin
+? `${String(row.storage_type).trim().toUpperCase()}-${String(row.expected_bin).trim().toUpperCase()}`
+: String(row.expected_bin).trim().toUpperCase();
+items.push({
+hu_number:hu, material_id:String(row.material_id).trim(),
+description:row.description||’’, batch_number:row.batch_number||’’,
+expected_bin:binKey, expected_qty:parseFloat(String(row.expected_qty||0).replace(/,/g,’’))||0,
+uom:row.uom||’’, stock_type:row.stock_type||’’, storage_type:row.storage_type||’’,
+status:STATUS.PENDING_COUNT, actual_bin:null,actual_qty:null,qty_variance:null,
+auditor_notes:’’, photo_evidence:null, print_label:false, is_adhoc_request:false,
+audited_by:null,audited_at:null,session_id:null,created_at:new Date().toISOString()
+});
+}
+if (!items.length) return { success:false, loaded:0, skipped, errors:[‘No valid items parsed.’], items:[] };
+localStorage.setItem(LS.INV, JSON.stringify(items));
+localStorage.setItem(‘cc_last_upload_v1’, JSON.stringify({ filename, uploaded_at:new Date().toISOString(), items_loaded:items.length, items_skipped:skipped }));
+return { success:true, loaded:items.length, skipped, errors, items };
 }
 
 // Sample CSV download
-document.getElementById('btn-sample-csv').addEventListener('click', () => {
-  const hdr = 'Document\tGoods Receipt Date\tInventory Active\tStorage Type\tStorage Bin\tHandling Unit\tProduct\tProduct Short Description\tQuantity\tBatch\tBase Unit of Measure\tStock Type\tShelf Life Expiration Date';
-  const rows = [
-    '\t2026-01-05\t\tFZ01\tFA01A\t800034793\t3301514\tIQF Tom 1/4" Diced\t1760\t0000022374\tLB\tF2\t2027-09-02',
-    '\t2026-02-05\t\tFZ01\tFA02A\t800057608\t3309032\tIQF Org Wht Onion Diced 3/8"\t1575\t0000035418\tLB\tF2\t2027-07-19',
-    '\t2026-02-26\t\tFZ01\tFA02A\t800067357\t3309145\tIQF Mango 3/8" Diced Blanched\t2400\t0000041843\tLB\tF2\t2027-07-07',
-    '\t2026-03-19\t\tRFL1\tKITS-FLOOR\t800075934\t4409950\tCase RSC Kraft Generic Purple\t750\t\tEA\tF2\t',
-    '\t2026-04-09\t\tRFL1\tKITS-FLOOR\t800076619\t4408551\tLid Plain Blk\t20000\t0000045178\tEA\tF2\t2028-02-01',
-    '\t2026-02-13\t\tLBRM\tLABEL-ROOM\t800069866\t4407059\tLbl TJ Mild Pico 12oz\t221857\t\tEA\tF2\t',
-  ];
-  const csv = [hdr,...rows].join('\n');
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  a.download = 'sample_sap_export.csv'; a.click(); URL.revokeObjectURL(a.href);
+document.getElementById(‘btn-sample-csv’).addEventListener(‘click’, () => {
+const hdr = ‘Document\tGoods Receipt Date\tInventory Active\tStorage Type\tStorage Bin\tHandling Unit\tProduct\tProduct Short Description\tQuantity\tBatch\tBase Unit of Measure\tStock Type\tShelf Life Expiration Date’;
+const rows = [
+‘\t2026-01-05\t\tFZ01\tFA01A\t800034793\t3301514\tIQF Tom 1/4” Diced\t1760\t0000022374\tLB\tF2\t2027-09-02’,
+‘\t2026-02-05\t\tFZ01\tFA02A\t800057608\t3309032\tIQF Org Wht Onion Diced 3/8”\t1575\t0000035418\tLB\tF2\t2027-07-19’,
+‘\t2026-02-26\t\tFZ01\tFA02A\t800067357\t3309145\tIQF Mango 3/8” Diced Blanched\t2400\t0000041843\tLB\tF2\t2027-07-07’,
+‘\t2026-03-19\t\tRFL1\tKITS-FLOOR\t800075934\t4409950\tCase RSC Kraft Generic Purple\t750\t\tEA\tF2\t’,
+‘\t2026-04-09\t\tRFL1\tKITS-FLOOR\t800076619\t4408551\tLid Plain Blk\t20000\t0000045178\tEA\tF2\t2028-02-01’,
+‘\t2026-02-13\t\tLBRM\tLABEL-ROOM\t800069866\t4407059\tLbl TJ Mild Pico 12oz\t221857\t\tEA\tF2\t’,
+];
+const csv = [hdr,…rows].join(’\n’);
+const a = document.createElement(‘a’);
+a.href = URL.createObjectURL(new Blob([csv],{type:‘text/csv’}));
+a.download = ‘sample_sap_export.csv’; a.click(); URL.revokeObjectURL(a.href);
 });
 
-document.getElementById('btn-reset-inv').addEventListener('click', () => {
-  if (!confirm('⚠ This will wipe the Master Inventory Array. Only do this at the start of a new cycle period. Continue?')) return;
-  localStorage.removeItem(LS.INV);
-  localStorage.removeItem('cc_last_upload_v1');
-  renderUploadPanel(); refreshKPIs(); renderTable();
-  toast('Inventory data cleared.', 'a');
+document.getElementById(‘btn-reset-inv’).addEventListener(‘click’, () => {
+if (!confirm(‘⚠ This will wipe the Master Inventory Array. Only do this at the start of a new cycle period. Continue?’)) return;
+localStorage.removeItem(LS.INV);
+localStorage.removeItem(‘cc_last_upload_v1’);
+renderUploadPanel(); refreshKPIs(); renderTable();
+toast(‘Inventory data cleared.’, ‘a’);
 });
 
 /* ══════════════════════════════════════════════════════
-   SPARKLINES
+SPARKLINES
 ══════════════════════════════════════════════════════ */
 const SPARK_DATA = {
-  acc: [97.8,98.0,97.9,98.1,98.2,97.8,98.0,98.3,98.4],
-  bins:[35,41,28,52,47,61,38,44,47],
-  sap: [4,3,5,2,3,1,4,3,2],
+acc: [97.8,98.0,97.9,98.1,98.2,97.8,98.0,98.3,98.4],
+bins:[35,41,28,52,47,61,38,44,47],
+sap: [4,3,5,2,3,1,4,3,2],
 };
 
 function drawSparkline(id, data, color) {
-  const canvas = document.getElementById(id);
-  if (!canvas) return;
-  const dpr=window.devicePixelRatio||1, w=canvas.parentElement.offsetWidth, h=34;
-  canvas.width=w*dpr; canvas.height=h*dpr; canvas.style.width=w+'px'; canvas.style.height=h+'px';
-  const ctx=canvas.getContext('2d'); ctx.scale(dpr,dpr);
-  const min=Math.min(...data), max=Math.max(...data), range=(max-min)||1, pad=3;
-  const pts=data.map((v,i)=>({x:pad+(i/(data.length-1))*(w-pad*2),y:h-pad-((v-min)/range)*(h-pad*2)}));
-  const g=ctx.createLinearGradient(0,0,0,h);
-  g.addColorStop(0,color+'30'); g.addColorStop(1,color+'00');
-  ctx.beginPath(); ctx.moveTo(pts[0].x,h);
-  pts.forEach(p=>ctx.lineTo(p.x,p.y));
-  ctx.lineTo(pts[pts.length-1].x,h); ctx.closePath(); ctx.fillStyle=g; ctx.fill();
-  ctx.beginPath(); pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
-  ctx.strokeStyle=color; ctx.lineWidth=2; ctx.lineJoin='round'; ctx.stroke();
-  const l=pts[pts.length-1]; ctx.beginPath(); ctx.arc(l.x,l.y,3,0,Math.PI*2); ctx.fillStyle=color; ctx.fill();
+const canvas = document.getElementById(id);
+if (!canvas) return;
+const dpr=window.devicePixelRatio||1, w=canvas.parentElement.offsetWidth, h=34;
+canvas.width=w*dpr; canvas.height=h*dpr; canvas.style.width=w+‘px’; canvas.style.height=h+‘px’;
+const ctx=canvas.getContext(‘2d’); ctx.scale(dpr,dpr);
+const min=Math.min(…data), max=Math.max(…data), range=(max-min)||1, pad=3;
+const pts=data.map((v,i)=>({x:pad+(i/(data.length-1))*(w-pad*2),y:h-pad-((v-min)/range)*(h-pad*2)}));
+const g=ctx.createLinearGradient(0,0,0,h);
+g.addColorStop(0,color+‘30’); g.addColorStop(1,color+‘00’);
+ctx.beginPath(); ctx.moveTo(pts[0].x,h);
+pts.forEach(p=>ctx.lineTo(p.x,p.y));
+ctx.lineTo(pts[pts.length-1].x,h); ctx.closePath(); ctx.fillStyle=g; ctx.fill();
+ctx.beginPath(); pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+ctx.strokeStyle=color; ctx.lineWidth=2; ctx.lineJoin=‘round’; ctx.stroke();
+const l=pts[pts.length-1]; ctx.beginPath(); ctx.arc(l.x,l.y,3,0,Math.PI*2); ctx.fillStyle=color; ctx.fill();
 }
 
 function initSparklines(){
-  drawSparkline('spark-acc','#16A34A',...[SPARK_DATA.acc,'#16A34A']);
-  drawSparkline('spark-bins',SPARK_DATA.bins,'#1D4ED8');
-  drawSparkline('spark-sap',SPARK_DATA.sap,'#D97706');
+drawSparkline(‘spark-acc’,’#16A34A’,…[SPARK_DATA.acc,’#16A34A’]);
+drawSparkline(‘spark-bins’,SPARK_DATA.bins,’#1D4ED8’);
+drawSparkline(‘spark-sap’,SPARK_DATA.sap,’#D97706’);
 }
 // Fix: sparkline helper signature
 function drawSparkline(id, data, color) {
-  const canvas = document.getElementById(id); if (!canvas) return;
-  const dpr=window.devicePixelRatio||1, w=canvas.parentElement.offsetWidth||200, h=34;
-  canvas.width=w*dpr; canvas.height=h*dpr; canvas.style.width=w+'px'; canvas.style.height=h+'px';
-  const ctx=canvas.getContext('2d'); ctx.scale(dpr,dpr);
-  const min=Math.min(...data), max=Math.max(...data), range=(max-min)||1, pad=3;
-  const pts=data.map((v,i)=>({x:pad+(i/(data.length-1))*(w-pad*2),y:h-pad-((v-min)/range)*(h-pad*2)}));
-  const g=ctx.createLinearGradient(0,0,0,h);
-  g.addColorStop(0,color+'30'); g.addColorStop(1,color+'00');
-  ctx.beginPath(); ctx.moveTo(pts[0].x,h); pts.forEach(p=>ctx.lineTo(p.x,p.y));
-  ctx.lineTo(pts[pts.length-1].x,h); ctx.closePath(); ctx.fillStyle=g; ctx.fill();
-  ctx.beginPath(); pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
-  ctx.strokeStyle=color; ctx.lineWidth=2; ctx.lineJoin='round'; ctx.stroke();
-  const l=pts[pts.length-1]; ctx.beginPath(); ctx.arc(l.x,l.y,3,0,Math.PI*2); ctx.fillStyle=color; ctx.fill();
+const canvas = document.getElementById(id); if (!canvas) return;
+const dpr=window.devicePixelRatio||1, w=canvas.parentElement.offsetWidth||200, h=34;
+canvas.width=w*dpr; canvas.height=h*dpr; canvas.style.width=w+‘px’; canvas.style.height=h+‘px’;
+const ctx=canvas.getContext(‘2d’); ctx.scale(dpr,dpr);
+const min=Math.min(…data), max=Math.max(…data), range=(max-min)||1, pad=3;
+const pts=data.map((v,i)=>({x:pad+(i/(data.length-1))*(w-pad*2),y:h-pad-((v-min)/range)*(h-pad*2)}));
+const g=ctx.createLinearGradient(0,0,0,h);
+g.addColorStop(0,color+‘30’); g.addColorStop(1,color+‘00’);
+ctx.beginPath(); ctx.moveTo(pts[0].x,h); pts.forEach(p=>ctx.lineTo(p.x,p.y));
+ctx.lineTo(pts[pts.length-1].x,h); ctx.closePath(); ctx.fillStyle=g; ctx.fill();
+ctx.beginPath(); pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+ctx.strokeStyle=color; ctx.lineWidth=2; ctx.lineJoin=‘round’; ctx.stroke();
+const l=pts[pts.length-1]; ctx.beginPath(); ctx.arc(l.x,l.y,3,0,Math.PI*2); ctx.fillStyle=color; ctx.fill();
 }
 function initSparklines() {
-  setTimeout(()=>{
-    drawSparkline('spark-acc',SPARK_DATA.acc,'#16A34A');
-    drawSparkline('spark-bins',SPARK_DATA.bins,'#1D4ED8');
-    drawSparkline('spark-sap',SPARK_DATA.sap,'#D97706');
-  }, 80);
+setTimeout(()=>{
+drawSparkline(‘spark-acc’,SPARK_DATA.acc,’#16A34A’);
+drawSparkline(‘spark-bins’,SPARK_DATA.bins,’#1D4ED8’);
+drawSparkline(‘spark-sap’,SPARK_DATA.sap,’#D97706’);
+}, 80);
 }
-window.addEventListener('resize', initSparklines);
+window.addEventListener(‘resize’, initSparklines);
 
 /* ══════════════════════════════════════════════════════
-   HISTORY TABLE
+HISTORY TABLE
 ══════════════════════════════════════════════════════ */
 function getFiltered() {
-  let d = [...allData];
-  const now=new Date(), sod=new Date(now); sod.setHours(0,0,0,0);
-  const wd=new Date(sod); wd.setDate(wd.getDate()-7);
-  const md=new Date(now.getFullYear(),now.getMonth(),1);
-  if (tState.range!=='all') d=d.filter(r=>{ const dt=new Date(r.date);
-    if(tState.range==='today') return dt>=sod;
-    if(tState.range==='week')  return dt>=wd;
-    if(tState.range==='month') return dt>=md; return true; });
-  if (tState.status!=='all') d=d.filter(r=>r.status===tState.status);
-  if (tState.search) { const q=tState.search.toLowerCase();
-    d=d.filter(r=>r.id.toLowerCase().includes(q)||r.user.toLowerCase().includes(q)||r.bin.toLowerCase().includes(q)||(r.notes||'').toLowerCase().includes(q)); }
-  d.sort((a,b)=>{
-    let va=a[tState.sortCol], vb=b[tState.sortCol];
-    if(typeof va==='string'){va=va.toLowerCase();vb=vb.toLowerCase();}
-    const dir=tState.sortDir==='asc'?1:-1;
-    return va<vb?-dir:va>vb?dir:0;
-  });
-  return d;
+let d = […allData];
+const now=new Date(), sod=new Date(now); sod.setHours(0,0,0,0);
+const wd=new Date(sod); wd.setDate(wd.getDate()-7);
+const md=new Date(now.getFullYear(),now.getMonth(),1);
+if (tState.range!==‘all’) d=d.filter(r=>{ const dt=new Date(r.date);
+if(tState.range===‘today’) return dt>=sod;
+if(tState.range===‘week’)  return dt>=wd;
+if(tState.range===‘month’) return dt>=md; return true; });
+if (tState.status!==‘all’) d=d.filter(r=>r.status===tState.status);
+if (tState.search) { const q=tState.search.toLowerCase();
+d=d.filter(r=>r.id.toLowerCase().includes(q)||r.user.toLowerCase().includes(q)||r.bin.toLowerCase().includes(q)||(r.notes||’’).toLowerCase().includes(q)); }
+d.sort((a,b)=>{
+let va=a[tState.sortCol], vb=b[tState.sortCol];
+if(typeof va===‘string’){va=va.toLowerCase();vb=vb.toLowerCase();}
+const dir=tState.sortDir===‘asc’?1:-1;
+return va<vb?-dir:va>vb?dir:0;
+});
+return d;
 }
 
 function renderTable() {
-  const data=getFiltered(), total=data.length;
-  const start=(tState.page-1)*PAGE_SIZE, end=Math.min(start+PAGE_SIZE,total);
-  const page=data.slice(start,end);
-  document.getElementById('row-count').textContent = `${total} record${total!==1?'s':''}`;
-  document.getElementById('pg-info').textContent   = total===0?'No records':`Showing ${start+1}–${end} of ${total}`;
-  const sMap={'Reconciled':'sb-reconciled','Pending SAP':'sb-pending','Under Review':'sb-review','Submitted':'sb-submitted'};
-  const dCls= d => d===0?'dc-none':d<=2?'dc-low':'dc-high';
-  const body = document.getElementById('table-body');
-  body.innerHTML = page.length===0
-    ? `<tr><td colspan="9" style="padding:32px;text-align:center;color:var(--t3);font-size:.86rem;">No records match your filters.</td></tr>`
-    : page.map(r=>`<tr data-id="${r.id}" style="cursor:pointer;">
-        <td class="td-mono">${r.id}</td>
-        <td class="td-primary">${fmtDate(r.date)}</td>
-        <td>${r.user}</td>
-        <td class="td-mono td-primary">${r.bin}</td>
-        <td class="td-center"><span style="font-family:var(--mono);font-weight:500;">${r.items}</span></td>
-        <td class="td-center"><span class="disc-chip ${dCls(r.disc)}">${r.disc}</span></td>
-        <td class="td-center">${r.photos>0?`<span title="${r.photos} photo(s)" style="font-size:.9rem;">📷 ${r.photos}</span>`:'<span style="color:var(--t3);font-size:.8rem;">—</span>'}</td>
-        <td><span class="status-badge ${sMap[r.status]||'sb-pending'}">${r.status}</span></td>
-        <td>
-          <button class="view-btn" data-id="${r.id}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            View
-          </button>
-        </td>
-      </tr>`).join('');
+const data=getFiltered(), total=data.length;
+const start=(tState.page-1)*PAGE_SIZE, end=Math.min(start+PAGE_SIZE,total);
+const page=data.slice(start,end);
+document.getElementById(‘row-count’).textContent = `${total} record${total!==1?'s':''}`;
+document.getElementById(‘pg-info’).textContent   = total===0?‘No records’:`Showing ${start+1}–${end} of ${total}`;
+const sMap={‘Reconciled’:‘sb-reconciled’,‘Pending SAP’:‘sb-pending’,‘Under Review’:‘sb-review’,‘Submitted’:‘sb-submitted’};
+const dCls= d => d===0?‘dc-none’:d<=2?‘dc-low’:‘dc-high’;
+const body = document.getElementById(‘table-body’);
+body.innerHTML = page.length===0
+? `<tr><td colspan="9" style="padding:32px;text-align:center;color:var(--t3);font-size:.86rem;">No records match your filters.</td></tr>`
+: page.map(r=>`<tr data-id="${r.id}" style="cursor:pointer;"> <td class="td-mono">${r.id}</td> <td class="td-primary">${fmtDate(r.date)}</td> <td>${r.user}</td> <td class="td-mono td-primary">${r.bin}</td> <td class="td-center"><span style="font-family:var(--mono);font-weight:500;">${r.items}</span></td> <td class="td-center"><span class="disc-chip ${dCls(r.disc)}">${r.disc}</span></td> <td class="td-center">${r.photos>0?`<span title="${r.photos} photo(s)" style="font-size:.9rem;">📷 ${r.photos}</span>`:'<span style="color:var(--t3);font-size:.8rem;">—</span>'}</td> <td><span class="status-badge ${sMap[r.status]||'sb-pending'}">${r.status}</span></td> <td> <button class="view-btn" data-id="${r.id}"> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> View </button> </td> </tr>`).join(’’);
 
-  body.querySelectorAll('tr[data-id]').forEach(tr => {
-    tr.addEventListener('click', e => { if(e.target.closest('.view-btn')) return; openDrawer(tr.dataset.id); });
-  });
-  body.querySelectorAll('.view-btn').forEach(b => b.addEventListener('click', () => openDrawer(b.dataset.id)));
-  renderPagination(total);
+body.querySelectorAll(‘tr[data-id]’).forEach(tr => {
+tr.addEventListener(‘click’, e => { if(e.target.closest(’.view-btn’)) return; openDrawer(tr.dataset.id); });
+});
+body.querySelectorAll(’.view-btn’).forEach(b => b.addEventListener(‘click’, () => openDrawer(b.dataset.id)));
+renderPagination(total);
 }
 
 function renderPagination(total) {
-  const pages=Math.ceil(total/PAGE_SIZE);
-  const pg=document.getElementById('pagination');
-  if (pages<=1){pg.innerHTML='';return;}
-  let html=`<button class="pg-btn" id="pg-prev" ${tState.page===1?'disabled':''}>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>`;
-  for(let i=1;i<=pages;i++){
-    if(pages>6&&i>2&&i<pages-1&&Math.abs(i-tState.page)>1){if(i===3||i===pages-2)html+=`<span style="padding:0 3px;color:var(--t3)">…</span>`;continue;}
-    html+=`<button class="pg-btn${i===tState.page?' active':''}" data-page="${i}">${i}</button>`;
-  }
-  html+=`<button class="pg-btn" id="pg-next" ${tState.page===pages?'disabled':''}>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>`;
-  pg.innerHTML=html;
-  pg.querySelector('#pg-prev')?.addEventListener('click',()=>{if(tState.page>1){tState.page--;renderTable();}});
-  pg.querySelector('#pg-next')?.addEventListener('click',()=>{if(tState.page<pages){tState.page++;renderTable();}});
-  pg.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>{tState.page=parseInt(b.dataset.page);renderTable();}));
+const pages=Math.ceil(total/PAGE_SIZE);
+const pg=document.getElementById(‘pagination’);
+if (pages<=1){pg.innerHTML=’’;return;}
+let html=`<button class="pg-btn" id="pg-prev" ${tState.page===1?'disabled':''}> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>`;
+for(let i=1;i<=pages;i++){
+if(pages>6&&i>2&&i<pages-1&&Math.abs(i-tState.page)>1){if(i===3||i===pages-2)html+=`<span style="padding:0 3px;color:var(--t3)">…</span>`;continue;}
+html+=`<button class="pg-btn${i===tState.page?' active':''}" data-page="${i}">${i}</button>`;
+}
+html+=`<button class="pg-btn" id="pg-next" ${tState.page===pages?'disabled':''}> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>`;
+pg.innerHTML=html;
+pg.querySelector(’#pg-prev’)?.addEventListener(‘click’,()=>{if(tState.page>1){tState.page–;renderTable();}});
+pg.querySelector(’#pg-next’)?.addEventListener(‘click’,()=>{if(tState.page<pages){tState.page++;renderTable();}});
+pg.querySelectorAll(’[data-page]’).forEach(b=>b.addEventListener(‘click’,()=>{tState.page=parseInt(b.dataset.page);renderTable();}));
 }
 
 // Table controls
-document.querySelectorAll('th[data-col]').forEach(th => {
-  th.addEventListener('click', () => {
-    const c=th.dataset.col;
-    if(tState.sortCol===c) tState.sortDir=tState.sortDir==='asc'?'desc':'asc'; else{tState.sortCol=c;tState.sortDir='desc';}
-    document.querySelectorAll('th[data-col]').forEach(x=>x.className='');
-    th.className='sort-'+tState.sortDir; tState.page=1; renderTable();
-  });
+document.querySelectorAll(‘th[data-col]’).forEach(th => {
+th.addEventListener(‘click’, () => {
+const c=th.dataset.col;
+if(tState.sortCol===c) tState.sortDir=tState.sortDir===‘asc’?‘desc’:‘asc’; else{tState.sortCol=c;tState.sortDir=‘desc’;}
+document.querySelectorAll(‘th[data-col]’).forEach(x=>x.className=’’);
+th.className=‘sort-’+tState.sortDir; tState.page=1; renderTable();
+});
 });
 let searchTO;
-document.getElementById('search-input').addEventListener('input', e=>{ clearTimeout(searchTO); searchTO=setTimeout(()=>{ tState.search=e.target.value; tState.page=1; renderTable(); },260); });
-document.getElementById('status-filter').addEventListener('change', e=>{ tState.status=e.target.value; tState.page=1; renderTable(); });
-document.querySelectorAll('.dt-tab').forEach(t=>t.addEventListener('click',()=>{
-  document.querySelectorAll('.dt-tab').forEach(x=>x.classList.remove('active'));
-  t.classList.add('active'); tState.range=t.dataset.range; tState.page=1; renderTable();
+document.getElementById(‘search-input’).addEventListener(‘input’, e=>{ clearTimeout(searchTO); searchTO=setTimeout(()=>{ tState.search=e.target.value; tState.page=1; renderTable(); },260); });
+document.getElementById(‘status-filter’).addEventListener(‘change’, e=>{ tState.status=e.target.value; tState.page=1; renderTable(); });
+document.querySelectorAll(’.dt-tab’).forEach(t=>t.addEventListener(‘click’,()=>{
+document.querySelectorAll(’.dt-tab’).forEach(x=>x.classList.remove(‘active’));
+t.classList.add(‘active’); tState.range=t.dataset.range; tState.page=1; renderTable();
 }));
 
 /* ══════════════════════════════════════════════════════
-   DETAIL DRAWER
+DETAIL DRAWER
 ══════════════════════════════════════════════════════ */
 function openDrawer(id) {
-  const row=allData.find(r=>r.id===id); if(!row)return;
-  activeRow=id;
-  document.getElementById('drw-title').textContent = row.id;
-  const sMap={'Reconciled':'sb-reconciled','Pending SAP':'sb-pending','Under Review':'sb-review','Submitted':'sb-submitted'};
-  document.getElementById('drw-body').innerHTML = `
-    <div class="drw-sec">
-      <div class="drw-sec-lbl">Session Info</div>
-      <div class="drw-grid">
-        <div class="drw-field"><div class="df-lbl">Date & Time</div><div class="df-val">${fmtDate(row.date)}</div></div>
-        <div class="drw-field"><div class="df-lbl">Auditor</div><div class="df-val">${row.user}</div></div>
-        <div class="drw-field"><div class="df-lbl">Bin Location</div><div class="df-val mono">${row.bin}</div></div>
-        <div class="drw-field"><div class="df-lbl">Session ID</div><div class="df-val mono">${row.id}</div></div>
-      </div>
-    </div>
-    <div class="drw-sec">
-      <div class="drw-sec-lbl">Results</div>
-      <div class="drw-grid">
-        <div class="drw-field"><div class="df-lbl">HUs Counted</div><div class="df-val">${row.items}</div></div>
-        <div class="drw-field"><div class="df-lbl">Discrepancies</div><div class="df-val" style="color:${row.disc>0?'var(--red)':'var(--green)'}">${row.disc}</div></div>
-        <div class="drw-field"><div class="df-lbl">Photos</div><div class="df-val">${row.photos>0?`📷 ${row.photos}`:'-'}</div></div>
-        <div class="drw-field"><div class="df-lbl">Status</div><div class="df-val"><span class="status-badge ${sMap[row.status]||'sb-pending'}">${row.status}</span></div></div>
-      </div>
-    </div>
-    <div class="drw-sec">
-      <div class="drw-sec-lbl">Notes</div>
-      <div class="drw-notes">${row.notes||'<span style="color:var(--t3)">No notes recorded.</span>'}</div>
-    </div>`;
-  document.getElementById('drw-reconcile').style.display = row.status==='Reconciled'?'none':'';
-  document.getElementById('drawer-ov').classList.add('open');
+const row=allData.find(r=>r.id===id); if(!row)return;
+activeRow=id;
+document.getElementById(‘drw-title’).textContent = row.id;
+const sMap={‘Reconciled’:‘sb-reconciled’,‘Pending SAP’:‘sb-pending’,‘Under Review’:‘sb-review’,‘Submitted’:‘sb-submitted’};
+document.getElementById(‘drw-body’).innerHTML = ` <div class="drw-sec"> <div class="drw-sec-lbl">Session Info</div> <div class="drw-grid"> <div class="drw-field"><div class="df-lbl">Date & Time</div><div class="df-val">${fmtDate(row.date)}</div></div> <div class="drw-field"><div class="df-lbl">Auditor</div><div class="df-val">${row.user}</div></div> <div class="drw-field"><div class="df-lbl">Bin Location</div><div class="df-val mono">${row.bin}</div></div> <div class="drw-field"><div class="df-lbl">Session ID</div><div class="df-val mono">${row.id}</div></div> </div> </div> <div class="drw-sec"> <div class="drw-sec-lbl">Results</div> <div class="drw-grid"> <div class="drw-field"><div class="df-lbl">HUs Counted</div><div class="df-val">${row.items}</div></div> <div class="drw-field"><div class="df-lbl">Discrepancies</div><div class="df-val" style="color:${row.disc>0?'var(--red)':'var(--green)'}">${row.disc}</div></div> <div class="drw-field"><div class="df-lbl">Photos</div><div class="df-val">${row.photos>0?`📷 ${row.photos}`:'-'}</div></div> <div class="drw-field"><div class="df-lbl">Status</div><div class="df-val"><span class="status-badge ${sMap[row.status]||'sb-pending'}">${row.status}</span></div></div> </div> </div> <div class="drw-sec"> <div class="drw-sec-lbl">Notes</div> <div class="drw-notes">${row.notes||'<span style="color:var(--t3)">No notes recorded.</span>'}</div> </div>`;
+document.getElementById(‘drw-reconcile’).style.display = row.status===‘Reconciled’?‘none’:’’;
+document.getElementById(‘drawer-ov’).classList.add(‘open’);
 }
 
-function closeDrawer() { document.getElementById('drawer-ov').classList.remove('open'); activeRow=null; }
-document.getElementById('drw-close').addEventListener('click', closeDrawer);
-document.getElementById('drw-close-2').addEventListener('click', closeDrawer);
-document.getElementById('drawer-ov').addEventListener('click', e => { if(e.target===document.getElementById('drawer-ov'))closeDrawer(); });
-document.getElementById('drw-reconcile').addEventListener('click', () => {
-  if (!activeRow) return;
-  // STUB: await supabase.from('sessions').update({status:'Reconciled'}).eq('id', activeRow)
-  const r=allData.find(x=>x.id===activeRow); if(r){r.status='Reconciled'; renderTable(); openDrawer(activeRow);}
+function closeDrawer() { document.getElementById(‘drawer-ov’).classList.remove(‘open’); activeRow=null; }
+document.getElementById(‘drw-close’).addEventListener(‘click’, closeDrawer);
+document.getElementById(‘drw-close-2’).addEventListener(‘click’, closeDrawer);
+document.getElementById(‘drawer-ov’).addEventListener(‘click’, e => { if(e.target===document.getElementById(‘drawer-ov’))closeDrawer(); });
+document.getElementById(‘drw-reconcile’).addEventListener(‘click’, () => {
+if (!activeRow) return;
+// STUB: await supabase.from(‘sessions’).update({status:‘Reconciled’}).eq(‘id’, activeRow)
+const r=allData.find(x=>x.id===activeRow); if(r){r.status=‘Reconciled’; renderTable(); openDrawer(activeRow);}
 });
 
 /* ══════════════════════════════════════════════════════
-   EXPORT CSV
+EXPORT CSV
 ══════════════════════════════════════════════════════ */
-document.getElementById('btn-export-csv').addEventListener('click', () => {
-  const d=getFiltered();
-  const hdr=['Session ID','Date','Auditor','Bin','Items','Discrepancies','Photos','Status'];
-  const rows=d.map(r=>[r.id,r.date,r.user,r.bin,r.items,r.disc,r.photos,r.status].join(','));
-  const csv=[hdr.join(','),...rows].join('\n');
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  a.download=`cycle_count_history_${new Date().toISOString().split('T')[0]}.csv`; a.click(); URL.revokeObjectURL(a.href);
-  toast('CSV exported.','g');
+document.getElementById(‘btn-export-csv’).addEventListener(‘click’, () => {
+const d=getFiltered();
+const hdr=[‘Session ID’,‘Date’,‘Auditor’,‘Bin’,‘Items’,‘Discrepancies’,‘Photos’,‘Status’];
+const rows=d.map(r=>[r.id,r.date,r.user,r.bin,r.items,r.disc,r.photos,r.status].join(’,’));
+const csv=[hdr.join(’,’),…rows].join(’\n’);
+const a=document.createElement(‘a’);
+a.href=URL.createObjectURL(new Blob([csv],{type:‘text/csv’}));
+a.download=`cycle_count_history_${new Date().toISOString().split('T')[0]}.csv`; a.click(); URL.revokeObjectURL(a.href);
+toast(‘CSV exported.’,‘g’);
 });
 
 /* ══════════════════════════════════════════════════════
-   RECONCILIATION REPORT STUB
+RECONCILIATION REPORT STUB
 ══════════════════════════════════════════════════════ */
-document.getElementById('btn-gen-recon').addEventListener('click', () => {
-  const inv=readInv();
-  if(!inv.length){toast('Upload SAP data first.','a');return;}
-  const sec=document.getElementById('recon-section'); sec.style.display='block';
-  const moves=inv.filter(i=>i.status==='moved');
-  const negs =inv.filter(i=>i.status==='missing'||(i.status==='qty_adjustment'&&(i.qty_variance||0)<0));
-  const pos  =inv.filter(i=>i.status==='found_unlisted'||(i.status==='qty_adjustment'&&(i.qty_variance||0)>0));
-  const fRow = (i,extra) => `<tr>
-    <td class="td-mono">${i.hu_number}</td><td class="td-mono">${i.material_id}</td>
-    <td>${i.description||'—'}</td><td class="td-mono">${i.expected_bin}</td>
-    <td class="td-center td-mono">${i.expected_qty||'—'}</td>
-    <td class="td-center td-mono">${i.actual_qty??'—'}</td>
-    <td class="td-center td-mono" style="font-weight:700;color:${extra<0?'var(--red)':extra>0?'var(--green)':'var(--t3)'}">
-      ${extra!=null?(extra>0?'+':'')+extra:'—'}</td>
-    <td style="font-size:.75rem;color:var(--t2)">${i.auditor_notes||'—'}</td>
-    ${i.photo_evidence?'<td>📷</td>':'<td>—</td>'}
+document.getElementById(‘btn-gen-recon’).addEventListener(‘click’, () => {
+const inv=readInv();
+if(!inv.length){toast(‘Upload SAP data first.’,‘a’);return;}
+const sec=document.getElementById(‘recon-section’); sec.style.display=‘block’;
+const moves=inv.filter(i=>i.status===‘moved’);
+const negs =inv.filter(i=>i.status===‘missing’||(i.status===‘qty_adjustment’&&(i.qty_variance||0)<0));
+const pos  =inv.filter(i=>i.status===‘found_unlisted’||(i.status===‘qty_adjustment’&&(i.qty_variance||0)>0));
+const fRow = (i,extra) => `<tr>
+<td class="td-mono">${i.hu_number}</td><td class="td-mono">${i.material_id}</td>
+<td>${i.description||’—’}</td><td class="td-mono">${i.expected_bin}</td>
+<td class="td-center td-mono">${i.expected_qty||’—’}</td>
+<td class="td-center td-mono">${i.actual_qty??’—’}</td>
+<td class="td-center td-mono" style="font-weight:700;color:${extra<0?'var(--red)':extra>0?'var(--green)':'var(--t3)'}">
+${extra!=null?(extra>0?’+’:’’)+extra:’—’}</td>
+<td style="font-size:.75rem;color:var(--t2)">${i.auditor_notes||’—’}</td>
+${i.photo_evidence?’<td>📷</td>’:’<td>—</td>’}
+
   </tr>`;
   const tbl = (title,icon,color,rows,extras) => `
     <div style="margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--sh-sm);">
@@ -1361,218 +1398,218 @@ document.getElementById('btn-gen-recon').addEventListener('click', () => {
 });
 
 /* ══════════════════════════════════════════════════════
-   EXPORT 30-DAY ARCHIVE  (multi-sheet XLSX via SheetJS)
-   STUB: Replace readLS() calls with Supabase queries:
-     const inv   = await (await _sb.from('inventory_items').select('*').gte('audited_at', cutoffIso)).data;
-     const hist  = await (await _sb.from('cycle_count_sessions').select('*').gte('started_at', cutoffIso)).data;
-     const reqs  = await (await _sb.from('adhoc_requests').select('*').gte('requested_at', cutoffIso)).data;
-     const fresh = await (await _sb.from('fresh_count_sessions').select('*,...').gte('count_date', cutoffDate)).data;
+EXPORT 30-DAY ARCHIVE  (multi-sheet XLSX via SheetJS)
+STUB: Replace readLS() calls with Supabase queries:
+const inv   = await (await _sb.from(‘inventory_items’).select(’*’).gte(‘audited_at’, cutoffIso)).data;
+const hist  = await (await _sb.from(‘cycle_count_sessions’).select(’*’).gte(‘started_at’, cutoffIso)).data;
+const reqs  = await (await _sb.from(‘adhoc_requests’).select(’*’).gte(‘requested_at’, cutoffIso)).data;
+const fresh = await (await _sb.from(‘fresh_count_sessions’).select(’*,…’).gte(‘count_date’, cutoffDate)).data;
 ══════════════════════════════════════════════════════ */
-document.getElementById('btn-export-archive').addEventListener('click', () => {
-  if (typeof XLSX === 'undefined') {
-    toast('SheetJS not loaded — refresh the page and try again.', 'r');
-    return;
-  }
-  buildArchiveXLSX();
+document.getElementById(‘btn-export-archive’).addEventListener(‘click’, () => {
+if (typeof XLSX === ‘undefined’) {
+toast(‘SheetJS not loaded — refresh the page and try again.’, ‘r’);
+return;
+}
+buildArchiveXLSX();
 });
 
 function buildArchiveXLSX() {
-  const DAYS     = 30;
-  const cutoff   = new Date(Date.now() - DAYS * 86400000);
-  const cutoffIso= cutoff.toISOString();
-  const today    = new Date();
-  const fmtD     = d => d ? new Date(d).toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}) : '';
+const DAYS     = 30;
+const cutoff   = new Date(Date.now() - DAYS * 86400000);
+const cutoffIso= cutoff.toISOString();
+const today    = new Date();
+const fmtD     = d => d ? new Date(d).toLocaleString(‘en-US’,{month:‘short’,day:‘numeric’,year:‘numeric’,hour:‘numeric’,minute:‘2-digit’}) : ‘’;
 
-  // ── Collect data ───────────────────────────────────────────────────────
-  // All inv items audited in the window (plus unaudited items from the current upload)
-  const inv   = readLS(LS.INV).filter(i =>
-    i.audited_at ? new Date(i.audited_at) >= cutoff
-                 : new Date(i.uploaded_at || i.created_at || 0) >= cutoff
-  );
+// ── Collect data ───────────────────────────────────────────────────────
+// All inv items audited in the window (plus unaudited items from the current upload)
+const inv   = readLS(LS.INV).filter(i =>
+i.audited_at ? new Date(i.audited_at) >= cutoff
+: new Date(i.uploaded_at || i.created_at || 0) >= cutoff
+);
 
-  // Sessions — filter allData (which includes both real + mock history)
-  const hist  = allData.filter(s => new Date(s.date) >= cutoff);
+// Sessions — filter allData (which includes both real + mock history)
+const hist  = allData.filter(s => new Date(s.date) >= cutoff);
 
-  const reqs  = readLS(LS.REQ).filter(r => new Date(r.requested_at) >= cutoff);
+const reqs  = readLS(LS.REQ).filter(r => new Date(r.requested_at) >= cutoff);
 
-  const fresh = readLS('cc_fresh_counts_v1')
-    .filter(s => new Date(s.date + 'T00:00:00') >= cutoff);
+const fresh = readLS(‘cc_fresh_counts_v1’)
+.filter(s => new Date(s.date + ‘T00:00:00’) >= cutoff);
 
-  // ── Build workbook ─────────────────────────────────────────────────────
-  const wb = XLSX.utils.book_new();
+// ── Build workbook ─────────────────────────────────────────────────────
+const wb = XLSX.utils.book_new();
 
-  // Helper: write a sheet with a styled-ish header row
-  function addSheet(name, headers, rows) {
-    const ws = XLSX.utils.aoa_to_sheet([headers, ...rows]);
-    // Bold the header row via cell styles (requires xlsx-style — use col widths as proxy)
-    ws['!cols'] = headers.map(h => ({ wch: Math.max(h.length + 4, 12) }));
-    XLSX.utils.book_append_sheet(wb, ws, name);
-    return ws;
-  }
+// Helper: write a sheet with a styled-ish header row
+function addSheet(name, headers, rows) {
+const ws = XLSX.utils.aoa_to_sheet([headers, …rows]);
+// Bold the header row via cell styles (requires xlsx-style — use col widths as proxy)
+ws[’!cols’] = headers.map(h => ({ wch: Math.max(h.length + 4, 12) }));
+XLSX.utils.book_append_sheet(wb, ws, name);
+return ws;
+}
 
-  // ── Sheet 1: Summary ──────────────────────────────────────────────────
-  const totalAdj = inv.filter(i => i.status !== 'pending_count' && i.status !== 'verified').length;
-  const totalPho = inv.filter(i => i.photo_evidence).length;
-  const totalAdh = reqs.filter(r => r.status === 'completed').length;
-  const totalFreshLbs = fresh.reduce((s,x) =>
-    s + (x.items||[]).reduce((a,i) => a + (i.total_lbs||0), 0), 0);
+// ── Sheet 1: Summary ──────────────────────────────────────────────────
+const totalAdj = inv.filter(i => i.status !== ‘pending_count’ && i.status !== ‘verified’).length;
+const totalPho = inv.filter(i => i.photo_evidence).length;
+const totalAdh = reqs.filter(r => r.status === ‘completed’).length;
+const totalFreshLbs = fresh.reduce((s,x) =>
+s + (x.items||[]).reduce((a,i) => a + (i.total_lbs||0), 0), 0);
 
-  addSheet('Summary', ['Field', 'Value'], [
-    ['Report Title',          'CycleOps Plant 1730 — 30-Day Archive'],
-    ['Exported At',           today.toLocaleString()],
-    ['Retention Window',      `${cutoff.toLocaleDateString()} → ${today.toLocaleDateString()} (${DAYS} days)`],
-    ['', ''],
-    ['── CYCLE COUNTS ──', ''],
-    ['Audit Sessions',        hist.length],
-    ['HUs Audited',           inv.filter(i => i.audited_at).length],
-    ['HUs Verified (Clean)',  inv.filter(i => i.status === 'verified').length],
-    ['Discrepancies',         totalAdj],
-    ['Photos Captured',       totalPho],
-    ['Labels Reprinted',      inv.filter(i => i.print_label).length],
-    ['', ''],
-    ['── AD-HOC REQUESTS ──', ''],
-    ['Total Requests',        reqs.length],
-    ['Completed',             totalAdh],
-    ['Pending / In Progress', reqs.filter(r => ['pending','in_progress'].includes(r.status)).length],
-    ['Cancelled',             reqs.filter(r => r.status === 'cancelled').length],
-    ['', ''],
-    ['── FRESH COUNTS ──', ''],
-    ['Fresh Count Sessions',  fresh.length],
-    ['Total LBS Counted',     totalFreshLbs.toLocaleString() + ' LBS'],
-  ]);
+addSheet(‘Summary’, [‘Field’, ‘Value’], [
+[‘Report Title’,          ‘CycleOps Plant 1730 — 30-Day Archive’],
+[‘Exported At’,           today.toLocaleString()],
+[‘Retention Window’,      `${cutoff.toLocaleDateString()} → ${today.toLocaleDateString()} (${DAYS} days)`],
+[’’, ‘’],
+[‘── CYCLE COUNTS ──’, ‘’],
+[‘Audit Sessions’,        hist.length],
+[‘HUs Audited’,           inv.filter(i => i.audited_at).length],
+[‘HUs Verified (Clean)’,  inv.filter(i => i.status === ‘verified’).length],
+[‘Discrepancies’,         totalAdj],
+[‘Photos Captured’,       totalPho],
+[‘Labels Reprinted’,      inv.filter(i => i.print_label).length],
+[’’, ‘’],
+[‘── AD-HOC REQUESTS ──’, ‘’],
+[‘Total Requests’,        reqs.length],
+[‘Completed’,             totalAdh],
+[‘Pending / In Progress’, reqs.filter(r => [‘pending’,‘in_progress’].includes(r.status)).length],
+[‘Cancelled’,             reqs.filter(r => r.status === ‘cancelled’).length],
+[’’, ‘’],
+[‘── FRESH COUNTS ──’, ‘’],
+[‘Fresh Count Sessions’,  fresh.length],
+[‘Total LBS Counted’,     totalFreshLbs.toLocaleString() + ’ LBS’],
+]);
 
-  // ── Sheet 2: Audit Sessions ───────────────────────────────────────────
-  addSheet('Audit Sessions',
-    ['Session ID', 'Date', 'Auditor', 'Bins Visited', 'HUs Counted', 'Discrepancies', 'Photos', 'Status', 'Notes'],
-    hist.map(s => [
-      s.id, fmtD(s.date), s.user || s.auditor || '',
-      Array.isArray(s.bins_visited) ? s.bins_visited.join('; ') : (s.bin || ''),
-      s.items || s.snap_total || 0,
-      s.disc  || (s.snap_missing||0)+(s.snap_adjustments||0)+(s.snap_moved||0)+(s.snap_unlisted||0),
-      s.photos || s.snap_photos || 0,
-      s.status || '',
-      s.notes || '',
-    ])
-  );
+// ── Sheet 2: Audit Sessions ───────────────────────────────────────────
+addSheet(‘Audit Sessions’,
+[‘Session ID’, ‘Date’, ‘Auditor’, ‘Bins Visited’, ‘HUs Counted’, ‘Discrepancies’, ‘Photos’, ‘Status’, ‘Notes’],
+hist.map(s => [
+s.id, fmtD(s.date), s.user || s.auditor || ‘’,
+Array.isArray(s.bins_visited) ? s.bins_visited.join(’; ’) : (s.bin || ‘’),
+s.items || s.snap_total || 0,
+s.disc  || (s.snap_missing||0)+(s.snap_adjustments||0)+(s.snap_moved||0)+(s.snap_unlisted||0),
+s.photos || s.snap_photos || 0,
+s.status || ‘’,
+s.notes || ‘’,
+])
+);
 
-  // ── Sheet 3: Inventory Items ──────────────────────────────────────────
-  addSheet('Inventory Items',
-    ['HU Number','Material ID','Description','Batch','Expected Bin','Actual Bin',
-     'Expected Qty','Actual Qty','Variance','UoM','Stock Type','Status',
-     'Auditor','Audited At','Auditor Notes','Photo','Print Label','Session ID'],
-    inv.map(i => [
-      i.hu_number, i.material_id, i.description || '', i.batch_number || '',
-      i.expected_bin || '', i.actual_bin || '',
-      i.expected_qty ?? '', i.actual_qty ?? '', i.qty_variance ?? '',
-      i.uom || '', i.stock_type || '', i.status || '',
-      i.audited_by || '', fmtD(i.audited_at),
-      i.auditor_notes || '',
-      i.photo_evidence ? 'Yes' : 'No',
-      i.print_label   ? 'Yes' : 'No',
-      i.session_id    || '',
-    ])
-  );
+// ── Sheet 3: Inventory Items ──────────────────────────────────────────
+addSheet(‘Inventory Items’,
+[‘HU Number’,‘Material ID’,‘Description’,‘Batch’,‘Expected Bin’,‘Actual Bin’,
+‘Expected Qty’,‘Actual Qty’,‘Variance’,‘UoM’,‘Stock Type’,‘Status’,
+‘Auditor’,‘Audited At’,‘Auditor Notes’,‘Photo’,‘Print Label’,‘Session ID’],
+inv.map(i => [
+i.hu_number, i.material_id, i.description || ‘’, i.batch_number || ‘’,
+i.expected_bin || ‘’, i.actual_bin || ‘’,
+i.expected_qty ?? ‘’, i.actual_qty ?? ‘’, i.qty_variance ?? ‘’,
+i.uom || ‘’, i.stock_type || ‘’, i.status || ‘’,
+i.audited_by || ‘’, fmtD(i.audited_at),
+i.auditor_notes || ‘’,
+i.photo_evidence ? ‘Yes’ : ‘No’,
+i.print_label   ? ‘Yes’ : ‘No’,
+i.session_id    || ‘’,
+])
+);
 
-  // ── Sheet 4: Ad-Hoc Requests ──────────────────────────────────────────
-  addSheet('Ad-Hoc Requests',
-    ['Request ID','Material ID','Description','Requested By','Priority','Status',
-     'Requested At','In Progress By','In Progress At','Completed By','Completed At',
-     'HU Found','Bin Found','Expected Qty','Actual Qty','Variance',
-     'Auditor Notes','Photo','Session ID'],
-    reqs.map(r => [
-      r.id, r.material_id, r.description || '',
-      r.requested_by || '', r.priority || '', r.status || '',
-      fmtD(r.requested_at), r.in_progress_by || '', fmtD(r.in_progress_at),
-      r.completed_by || '', fmtD(r.completed_at),
-      r.result_hu || '', r.result_bin || '',
-      r.expected_qty ?? '', r.result_qty ?? '', r.qty_variance ?? '',
-      r.auditor_notes || '',
-      r.photo_evidence ? 'Yes' : 'No',
-      r.session_id || '',
-    ])
-  );
+// ── Sheet 4: Ad-Hoc Requests ──────────────────────────────────────────
+addSheet(‘Ad-Hoc Requests’,
+[‘Request ID’,‘Material ID’,‘Description’,‘Requested By’,‘Priority’,‘Status’,
+‘Requested At’,‘In Progress By’,‘In Progress At’,‘Completed By’,‘Completed At’,
+‘HU Found’,‘Bin Found’,‘Expected Qty’,‘Actual Qty’,‘Variance’,
+‘Auditor Notes’,‘Photo’,‘Session ID’],
+reqs.map(r => [
+r.id, r.material_id, r.description || ‘’,
+r.requested_by || ‘’, r.priority || ‘’, r.status || ‘’,
+fmtD(r.requested_at), r.in_progress_by || ‘’, fmtD(r.in_progress_at),
+r.completed_by || ‘’, fmtD(r.completed_at),
+r.result_hu || ‘’, r.result_bin || ‘’,
+r.expected_qty ?? ‘’, r.result_qty ?? ‘’, r.qty_variance ?? ‘’,
+r.auditor_notes || ‘’,
+r.photo_evidence ? ‘Yes’ : ‘No’,
+r.session_id || ‘’,
+])
+);
 
-  // ── Sheet 5: Fresh Count Summary (one row per material per session) ───
-  const freshSumRows = [];
-  fresh.forEach(s => {
-    (s.items || []).forEach(item => {
-      freshSumRows.push([
-        s.id, s.date, s.auditor || '', s.status || '',
-        item.material_id, item.description || '',
-        item.total_lbs ?? '',
-        item.counted ? 'Yes' : 'No',
-        item.notes || '',
-        (item.finds || []).filter(f => f.location).map(f => f.location).join('; ') || '',
-        (item.finds || []).filter(f => f.batch_number).map(f => f.batch_number).join('; ') || '',
-        (item.finds || []).filter(f => f.hu_number).map(f => f.hu_number).join('; ') || '',
-        (item.finds || []).reduce((s, f) => s + (parseInt(f.pallet_count) || 0), 0) || '',
-      ]);
-    });
-  });
-  addSheet('Fresh Count Summary',
-    ['Session ID','Date','Auditor','Status',
-     'Material ID','Description','Total LBS','Counted','Notes',
-     'Locations','Batch Numbers','HU Numbers','Total Pallets'],
-    freshSumRows
-  );
+// ── Sheet 5: Fresh Count Summary (one row per material per session) ───
+const freshSumRows = [];
+fresh.forEach(s => {
+(s.items || []).forEach(item => {
+freshSumRows.push([
+s.id, s.date, s.auditor || ‘’, s.status || ‘’,
+item.material_id, item.description || ‘’,
+item.total_lbs ?? ‘’,
+item.counted ? ‘Yes’ : ‘No’,
+item.notes || ‘’,
+(item.finds || []).filter(f => f.location).map(f => f.location).join(’; ‘) || ‘’,
+(item.finds || []).filter(f => f.batch_number).map(f => f.batch_number).join(’; ‘) || ‘’,
+(item.finds || []).filter(f => f.hu_number).map(f => f.hu_number).join(’; ’) || ‘’,
+(item.finds || []).reduce((s, f) => s + (parseInt(f.pallet_count) || 0), 0) || ‘’,
+]);
+});
+});
+addSheet(‘Fresh Count Summary’,
+[‘Session ID’,‘Date’,‘Auditor’,‘Status’,
+‘Material ID’,‘Description’,‘Total LBS’,‘Counted’,‘Notes’,
+‘Locations’,‘Batch Numbers’,‘HU Numbers’,‘Total Pallets’],
+freshSumRows
+);
 
-  // ── Sheet 6: Fresh Count Finds (one row per individual find entry) ────
-  const findRows = [];
-  fresh.forEach(s => {
-    (s.items || []).forEach(item => {
-      (item.finds || []).filter(f => parseFloat(f.lbs) > 0).forEach(f => {
-        findRows.push([
-          s.id, s.date, s.auditor || '',
-          item.material_id, item.description || '',
-          f.location || '', f.batch_number || '', f.hu_number || '',
-          f.pallet_count || '', f.lbs_per_pallet || '', f.lbs || '',
-          f.notes || '',
-        ]);
-      });
-    });
-  });
-  addSheet('Fresh Count Finds',
-    ['Session ID','Date','Auditor',
-     'Material ID','Description',
-     'Location','Batch Number','HU Number',
-     'Pallet Count','LBS/Pallet','LBS','Find Notes'],
-    findRows
-  );
+// ── Sheet 6: Fresh Count Finds (one row per individual find entry) ────
+const findRows = [];
+fresh.forEach(s => {
+(s.items || []).forEach(item => {
+(item.finds || []).filter(f => parseFloat(f.lbs) > 0).forEach(f => {
+findRows.push([
+s.id, s.date, s.auditor || ‘’,
+item.material_id, item.description || ‘’,
+f.location || ‘’, f.batch_number || ‘’, f.hu_number || ‘’,
+f.pallet_count || ‘’, f.lbs_per_pallet || ‘’, f.lbs || ‘’,
+f.notes || ‘’,
+]);
+});
+});
+});
+addSheet(‘Fresh Count Finds’,
+[‘Session ID’,‘Date’,‘Auditor’,
+‘Material ID’,‘Description’,
+‘Location’,‘Batch Number’,‘HU Number’,
+‘Pallet Count’,‘LBS/Pallet’,‘LBS’,‘Find Notes’],
+findRows
+);
 
-  // ── Download ───────────────────────────────────────────────────────────
-  const filename = `cycleops_30day_archive_${today.toISOString().split('T')[0]}.xlsx`;
-  XLSX.writeFile(wb, filename);
-  toast(`Archive exported — ${filename}`, 'g');
+// ── Download ───────────────────────────────────────────────────────────
+const filename = `cycleops_30day_archive_${today.toISOString().split('T')[0]}.xlsx`;
+XLSX.writeFile(wb, filename);
+toast(`Archive exported — ${filename}`, ‘g’);
 }
 
 // Refresh button
-document.getElementById('btn-refresh').addEventListener('click', () => {
-  renderUploadPanel(); refreshKPIs(); renderTable(); renderActiveRequests(); updateReqTopbarBadge();
-  document.getElementById('js-last-updated').textContent = 'Updated ' + new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-  toast('Dashboard refreshed.','g');
+document.getElementById(‘btn-refresh’).addEventListener(‘click’, () => {
+renderUploadPanel(); refreshKPIs(); renderTable(); renderActiveRequests(); updateReqTopbarBadge();
+document.getElementById(‘js-last-updated’).textContent = ’Updated ’ + new Date().toLocaleTimeString(‘en-US’,{hour:‘numeric’,minute:‘2-digit’});
+toast(‘Dashboard refreshed.’,‘g’);
 });
 
 // Cross-tab: update when scanner makes changes
-window.addEventListener('storage', e => {
-  if (e.key===LS.INV||e.key===LS.REQ) { refreshKPIs(); renderActiveRequests(); updateReqTopbarBadge(); renderUploadPanel(); }
+window.addEventListener(‘storage’, e => {
+if (e.key===LS.INV||e.key===LS.REQ) { refreshKPIs(); renderActiveRequests(); updateReqTopbarBadge(); renderUploadPanel(); }
 });
 
 /* ══════════════════════════════════════════════════════
-   UTILITIES
+UTILITIES
 ══════════════════════════════════════════════════════ */
 function fmtDate(d) {
-  const dt=new Date(d);
-  return dt.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' · '+dt.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+const dt=new Date(d);
+return dt.toLocaleDateString(‘en-US’,{month:‘short’,day:‘numeric’})+’ · ‘+dt.toLocaleTimeString(‘en-US’,{hour:‘numeric’,minute:‘2-digit’});
 }
 function timeAgo(iso) {
-  const m=Math.floor((Date.now()-new Date(iso))/60000);
-  if(m<1)return'just now'; if(m<60)return`${m}m ago`;
-  const h=Math.floor(m/60); if(h<24)return`${h}h ago`; return`${Math.floor(h/24)}d ago`;
+const m=Math.floor((Date.now()-new Date(iso))/60000);
+if(m<1)return’just now’; if(m<60)return`${m}m ago`;
+const h=Math.floor(m/60); if(h<24)return`${h}h ago`; return`${Math.floor(h/24)}d ago`;
 }
-function toast(msg, t='g') {
-  const w=document.getElementById('toast-wrap'),el=document.createElement('div');
-  el.className=`toast t-${t}`;el.innerHTML=`<div class="t-dot"></div><span>${msg}</span>`;
-  w.appendChild(el); setTimeout(()=>el.remove(),3200);
+function toast(msg, t=‘g’) {
+const w=document.getElementById(‘toast-wrap’),el=document.createElement(‘div’);
+el.className=`toast t-${t}`;el.innerHTML=`<div class="t-dot"></div><span>${msg}</span>`;
+w.appendChild(el); setTimeout(()=>el.remove(),3200);
 }
 </script>
 
