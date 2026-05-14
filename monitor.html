@@ -275,6 +275,7 @@
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="supabase-wiring.js"></script>
 </head>
 <body>
 
@@ -588,114 +589,7 @@
 <div class="toast-wrap" id="toast-wrap"></div>
 <script>
 
-/* ── Supabase client ────────────────────────────────────
-   Global inventory is read/written here so all devices
-   see the same data instantly.                          */
-const _SB_URL = 'https://zdbgynzycjjaawzjyptv.supabase.co';
-const _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkYmd5bnp5Y2pqYWF3emp5cHR2IiwicmVsZSI6ImFub24iLCJpYXQiOjE3Nzg2ODI2MDMsImV4cCI6MjA5NDI1ODYwM30.85EvZWcNkZDBYdgpzFZu5z4Lda-twbAfZBw-B0_ep5s';
-let _sb = null;
-try { _sb = supabase.createClient(_SB_URL, _SB_KEY); } catch(e) {}
-/* ══════════════════════════════════════════════════════
-   STORAGE KEYS & HELPERS
-══════════════════════════════════════════════════════ */
-const LS = {
-  INV  : 'cc_inventory_v1',
-  SES  : 'cc_session_active_v1',
-  HIST : 'cc_session_history_v1',
-  REQ  : 'cc_adhoc_requests_v1',
-  UPLD : 'cc_last_upload_v1',
-};
-const readLS  = k => { try{return JSON.parse(localStorage.getItem(k))||[];}catch{return[];} };
-const writeLS = (k,v) => localStorage.setItem(k, JSON.stringify(v));
-const readInv = () => readLS(LS.INV);
-const readReq = () => readLS(LS.REQ);
-const readHist= () => readLS(LS.HIST);
 
-/* ══════════════════════════════════════════════════════
-   AD-HOC REQUEST STORE
-   STUB: Replace with Supabase calls:
-   await supabase.from('adhoc_requests').insert({...})
-══════════════════════════════════════════════════════ */
-const AdhocStore = {
-  getAll()      { return readReq(); },
-  getPending()  { return readReq().filter(r => r.status === 'pending' || r.status === 'in_progress'); },
-  getCompleted(){ return readReq().filter(r => r.status === 'completed'); },
-
-  create({ material_id, description='', notes='', requested_by='Manager', priority='normal' }) {
-    if (!material_id) return null;
-    const task = {
-      id          : `ADHOC-${Date.now()}`,
-      material_id : String(material_id).trim().toUpperCase(),
-      description,
-      notes,
-      requested_by,
-      priority,
-      status      : 'pending',
-      requested_at: new Date().toISOString(),
-      in_progress_by: null, in_progress_at: null,
-      completed_by: null,   completed_at:   null,
-      result_hu   : null,   result_bin:     null,
-      result_qty  : null,   expected_qty:   null,
-      qty_variance: null,   auditor_notes:  '',
-      photo_evidence: null, is_adhoc_request: true,
-      session_id  : null,
-    };
-    const all = readReq(); all.unshift(task); writeLS(LS.REQ, all);
-    // Cross-tab notification
-    window.dispatchEvent(new StorageEvent('storage', { key: LS.REQ }));
-    return task;
-  },
-
-  cancel(id) {
-    const all = readReq();
-    const i   = all.findIndex(r => r.id === id);
-    if (i >= 0) { all[i].status = 'cancelled'; writeLS(LS.REQ, all); }
-  },
-};
-
-/* ══════════════════════════════════════════════════════
-   MOCK HISTORY (seeded for demo)
-   STUB: Replace with Supabase session query
-══════════════════════════════════════════════════════ */
-const MOCK_HIST = [
-  { id:'SES-1730-047', date:'2025-07-15 08:41', user:'A. Lopez',   bin:'FZ01-FA01A',     items:12, disc:2, photos:1, status:'Pending SAP',  notes:'Qty variance on 3301514. Label reprint required.' },
-  { id:'SES-1730-046', date:'2025-07-15 07:22', user:'M. Torres',  bin:'FZ01-FA04B',     items:8,  disc:1, photos:0, status:'Submitted',    notes:'Location move flagged on 3308309.' },
-  { id:'SES-1730-045', date:'2025-07-14 14:10', user:'A. Lopez',   bin:'FZ01-FA03B',     items:15, disc:0, photos:0, status:'Reconciled',   notes:'All items match system.' },
-  { id:'SES-1730-044', date:'2025-07-14 11:35', user:'J. Medina',  bin:'FZ01-FA02A',     items:6,  disc:3, photos:2, status:'Under Review', notes:'Multiple discrepancies. SAP recount requested.' },
-  { id:'SES-1730-043', date:'2025-07-14 09:00', user:'M. Torres',  bin:'RFL1-KITS-FLOOR',items:22, disc:0, photos:0, status:'Reconciled',   notes:'Clean count.' },
-  { id:'SES-1730-042', date:'2025-07-13 15:48', user:'A. Lopez',   bin:'LBRM-LABEL-ROOM',items:10, disc:1, photos:1, status:'Reconciled',   notes:'Minor label damage.' },
-  { id:'SES-1730-041', date:'2025-07-13 13:20', user:'J. Medina',  bin:'PSH1-MIXAREA1_HU',items:18,disc:2, photos:0, status:'Pending SAP',  notes:'Overage on 2 SKUs.' },
-  { id:'SES-1730-040', date:'2025-07-13 10:05', user:'A. Lopez',   bin:'FZ02-FZ100',     items:9,  disc:0, photos:0, status:'Reconciled',   notes:'All clear.' },
-  { id:'SES-1730-039', date:'2025-07-12 16:30', user:'M. Torres',  bin:'FZ01-FA05A',     items:14, disc:1, photos:1, status:'Reconciled',   notes:'One item short. Adjustment posted.' },
-  { id:'SES-1730-038', date:'2025-07-12 14:00', user:'J. Medina',  bin:'FZ01-FA06A',     items:7,  disc:0, photos:0, status:'Reconciled',   notes:'Count clean.' },
-  { id:'SES-1730-037', date:'2025-07-11 11:15', user:'A. Lopez',   bin:'FZ01-FA07B',     items:20, disc:4, photos:3, status:'Under Review', notes:'Large variance detected. Physical audit requested.' },
-  { id:'SES-1730-036', date:'2025-07-11 09:00', user:'M. Torres',  bin:'PSH1-MIXAREA2_HU',items:11,disc:0, photos:0, status:'Reconciled',   notes:'No issues.' },
-];
-
-/* ══════════════════════════════════════════════════════
-   TABLE STATE
-══════════════════════════════════════════════════════ */
-const PAGE_SIZE = 8;
-let tState = { page:1, sortCol:'date', sortDir:'desc', search:'', status:'all', range:'today' };
-let allData = [...MOCK_HIST];
-let activeRow = null;
-
-/* ══════════════════════════════════════════════════════
-   INIT
-══════════════════════════════════════════════════════ */
-window.addEventListener('load', () => {
-  seedHistory();
-  renderUploadPanel();
-  refreshKPIs();
-  renderTable();
-  renderActiveRequests();
-  updateReqTopbarBadge();
-  initSparklines();
-  document.getElementById('js-last-updated').textContent =
-    'Updated ' + new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-  document.getElementById('footer-date').textContent =
-    new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
-});
 
 function seedHistory() {
   // Merge real session history with mock if available
@@ -1044,7 +938,7 @@ function parseInventoryRows(rows, filename) {
     return { success:false, loaded:0, skipped, skippedNoHU,
              errors:['No valid items parsed after processing all rows.'], items:[] };
 
-  // ── Persist locally first (instant feedback) ───────────────────────────
+  // ── Persist locally (instant feedback) then push to Supabase ──────────
   try { localStorage.setItem(LS.INV, JSON.stringify(items)); } catch(e) {
     try { localStorage.removeItem(LS.INV); localStorage.setItem(LS.INV, JSON.stringify(items)); }
     catch(e2) { return { success:false, loaded:0, skipped, skippedNoHU,
@@ -1054,10 +948,15 @@ function parseInventoryRows(rows, filename) {
     filename, uploaded_at: new Date().toISOString(),
     items_loaded: items.length, items_skipped: skipped, skipped_no_hu: skippedNoHU,
   }));
-
-  // ── Push to Supabase (global — all devices will refresh) ─────────────────
-  // Don't await: let it run in the background after returning success to UI
-  _pushInventoryToSupabase(items, filename).catch(e => console.warn('[SB] push error:', e));
+  // Push to Supabase — all other devices will receive this automatically
+  if (window.DB) {
+    DB.replaceInventory(items, `upload-${Date.now()}`)
+      .then(r => {
+        const el = document.getElementById('js-last-updated');
+        if (el) el.textContent = `Synced ${r.loaded.toLocaleString()} rows to database`;
+      })
+      .catch(e => console.error('[DB] replaceInventory failed:', e));
+  }
 
   console.info(`[Upload] Loaded ${items.length} HU records from "${filename}". Skipped: ${skipped} (${skippedNoHU} no-HU rows).`);
   return { success:true, loaded: items.length, skipped, skippedNoHU, errors, items };
@@ -1667,39 +1566,3 @@ function toast(msg, t='g') {
 </script>
 
 <script>
-
-/* ── Supabase: delete-all then batch insert ─────────────────────────────── */
-async function _pushInventoryToSupabase(items, filename) {
-  if (!_sb) return;
-  const uploadedAt = new Date().toISOString();
-  const batchId    = `upload-${Date.now()}`;
-
-  // Step 1: Delete ALL previous inventory rows
-  const { error: delErr } = await _sb
-    .from('inventory_items')
-    .delete()
-    .not('hu_number', 'is', null);   // matches every row (hu_number is always set)
-  if (delErr) console.warn('[SB] delete-all error:', delErr.message);
-
-  // Step 2: Batch insert in chunks of 500 (Supabase row limit per request)
-  const CHUNK = 500;
-  const stamped = items.map(i => ({ ...i, upload_batch_id: batchId, uploaded_at: uploadedAt }));
-  let inserted = 0;
-  for (let i = 0; i < stamped.length; i += CHUNK) {
-    const { error: insErr } = await _sb
-      .from('inventory_items')
-      .insert(stamped.slice(i, i + CHUNK));
-    if (insErr) { console.error('[SB] insert chunk error:', insErr.message); break; }
-    inserted += Math.min(CHUNK, stamped.length - i);
-  }
-
-  console.info(`[SB] Upload complete — ${inserted}/${items.length} rows in database.`);
-
-  // Update the topbar "last updated" label
-  const el = document.getElementById('js-last-updated');
-  if (el) el.textContent = `Supabase: ${inserted.toLocaleString()} items synced`;
-}
-
-</script>
-</body>
-</html>
