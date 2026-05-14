@@ -53,8 +53,9 @@ const readLS  = (k)    => { try { return JSON.parse(localStorage.getItem(k)) || 
 async function getInventory() {
   // Supabase PostgREST caps responses at 1000 rows by default.
   // Paginate in chunks until we receive a partial page (end of data).
-  // PAGE 2000 → 2 round-trips for a 4000-item export instead of 4.
-  const PAGE = 2000;
+  // PAGE must be ≤ Supabase db-max-rows (default 1000).
+  // Using 1000 ensures we always get a full page when more rows exist.
+  const PAGE = 1000;
   let all  = [];
   let page = 0;
 
