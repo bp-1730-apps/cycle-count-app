@@ -593,15 +593,7 @@
 /* ══════════════════════════════════════════════════════
    STORAGE KEYS & HELPERS
 ══════════════════════════════════════════════════════ */
-const LS = {
-  INV  : 'cc_inventory_v1',
-  SES  : 'cc_session_active_v1',
-  HIST : 'cc_session_history_v1',
-  REQ  : 'cc_adhoc_requests_v1',
-  UPLD : 'cc_last_upload_v1',
-};
-const readLS  = k => { try{return JSON.parse(localStorage.getItem(k))||[];}catch{return[];} };
-const writeLS = (k,v) => localStorage.setItem(k, JSON.stringify(v));
+// LS, readLS, writeLS supplied by supabase-wiring.js
 const readInv = () => readLS(LS.INV);
 const readReq = () => readLS(LS.REQ);
 const readHist= () => readLS(LS.HIST);
