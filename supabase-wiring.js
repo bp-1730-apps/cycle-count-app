@@ -106,36 +106,44 @@ async function upsertItem(item) {
  * With:     await DB.replaceInventory(items, uploadBatchId);
  */
 async function replaceInventory(items, uploadBatchId) {
-  const timestamp    = new Date().toISOString();
-  const stamped      = items.map(i => ({
+  const timestamp = new Date().toISOString();
+  const batchId   = uploadBatchId || `upload-${Date.now()}`;
+  const stamped   = items.map(i => ({
     ...i,
-    upload_batch_id : uploadBatchId || `upload-${Date.now()}`,
+    upload_batch_id : batchId,
     uploaded_at     : timestamp,
     status          : i.status || 'pending_count',
   }));
 
-  // Write-through cache
+  // Write-through cache immediately (local UI stays snappy)
   writeLS(LS.INV, stamped);
 
-  // NOTE: For large imports (3,000+ rows) batch in chunks of 500
+  // Step 1: DELETE every existing row so stale HUs don't linger
+  const { error: delErr } = await _sb
+    .from('inventory_items')
+    .delete()
+    .not('hu_number', 'is', null);   // matches every row
+  if (delErr) console.error('[DB] replaceInventory delete:', delErr.message);
+
+  // Step 2: INSERT in chunks of 500
   const CHUNK = 500;
+  let inserted = 0;
   for (let i = 0; i < stamped.length; i += CHUNK) {
-    const chunk = stamped.slice(i, i + CHUNK);
     const { error } = await _sb
       .from('inventory_items')
-      .upsert(chunk, { onConflict: 'hu_number' });
-    if (error) { console.error('[DB] replaceInventory chunk error:', error); break; }
+      .insert(stamped.slice(i, i + CHUNK));
+    if (error) { console.error('[DB] replaceInventory insert:', error.message); break; }
+    inserted += Math.min(CHUNK, stamped.length - i);
   }
 
-  // Store upload metadata
-  const meta = {
-    filename       : `SAP Import ${new Date().toLocaleDateString()}`,
-    uploaded_at    : timestamp,
-    items_loaded   : stamped.length,
-    upload_batch_id: uploadBatchId,
-  };
-  writeLS(LS.UPLD, meta);
-  return { loaded: stamped.length };
+  writeLS(LS.UPLD, {
+    filename        : `SAP Import ${new Date().toLocaleDateString()}`,
+    uploaded_at     : timestamp,
+    items_loaded    : inserted,
+    upload_batch_id : batchId,
+  });
+  console.info(`[DB] replaceInventory: ${inserted}/${stamped.length} rows synced`);
+  return { loaded: inserted };
 }
 
 
