@@ -602,6 +602,7 @@
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="supabase-wiring.js"></script>
 </head>
 <body>
 
@@ -910,28 +911,7 @@
     refreshStats(); _sbRefreshStats();
 
     
-/* ── Supabase client ─────────────────────────────────── */
-const _SB_URL = 'https://zdbgynzycjjaawzjyptv.supabase.co';
-const _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkYmd5bnp5Y2pqYWF3emp5cHR2IiwicmVsZSI6ImFub24iLCJpYXQiOjE3Nzg2ODI2MDMsImV4cCI6MjA5NDI1ODYwM30.85EvZWcNkZDBYdgpzFZu5z4Lda-twbAfZBw-B0_ep5s';
-let _sb = null;
-try { _sb = supabase.createClient(_SB_URL, _SB_KEY); } catch(e) {}
 
-async function _sbRefreshStats() {
-  if (!_sb) return;
-  try {
-    const [invRes, pendRes] = await Promise.all([
-      _sb.from('inventory_items').select('*', { count: 'exact', head: true }),
-      _sb.from('adhoc_requests').select('*', { count: 'exact', head: true }).eq('status','pending'),
-    ]);
-    if (invRes.count != null) {
-      document.getElementById('js-qs-bins').textContent = invRes.count.toLocaleString();
-      document.getElementById('js-sap-status').textContent = invRes.count.toLocaleString() + ' items';
-    }
-    if (pendRes.count != null)
-      document.getElementById('js-qs-sap').textContent = pendRes.count;
-  } catch(e) { console.warn('[SB] index stats:', e.message); }
-}
-setTimeout(_sbRefreshStats, 200);
 /* ─── Gate logic ───────────────────────────────────────── */
     const gate    = document.getElementById('js-gate');
     const gateInp = document.getElementById('js-gate-input');
@@ -1008,6 +988,23 @@ setTimeout(_sbRefreshStats, 200);
     document.getElementById('js-db-status').textContent      = 'localStorage';
     document.getElementById('js-active-sessions').textContent = '—';
     document.getElementById('js-last-sync').textContent      = 'Local only';
-  </script>
+  
+/* ── Supabase: live stats for index ── */
+async function _dbRefreshStats() {
+  if (!window.DB) return;
+  try {
+    const [inv, reqs] = await Promise.all([
+      DB.client.from('inventory_items').select('*', {count:'exact',head:true}),
+      DB.client.from('adhoc_requests').select('*', {count:'exact',head:true}).eq('status','pending'),
+    ]);
+    if (inv.count != null) {
+      document.getElementById('js-qs-bins').textContent = inv.count.toLocaleString();
+      document.getElementById('js-sap-status').textContent = inv.count.toLocaleString() + ' items';
+    }
+    if (reqs.count != null) document.getElementById('js-qs-sap').textContent = reqs.count;
+  } catch(e) { console.warn('[DB] index stats:', e.message); }
+}
+_dbRefreshStats();
+</script>
 </body>
 </html>
