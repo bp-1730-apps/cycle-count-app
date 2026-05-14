@@ -595,24 +595,26 @@
   const writeInv = v  => localStorage.setItem(LS.INV, JSON.stringify(v));
   const readHist  = () => readLS(LS.HIST || 'cc_session_history_v1');
   const writeHist = v  => localStorage.setItem(LS.HIST || 'cc_session_history_v1', JSON.stringify(v));
+// ── Session history state ──────────────────────────────────────────────
+const MOCK_HIST = [];          // populated from real sessions; no hard-coded mock data
+let   allData   = [];          // flat rows consumed by the history table
+
 function seedHistory() {
-  // Merge real session history with mock if available
   const real = readHist();
-  if (real.length > 0) {
-    const realRows = real.map(s => ({
-      id    : s.id,
-      date  : s.ended_at || s.started_at,
-      user  : s.user,
-      bin   : (s.bins_visited||[]).join(', ') || '—',
-      items : (s.hu_scanned||[]).length,
-      disc  : ((s.summary_snapshot?.missing||0)+(s.summary_snapshot?.qty_adjustments||0)+(s.summary_snapshot?.moved||0)+(s.summary_snapshot?.found_unlisted||0)),
-      photos: 0, // STUB: track in session
-      status: deriveStatus(s),
-      notes : `Bins: ${(s.bins_visited||[]).join(', ')}`,
-    }));
-    allData = [...realRows, ...MOCK_HIST];
-  }
+  const realRows = real.map(s => ({
+    id    : s.id,
+    date  : s.ended_at || s.started_at,
+    user  : s.user,
+    bin   : (s.bins_visited||[]).join(', ') || '—',
+    items : (s.hu_scanned||[]).length,
+    disc  : ((s.summary_snapshot?.missing||0)+(s.summary_snapshot?.qty_adjustments||0)+(s.summary_snapshot?.moved||0)+(s.summary_snapshot?.found_unlisted||0)),
+    photos: 0,
+    status: deriveStatus(s),
+    notes : `Bins: ${(s.bins_visited||[]).join(', ')}`,
+  }));
+  allData = [...realRows, ...MOCK_HIST];  // MOCK_HIST is [] — real sessions only
 }
+seedHistory();
 
 function deriveStatus(s) {
   const snap = s.summary_snapshot;
