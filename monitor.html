@@ -1610,9 +1610,10 @@ document.getElementById('btn-refresh').addEventListener('click', () => {
   toast('Dashboard refreshed.','g');
 });
 
-// Cross-tab: update when scanner makes changes
+// Cross-tab + Supabase real-time: update when scanner makes changes
 window.addEventListener('storage', e => {
-  if (e.key===LS.INV||e.key===LS.REQ) { refreshKPIs(); renderActiveRequests(); updateReqTopbarBadge(); renderUploadPanel(); }
+  if (e.key===LS.INV) { seedHistory(); refreshKPIs(); renderUploadPanel(); renderTable(); }
+  if (e.key===LS.REQ) { renderActiveRequests(); updateReqTopbarBadge(); }
 });
 
 /* ══════════════════════════════════════════════════════
@@ -1659,7 +1660,9 @@ async function _monitorSyncAll() {
 function _monitorSubscribe() {
   if (!window.DB) return;
   DB.subscribeInventory(() => {
-    DB.getInventory().then(() => { refreshKPIs(); renderUploadPanel(); });
+    DB.getInventory().then(() => {
+      seedHistory(); refreshKPIs(); renderUploadPanel(); renderTable();
+    });
   });
   DB.subscribeRequests(() => {
     DB.getRequests().then(reqs => {
