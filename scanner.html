@@ -488,11 +488,6 @@ const LS_DONE = 'cc_done_bins';
 
 const readInv  = () => { try{return JSON.parse(localStorage.getItem(LS_INV))||[];}catch{return[];} };
 const writeInv = v  => { try{localStorage.setItem(LS_INV,JSON.stringify(v));}catch{} };
-
-/* ── Supabase client ─────────────────────────────────── */
-
-
-
 const readSes  = () => { try{return JSON.parse(localStorage.getItem(LS_SES));}catch{return null;} };
 const writeSes = v  => { try{localStorage.setItem(LS_SES,JSON.stringify(v));}catch{} };
 const getName  = () => (localStorage.getItem(LS_NAME)||'').trim();
@@ -1135,6 +1130,19 @@ function finalizeBin(){
     }
   });
   writeInv(inv);
+
+  // Push audited items to Supabase so monitor sees results in real time
+  if (window.DB) {
+    const toSync = [];
+    ST.items.forEach(item => {
+      const updated = inv.find(i => i.hu_number === item.hu);
+      if (updated) toSync.push(updated);
+    });
+    toSync.forEach(item =>
+      DB.upsertItem(item).catch(e => console.warn('[Scanner] upsertItem:', e.message))
+    );
+  }
+
   ST.done.add(ST.currentBin);
   try{localStorage.setItem(LS_DONE,JSON.stringify({date:new Date().toDateString(),bins:[...ST.done]}));}catch{}
   toast(`${ST.binShort} finalized ✓`,'green');
@@ -1210,7 +1218,7 @@ function toast(msg,type='blue'){
 }
 function escHtml(s){const d=document.createElement('div');d.textContent=String(s||'');return d.innerHTML;}
 
-/* ── Supabase: load inventory on page open, subscribe to live changes ── */
+/* ── Supabase: load inventory on open, subscribe to live changes ── */
 if (window.DB) {
   DB.getInventory().then(data => {
     if (data && data.length) { buildGrid(); updateStats(); }
