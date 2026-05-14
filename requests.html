@@ -267,6 +267,7 @@
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="supabase-wiring.js"></script>
 </head>
 <body>
 
@@ -463,37 +464,8 @@ const readReq  = () => { try{return JSON.parse(localStorage.getItem(LS_REQ))||[]
 const writeReq = v  => localStorage.setItem(LS_REQ, JSON.stringify(v));
 
 /* ── Supabase client ─────────────────────────────────── */
-const _SB_URL = 'https://zdbgynzycjjaawzjyptv.supabase.co';
-const _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpkYmd5bnp5Y2pqYWF3emp5cHR2IiwicmVsZSI6ImFub24iLCJpYXQiOjE3Nzg2ODI2MDMsImV4cCI6MjA5NDI1ODYwM30.85EvZWcNkZDBYdgpzFZu5z4Lda-twbAfZBw-B0_ep5s';
-let _sb = null;
-try { _sb = supabase.createClient(_SB_URL, _SB_KEY); } catch(e) {}
 
-/* ── Supabase requests sync ──────────────────────────────────────────────── */
-async function _sbSyncReqs() {
-  if (!_sb) return;
-  try {
-    const { data, error } = await _sb
-      .from('adhoc_requests')
-      .select('*')
-      .order('requested_at', { ascending: false });
-    if (error) throw error;
-    if (data) {
-      localStorage.setItem(LS_REQ, JSON.stringify(data));
-      allRequests = [...data];
-      updateStats(); updateCounts(); renderGrid();
-      const el = document.getElementById('js-sub');
-      if (el) el.textContent = 'Updated ' + new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
-    }
-  } catch(e) { console.warn('[SB] requests sync failed:', e.message); }
-}
-function _sbSubscribeReqs() {
-  if (!_sb) return;
-  _sb.channel('req-changes')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'adhoc_requests' },
-      () => { _sbSyncReqs(); })
-    .subscribe();
-}
-setTimeout(() => { _sbSyncReqs(); _sbSubscribeReqs(); }, 150);
+
 
 
 /* ══════════════════════════════════════════════════════
@@ -1193,6 +1165,18 @@ function toast(msg, t='g') {
   });
 })();
 
+
+/* ── Supabase: load requests + subscribe to live changes ── */
+if (window.DB) {
+  DB.getRequests().then(data => {
+    if (data) { allRequests = data; updateStats(); updateCounts(); renderGrid(); }
+  });
+  DB.subscribeRequests(() => {
+    DB.getRequests().then(data => {
+      if (data) { allRequests = data; updateStats(); updateCounts(); renderGrid(); }
+    });
+  });
+}
 </script>
 </body>
 </html>
