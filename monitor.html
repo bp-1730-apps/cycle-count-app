@@ -596,8 +596,13 @@
   const readHist  = () => readLS(LS.HIST || 'cc_session_history_v1');
   const writeHist = v  => localStorage.setItem(LS.HIST || 'cc_session_history_v1', JSON.stringify(v));
 // ── Session history state ──────────────────────────────────────────────
-const MOCK_HIST = [];          // populated from real sessions; no hard-coded mock data
-let   allData   = [];          // flat rows consumed by the history table
+const MOCK_HIST  = [];         // no hard-coded mock data — real sessions only
+let   allData    = [];         // flat rows consumed by the history table
+let   activeRow  = null;       // ID of the row whose detail drawer is open
+
+// ── History table filter / sort / page state ────────────────────────────
+const PAGE_SIZE  = 20;
+let   tState     = { range:'all', status:'all', search:'', sortCol:'date', sortDir:'desc', page:1 };
 
 function seedHistory() {
   const real = readHist();
