@@ -684,22 +684,49 @@ window.addEventListener('load', () => {
 });
 
 function seedHistory() {
-  // Merge real session history with mock if available
-  const real = readHist();
-  if (real.length > 0) {
-    const realRows = real.map(s => ({
-      id    : s.id,
-      date  : s.ended_at || s.started_at,
-      user  : s.user,
-      bin   : (s.bins_visited||[]).join(', ') || '—',
-      items : (s.hu_scanned||[]).length,
-      disc  : ((s.summary_snapshot?.missing||0)+(s.summary_snapshot?.qty_adjustments||0)+(s.summary_snapshot?.moved||0)+(s.summary_snapshot?.found_unlisted||0)),
-      photos: 0, // STUB: track in session
-      status: deriveStatus(s),
-      notes : `Bins: ${(s.bins_visited||[]).join(', ')}`,
-    }));
-    allData = [...realRows, ...MOCK_HIST];
-  }
+  // Source 1: saved localStorage sessions
+  const savedRows = readHist().map(s => ({
+    id: s.id, date: s.ended_at || s.started_at, user: s.user || 'Auditor',
+    bin: (s.bins_visited||[]).join(', ') || '—', items: (s.hu_scanned||[]).length,
+    disc: ((s.summary_snapshot?.missing||0)+(s.summary_snapshot?.qty_adjustments||0)
+          +(s.summary_snapshot?.moved||0)+(s.summary_snapshot?.found_unlisted||0)),
+    photos: 0, status: deriveStatus(s),
+    notes: 'Bins: ' + (s.bins_visited||[]).join(', '),
+  }));
+
+  // Source 2: derive sessions from audited inventory items
+  // Works cross-device as long as inventory is synced via Supabase
+  const inv = readInv();
+  const sMap = {};
+  inv.filter(i => i.audited_at && i.session_id).forEach(item => {
+    const sid = item.session_id;
+    if (!sMap[sid]) sMap[sid] = {
+      id: sid, date: item.audited_at, user: item.audited_by || 'Auditor',
+      bins: new Set(), items: 0, disc: 0, photos: 0,
+    };
+    const s = sMap[sid];
+    s.items++;
+    if (item.status !== 'verified' && item.status !== 'pending_count') s.disc++;
+    if (item.photo_evidence) s.photos++;
+    if (item.actual_bin) s.bins.add(item.actual_bin);
+    if (item.audited_at > s.date) s.date = item.audited_at;
+  });
+
+  const derivedRows = Object.values(sMap).map(s => ({
+    id: s.id, date: s.date, user: s.user,
+    bin: [...s.bins].join(', ') || '—',
+    items: s.items, disc: s.disc, photos: s.photos,
+    status: s.disc > 0 ? 'Pending SAP' : 'Submitted',
+    notes: 'Bins: ' + [...s.bins].join(', '),
+  }));
+
+  // Merge: derived rows win over saved/mock for same session ID
+  const usedIds = new Set(derivedRows.map(r => r.id));
+  allData = [
+    ...derivedRows,
+    ...savedRows.filter(r => !usedIds.has(r.id)),
+    ...MOCK_HIST.filter(m => !usedIds.has(m.id)),
+  ];
 }
 
 function deriveStatus(s) {
