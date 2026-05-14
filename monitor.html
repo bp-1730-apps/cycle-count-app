@@ -589,18 +589,6 @@
 <div class="toast-wrap" id="toast-wrap"></div>
 
 <script>
-  const readInv  = () => readLS(LS.INV);
-  const writeInv = v  => localStorage.setItem(LS.INV, JSON.stringify(v));
-  const readHist  = () => readLS(LS.HIST || 'cc_session_history_v1');
-  const writeHist = v  => localStorage.setItem(LS.HIST || 'cc_session_history_v1', JSON.stringify(v));
-
-  // ── Session history state ──────────────────────────────────────────────
-  const MOCK_HIST  = [];
-  let   allData    = [];
-  let   activeRow  = null;
-  const PAGE_SIZE  = 20;
-  let   tState     = { range:'all', status:'all', search:'', sortCol:'date', sortDir:'desc', page:1 };
-
 
 /* ══════════════════════════════════════════════════════
    STORAGE KEYS & HELPERS
