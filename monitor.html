@@ -593,6 +593,8 @@
 
   const readInv  = () => readLS(LS.INV);
   const writeInv = v  => localStorage.setItem(LS.INV, JSON.stringify(v));
+  const readHist  = () => readLS(LS.HIST || 'cc_session_history_v1');
+  const writeHist = v  => localStorage.setItem(LS.HIST || 'cc_session_history_v1', JSON.stringify(v));
 function seedHistory() {
   // Merge real session history with mock if available
   const real = readHist();
