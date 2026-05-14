@@ -1704,7 +1704,10 @@ function _monitorSubscribe() {
   });
 }
 
-// Run on page open
+// Run on page open:
+// 1. Render immediately from localStorage cache (instant, no flicker)
+_monitorInit();
+// 2. Fetch fresh data from Supabase in background, re-render when done
 _monitorSyncAll().then(() => _monitorSubscribe());
 </script>
 </body>
