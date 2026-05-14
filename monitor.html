@@ -518,10 +518,10 @@
       </div>
       <div class="tc-tr">
         <div class="date-tabs" id="date-tabs">
-          <button class="dt-tab active" data-range="today">Today</button>
+          <button class="dt-tab" data-range="today">Today</button>
           <button class="dt-tab" data-range="week">Week</button>
           <button class="dt-tab" data-range="month">Month</button>
-          <button class="dt-tab" data-range="all">All</button>
+          <button class="dt-tab active" data-range="all">All</button>
         </div>
         <div class="search-wrap">
           <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
@@ -589,11 +589,10 @@
 <div class="toast-wrap" id="toast-wrap"></div>
 
 <script>
-
 /* ══════════════════════════════════════════════════════
    STORAGE KEYS & HELPERS
 ══════════════════════════════════════════════════════ */
-// LS, readLS, writeLS supplied by supabase-wiring.js
+// LS, readLS, writeLS provided by supabase-wiring.js
 const readInv = () => readLS(LS.INV);
 const readReq = () => readLS(LS.REQ);
 const readHist= () => readLS(LS.HIST);
@@ -663,7 +662,7 @@ const MOCK_HIST = [
    TABLE STATE
 ══════════════════════════════════════════════════════ */
 const PAGE_SIZE = 8;
-let tState = { page:1, sortCol:'date', sortDir:'desc', search:'', status:'all', range:'today' };
+let tState = { page:1, sortCol:'date', sortDir:'desc', search:'', status:'all', range:'all'  };
 let allData = [...MOCK_HIST];
 let activeRow = null;
 
@@ -702,7 +701,6 @@ function seedHistory() {
     allData = [...realRows, ...MOCK_HIST];
   }
 }
-seedHistory();
 
 function deriveStatus(s) {
   const snap = s.summary_snapshot;
@@ -1032,25 +1030,25 @@ function parseInventoryRows(rows, filename) {
     return { success:false, loaded:0, skipped, skippedNoHU,
              errors:['No valid items parsed after processing all rows.'], items:[] };
 
-  // ── Persist locally (instant feedback) then push to Supabase ──────────
-  try { localStorage.setItem(LS.INV, JSON.stringify(items)); } catch(e) {
-    try { localStorage.removeItem(LS.INV); localStorage.setItem(LS.INV, JSON.stringify(items)); }
-    catch(e2) { return { success:false, loaded:0, skipped, skippedNoHU,
-      errors:[`Storage full: ${e2.message}`], items:[] }; }
+  // ── Persist ─────────────────────────────────────────────────────────────
+  try {
+    localStorage.setItem(LS.INV, JSON.stringify(items));
+  } catch (quotaErr) {
+    // QuotaExceededError — storage full.  Clear old inventory and retry once.
+    console.warn('[Upload] localStorage quota hit — clearing old inventory and retrying');
+    try {
+      localStorage.removeItem(LS.INV);
+      localStorage.setItem(LS.INV, JSON.stringify(items));
+    } catch (retryErr) {
+      return { success:false, loaded:0, skipped, skippedNoHU,
+               errors:[`Storage full. Try closing other tabs or clearing browser data. (${retryErr.message})`], items:[] };
+    }
   }
+
   localStorage.setItem('cc_last_upload_v1', JSON.stringify({
     filename, uploaded_at: new Date().toISOString(),
     items_loaded: items.length, items_skipped: skipped, skipped_no_hu: skippedNoHU,
   }));
-  // Push to Supabase so all devices see the new data
-  if (window.DB) {
-    DB.replaceInventory(items, `upload-${Date.now()}`)
-      .then(r => {
-        const el = document.getElementById('js-last-updated');
-        if (el) el.textContent = `Synced ${r.loaded.toLocaleString()} rows to database`;
-      })
-      .catch(e => console.error('[DB] replaceInventory failed:', e));
-  }
 
   console.info(`[Upload] Loaded ${items.length} HU records from "${filename}". Skipped: ${skipped} (${skippedNoHU} no-HU rows).`);
   return { success:true, loaded: items.length, skipped, skippedNoHU, errors, items };
@@ -1174,30 +1172,7 @@ const SPARK_DATA = {
   sap: [4,3,5,2,3,1,4,3,2],
 };
 
-function drawSparkline(id, data, color) {
-  const canvas = document.getElementById(id);
-  if (!canvas) return;
-  const dpr=window.devicePixelRatio||1, w=canvas.parentElement.offsetWidth, h=34;
-  canvas.width=w*dpr; canvas.height=h*dpr; canvas.style.width=w+'px'; canvas.style.height=h+'px';
-  const ctx=canvas.getContext('2d'); ctx.scale(dpr,dpr);
-  const min=Math.min(...data), max=Math.max(...data), range=(max-min)||1, pad=3;
-  const pts=data.map((v,i)=>({x:pad+(i/(data.length-1))*(w-pad*2),y:h-pad-((v-min)/range)*(h-pad*2)}));
-  const g=ctx.createLinearGradient(0,0,0,h);
-  g.addColorStop(0,color+'30'); g.addColorStop(1,color+'00');
-  ctx.beginPath(); ctx.moveTo(pts[0].x,h);
-  pts.forEach(p=>ctx.lineTo(p.x,p.y));
-  ctx.lineTo(pts[pts.length-1].x,h); ctx.closePath(); ctx.fillStyle=g; ctx.fill();
-  ctx.beginPath(); pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
-  ctx.strokeStyle=color; ctx.lineWidth=2; ctx.lineJoin='round'; ctx.stroke();
-  const l=pts[pts.length-1]; ctx.beginPath(); ctx.arc(l.x,l.y,3,0,Math.PI*2); ctx.fillStyle=color; ctx.fill();
-}
-
-function initSparklines(){
-  drawSparkline('spark-acc','#16A34A',...[SPARK_DATA.acc,'#16A34A']);
-  drawSparkline('spark-bins',SPARK_DATA.bins,'#1D4ED8');
-  drawSparkline('spark-sap',SPARK_DATA.sap,'#D97706');
-}
-// Fix: sparkline helper signature
+// Sparklines defined below
 function drawSparkline(id, data, color) {
   const canvas = document.getElementById(id); if (!canvas) return;
   const dpr=window.devicePixelRatio||1, w=canvas.parentElement.offsetWidth||200, h=34;
@@ -1658,21 +1633,11 @@ function toast(msg, t='g') {
   w.appendChild(el); setTimeout(()=>el.remove(),3200);
 }
 
-/* ══════════════════════════════════════════════════════
-   PAGE INIT
-══════════════════════════════════════════════════════ */
-function _monitorInit() {
-  seedHistory();
-  renderUploadPanel();
-  refreshKPIs();
-  renderTable();
-  renderActiveRequests();
-  updateReqTopbarBadge();
-  initSparklines();
-}
-
+/* ══════════════════════════════════════════════════
+   SUPABASE BACKGROUND SYNC
+══════════════════════════════════════════════════ */
 async function _monitorSyncAll() {
-  if (!window.DB) { _monitorInit(); return; }
+  if (!window.DB) return;
   try {
     const [inv, reqs] = await Promise.all([
       DB.getInventory(),
@@ -1682,32 +1647,28 @@ async function _monitorSyncAll() {
       document.getElementById('js-last-updated').textContent =
         inv.length.toLocaleString() + ' items · synced ' +
         new Date().toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
+      renderUploadPanel(); refreshKPIs(); renderTable();
     }
-    if (reqs) try { localStorage.setItem(LS.REQ, JSON.stringify(reqs)); } catch(e) {}
-  } catch(e) {
-    console.warn('[Monitor] sync failed, using local cache:', e.message);
-  }
-  _monitorInit();
+    if (reqs) {
+      try { localStorage.setItem(LS.REQ, JSON.stringify(reqs)); } catch(e) {}
+      renderActiveRequests(); updateReqTopbarBadge();
+    }
+  } catch(e) { console.warn('[Monitor] sync failed:', e.message); }
 }
 
 function _monitorSubscribe() {
   if (!window.DB) return;
   DB.subscribeInventory(() => {
-    DB.getInventory().then(() => { refreshKPIs(); renderUploadPanel(); initSparklines(); });
+    DB.getInventory().then(() => { refreshKPIs(); renderUploadPanel(); });
   });
   DB.subscribeRequests(() => {
     DB.getRequests().then(reqs => {
       if (reqs) try { localStorage.setItem(LS.REQ, JSON.stringify(reqs)); } catch(e) {}
-      renderActiveRequests();
-      updateReqTopbarBadge();
+      renderActiveRequests(); updateReqTopbarBadge();
     });
   });
 }
 
-// Run on page open:
-// 1. Render immediately from localStorage cache (instant, no flicker)
-_monitorInit();
-// 2. Fetch fresh data from Supabase in background, re-render when done
 _monitorSyncAll().then(() => _monitorSubscribe());
 </script>
 </body>
