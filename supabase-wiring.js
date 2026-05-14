@@ -51,15 +51,34 @@ const readLS  = (k)    => { try { return JSON.parse(localStorage.getItem(k)) || 
  * With:     const inv = await DB.getInventory();
  */
 async function getInventory() {
-  const { data, error } = await _sb
-    .from('inventory_items')
-    .select('*')
-    .order('expected_bin')
-    .order('material_id');
+  // Supabase PostgREST caps responses at 1000 rows by default.
+  // Paginate in chunks until we receive a partial page (end of data).
+  const PAGE = 1000;
+  let all  = [];
+  let page = 0;
 
-  if (error) { console.error('[DB] getInventory:', error); return readLS(LS.INV); }
-  writeLS(LS.INV, data);
-  return data;
+  while (true) {
+    const { data, error } = await _sb
+      .from('inventory_items')
+      .select('*')
+      .order('expected_bin')
+      .order('material_id')
+      .range(page * PAGE, (page + 1) * PAGE - 1);
+
+    if (error) {
+      console.error('[DB] getInventory page', page, ':', error.message);
+      // Return whatever we have so far (plus localStorage fallback on first failure)
+      return all.length ? all : readLS(LS.INV);
+    }
+
+    all = all.concat(data || []);
+    if (!data || data.length < PAGE) break;  // last page reached
+    page++;
+  }
+
+  console.info(`[DB] getInventory: fetched ${all.length} rows (${page + 1} page${page ? 's' : ''})`);
+  writeLS(LS.INV, all);
+  return all;
 }
 
 /**
